@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "NugetDbPacker", "NugetDbPacker\NugetDbPacker.pssproj", "{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EBB729A2-A1A6-4736-A020-19B3A79947E9} = {EBB729A2-A1A6-4736-A020-19B3A79947E9}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6F4074EE-2079-4DB5-9C97-7BF371C263AA}"
+	ProjectSection(SolutionItems) = preProject
+		CiTools\Bootstrap.cmd = CiTools\Bootstrap.cmd
+		CiTools\Bootstrap.ps1 = CiTools\Bootstrap.ps1
+		Build.ps1 = Build.ps1
+		CiTools\Get-PackageContent.ps1 = CiTools\Get-PackageContent.ps1
+		CiTools\GetPackageContent.cmd = CiTools\GetPackageContent.cmd
+		CiTools\Publish-DbProjects.ps1 = CiTools\Publish-DbProjects.ps1
+		CiTools\PublishDbProjects.cmd = CiTools\PublishDbProjects.cmd
+		TestAll.ps1 = TestAll.ps1
+	EndProjectSection
+EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "NugetShared", "NugetShared\NugetShared.pssproj", "{EBB729A2-A1A6-4736-A020-19B3A79947E9}"
+EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "MigrateFromCI", "MigrateFromCI\MigrateFromCI.pssproj", "{A495F978-7316-4A6A-93B7-038B17F11B2A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EBB729A2-A1A6-4736-A020-19B3A79947E9} = {EBB729A2-A1A6-4736-A020-19B3A79947E9}
+	EndProjectSection
+EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "PowershellBuilder", "PowershellBuilder\PowershellBuilder.pssproj", "{F4A291E6-845C-4469-886B-BBBA24B5541D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EBB729A2-A1A6-4736-A020-19B3A79947E9} = {EBB729A2-A1A6-4736-A020-19B3A79947E9}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CAFC0C6-A428-4D30-A9F9-700E829FEA51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBB729A2-A1A6-4736-A020-19B3A79947E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBB729A2-A1A6-4736-A020-19B3A79947E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBB729A2-A1A6-4736-A020-19B3A79947E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBB729A2-A1A6-4736-A020-19B3A79947E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A495F978-7316-4A6A-93B7-038B17F11B2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A495F978-7316-4A6A-93B7-038B17F11B2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A495F978-7316-4A6A-93B7-038B17F11B2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A495F978-7316-4A6A-93B7-038B17F11B2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4A291E6-845C-4469-886B-BBBA24B5541D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4A291E6-845C-4469-886B-BBBA24B5541D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4A291E6-845C-4469-886B-BBBA24B5541D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4A291E6-845C-4469-886B-BBBA24B5541D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7BD0216A-1FF9-4A04-88A8-824A2B56813B}
+	EndGlobalSection
+EndGlobal

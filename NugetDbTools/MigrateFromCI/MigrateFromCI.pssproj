@@ -1,0 +1,55 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{a495f978-7316-4a6a-93b7-038b17f11b2a}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MyApplication</RootNamespace>
+    <AssemblyName>MyApplication</AssemblyName>
+    <Name>MigrateFromCI</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Package.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Build.ps1" />
+    <Compile Include="MigrateFromCI.psd1" />
+    <Compile Include="MigrateFromCI.psm1" />
+    <Compile Include="Package.ps1" />
+    <Compile Include="Scripts\Get-CiDependenciesDocument.ps1" />
+    <Compile Include="Scripts\Get-CiSqlProjects.ps1" />
+    <Compile Include="Scripts\Get-NuGetPackageVersion.ps1" />
+    <Compile Include="Scripts\Test-CiDataAvailable.ps1" />
+    <Compile Include="Scripts\Test-CiDependenciesMigrated.ps1" />
+    <Compile Include="Scripts\Test-NuGetPackage.ps1" />
+    <Compile Include="Tests\Get-CiDependencies.tests.ps1" />
+    <Compile Include="Tests\Get-CiSqlProjects.tests.ps1" />
+    <Compile Include="Tests\Get-NuGetPackageVersion.tests.ps1" />
+    <Compile Include="Tests\Test-CiDataAvailable.tests.ps1" />
+    <Compile Include="Tests\Test-CiDependenciesMigrated.tests.ps1" />
+    <Compile Include="Tests\Test-NuGetPackage.tests.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tests\" />
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="Build" />
+</Project>

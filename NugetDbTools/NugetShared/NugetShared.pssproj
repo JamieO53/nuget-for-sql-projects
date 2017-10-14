@@ -1,0 +1,53 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ebb729a2-a1a6-4736-a020-19b3a79947e9}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MyApplication</RootNamespace>
+    <AssemblyName>MyApplication</AssemblyName>
+    <Name>NugetShared</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Package.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Build.ps1" />
+    <Compile Include="NugetShared.psd1" />
+    <Compile Include="NugetShared.psm1" />
+    <Compile Include="Package.ps1" />
+    <Compile Include="Scripts\Add-DictionaryNode.ps1" />
+    <Compile Include="Scripts\Get-NuGetLocalApiKey.ps1" />
+    <Compile Include="Scripts\Get-NuGetLocalSource.ps1" />
+    <Compile Include="Scripts\Get-ParentSubfolder.ps1" />
+    <Compile Include="Scripts\Get-PowerShellProjects.ps1" />
+    <Compile Include="Scripts\Get-ProjectsByType.ps1" />
+    <Compile Include="Scripts\Get-ProjectVersion.ps1" />
+    <Compile Include="Scripts\Test-NuGetVersionExists.ps1" />
+    <Compile Include="Scripts\Test-PathIsInGitRepo.ps1" />
+    <Compile Include="Tests\Get-ProjectVersion.tests.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tests\" />
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="Build" />
+</Project>
