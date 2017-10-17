@@ -39,6 +39,7 @@
     <Compile Include="Build.ps1" />
     <Compile Include="PowershellBuilder.psd1" />
     <Compile Include="PowershellBuilder.psm1" />
+    <Compile Include="PSModuleBuilder.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
