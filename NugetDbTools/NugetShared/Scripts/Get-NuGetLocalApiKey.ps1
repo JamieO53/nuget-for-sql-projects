@@ -1,3 +1,4 @@
 function Get-NuGetLocalApiKey {
-	return 'NUG3TK3Y'
+	$config = Get-NuGetDbToolsConfig
+	$config.configuration.nugetLocalServer.add | ? { $_.key -eq 'ApiKey' } | % { $_.value }
 }

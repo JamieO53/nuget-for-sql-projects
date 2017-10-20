@@ -1,3 +1,4 @@
 function Get-NuGetLocalSource {
-	return 'http://srv103octo01:808/NugetServer/nuget'
+	$config = Get-NuGetDbToolsConfig
+	$config.configuration.nugetLocalServer.add | ? { $_.key -eq 'Source' } | % { $_.value }
 }

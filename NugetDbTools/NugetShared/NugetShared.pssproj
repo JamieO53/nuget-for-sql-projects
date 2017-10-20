@@ -34,6 +34,8 @@
     <Compile Include="NugetShared.psm1" />
     <Compile Include="Package.ps1" />
     <Compile Include="Scripts\Add-DictionaryNode.ps1" />
+    <Compile Include="Scripts\Get-NuGetDbToolsConfig.ps1" />
+    <Compile Include="Scripts\Get-NuGetDbToolsConfigPath.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalApiKey.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalSource.ps1" />
     <Compile Include="Scripts\Get-ParentSubfolder.ps1" />
@@ -42,6 +44,9 @@
     <Compile Include="Scripts\Get-ProjectVersion.ps1" />
     <Compile Include="Scripts\Test-NuGetVersionExists.ps1" />
     <Compile Include="Scripts\Test-PathIsInGitRepo.ps1" />
+    <Compile Include="Tests\Get-NuGetDbToolsConfigPath.tests.ps1" />
+    <Compile Include="Tests\Get-NuGetLocalApiKey.tests.ps1" />
+    <Compile Include="Tests\Get-NuGetLocalSource.tests.ps1" />
     <Compile Include="Tests\Get-ProjectVersion.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
