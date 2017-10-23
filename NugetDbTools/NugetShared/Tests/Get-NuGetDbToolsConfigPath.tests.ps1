@@ -1,6 +1,7 @@
-﻿if (-not (Get-Module NugetShared)) {
-	Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
+﻿if (Get-Module NugetShared) {
+	Remove-Module NugetShared
 }
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
 
 Describe "Get-NuGetDbToolsConfigPath" {
 	Context "Non Debug" {

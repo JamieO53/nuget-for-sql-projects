@@ -7,12 +7,18 @@ if (-not (Test-Path "$SolutionFolder\TestResults")) {
 	md "$SolutionFolder\TestResults"
 }
 Get-PowerShellProjects -SolutionPath $SolutionPath | % {
-	if (Get-Module NuGetShared) {
-		Remove-Module NuGetShared
-	}
 	$projectFolder = Split-Path "$SolutionFolder\$($_.ProjectPath)"
-	Invoke-Pester "$projectFolder\Tests" -OutputFile "$SolutionFolder\TestResults\$($_.Project).xml" -OutputFormat NUnitXml
-	if (Get-Module $_.Project) {
-		Remove-Module $_.Project
+	if (Test-Path "$projectFolder\Tests")
+	{
+		if (Get-Module NuGetShared) {
+			Remove-Module NuGetShared
+		}
+		Invoke-Pester "$projectFolder\Tests" -OutputFile "$SolutionFolder\TestResults\$($_.Project).xml" -OutputFormat NUnitXml
+		if (Test-Path variable:\global:testing) {
+			$Global:testing = $false
+		}
+		if (Get-Module $_.Project) {
+			Remove-Module $_.Project
+		}
 	}
 }

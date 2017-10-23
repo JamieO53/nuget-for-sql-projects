@@ -7,6 +7,11 @@ pushd $projDir
 [xml]$cfg = gc Package.nuspec
 $version=$cfg.package.metadata.version
 
+$loaded = $false
+if (-not (Get-Module NugetShared)) {
+	$loaded = $true
+	Install-Module "bin\Debug\$id\NugetShared.ps1"
+}
 if (Test-Path NuGet) {
 	del NuGet\* -Recurse -Force
 	rmdir NuGet
@@ -19,9 +24,12 @@ copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
 copy "$slnDir\CiTools\*" "NuGet\content\CiTools\"
 
 NuGet pack -BasePath NuGet
-nuget push "$id.$version.nupkg" NUG3TK3Y -Source 'http://srv103octo01:808/NugetServer/nuget'
+nuget push "$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
 
 del NuGet\* -Recurse -Force
 rmdir NuGet
 del "$id.$version.nupkg"
+if ($loaded) {
+	Remove-Module NugetShared
+}
 popd
