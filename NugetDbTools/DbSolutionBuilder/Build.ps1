@@ -1,8 +1,8 @@
-$ProjectName = 'NuGetShared'
+$ProjectName = 'DbSolutionBuilder'
 $SolutionDir = Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\.."
 $ProjectDir = "$SolutionDir\$ProjectName"
-$Dependencies = @()
-$Dependents = @('PowershellBuilder', 'NugetDbPacker', 'DbSolutionBuilder')
+$Dependencies = @('NuGetShared')
+$Dependents = @()
 
 "'$SolutionDir\PowershellBuilder\PSModuleBuilder.ps1' -project $ProjectName -path $SolutionDir -outputPath $ProjectDir\bin\Debug"
 pushd $SolutionDir
