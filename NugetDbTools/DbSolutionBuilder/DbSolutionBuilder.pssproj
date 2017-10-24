@@ -37,12 +37,14 @@
     <Compile Include="Scripts\Get-CiDependenciesDocument.ps1" />
     <Compile Include="Scripts\Get-CiSqlProjects.ps1" />
     <Compile Include="Scripts\Get-NuGetPackageVersion.ps1" />
+    <Compile Include="Scripts\New-DbSolution.ps1" />
     <Compile Include="Scripts\Test-CiDataAvailable.ps1" />
     <Compile Include="Scripts\Test-CiDependenciesMigrated.ps1" />
     <Compile Include="Scripts\Test-NuGetPackage.ps1" />
     <Compile Include="Tests\Get-CiDependencies.tests.ps1" />
     <Compile Include="Tests\Get-CiSqlProjects.tests.ps1" />
     <Compile Include="Tests\Get-NuGetPackageVersion.tests.ps1" />
+    <Compile Include="Tests\New-DbSolution.tests.ps1" />
     <Compile Include="Tests\Test-CiDataAvailable.tests.ps1" />
     <Compile Include="Tests\Test-CiDependenciesMigrated.tests.ps1" />
     <Compile Include="Tests\Test-NuGetPackage.tests.ps1" />

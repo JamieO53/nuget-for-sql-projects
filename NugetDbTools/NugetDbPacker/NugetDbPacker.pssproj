@@ -43,8 +43,6 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Scripts\Add-DbFileNode.ps1" />
     <Compile Include="Scripts\Export-NuGetSettings.ps1" />
     <Compile Include="Scripts\Format-XmlIndent.ps1" />
-    <Compile Include="Scripts\Get-CSharpProjects.ps1" />
-    <Compile Include="Scripts\Get-SqlProjects.ps1" />
     <Compile Include="Scripts\Import-NuGetDb.ps1" />
     <Compile Include="Scripts\Import-NuGetSettings.ps1" />
     <Compile Include="Scripts\Out-FormattedXml.ps1" />
@@ -55,7 +53,6 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Scripts\Remove-NugetFolder.ps1" />
     <Compile Include="Scripts\Set-NodeText.ps1" />
     <Compile Include="Tests\Export-NuGetSettings.tests.ps1" />
-    <Compile Include="Tests\Get-SqlProjects.tests.ps1" />
     <Compile Include="Tests\Import-NuGetDb.tests.ps1" />
     <Compile Include="Tests\Import-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />
