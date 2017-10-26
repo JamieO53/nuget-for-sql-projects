@@ -8,22 +8,6 @@ if (Test-Path "$SolutionFolder\TestResults") {
 }
 md "$SolutionFolder\TestResults\HTML"
 
-$allTests = @"
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>NugetDbTools Tests</title>
-  </head>
-  <body>
-	<h1>NugetDbTools test results</h1>
-	<ul>
-		$links
-	</ul>
-  </body>
-</html>
-"@
 $links = ''
 
 Get-PowerShellProjects -SolutionPath $SolutionPath | % {
@@ -37,7 +21,8 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 		& NUnitHTMLReportGenerator.exe "$SolutionFolder\TestResults\$($_.Project).xml" "$SolutionFolder\TestResults\HTML\$($_.Project).html"
 		if (Test-Path "$SolutionFolder\TestResults\HTML\$($_.Project).html") {
 			$links += @"
-		<li><a href=`"$($_.Project).html`">$($_.Project)</a></li>
+
+			<li><a href=`"$($_.Project).html`">$($_.Project)</a></li>
 "@
 		}
 		if (Test-Path variable:\global:testing) {
@@ -54,12 +39,13 @@ $allTests = @"
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>Results</title>
+    <title>NuGetDbTools Tests</title>
   </head>
-	<ul>
-		$links
-	</ul>
   <body>
+	<h1>NuGetDbTools test results</h1>
+	<ul>
+$links
+	</ul>
   </body>
 </html>
 "@
