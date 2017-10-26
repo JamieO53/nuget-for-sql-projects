@@ -17,7 +17,7 @@
   </metadata>
   <files>
     <file src="tools\*" target="tools" />
-    <file src="content\CiTools\*" target="CiTools" />
+    <file src="content\PackageTools\*" target="PackageTools" />
 	<file src="content\PowerShell\*" target="PowerShell" />
   </files>
 </package>

@@ -263,5 +263,4 @@ __pycache__/
 *.bak
 /NugetDbTools/CiTools
 /Template.DB/PowerShell
-/Template.DB/CiTools
 /Template.DB/Databases

@@ -18,10 +18,10 @@ if (Test-Path NuGet) {
 }
 md NuGet
 cd NuGet
-'tools','lib',"content\$contentType","content\CiTools",'build' | % { md $_ }
+'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $_ }
 cd ..
 copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
-copy "$slnDir\CiTools\*" "NuGet\content\CiTools\"
+copy "$slnDir\PackageTools\*" "NuGet\content\PackageTools\"
 
 NuGet pack -BasePath NuGet
 nuget push "$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)

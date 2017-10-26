@@ -7,7 +7,11 @@ if (Test-Path $BootstrapFolder) {
     mkdir $BootstrapFolder
 }
 
-nuget install NuGetDbPacker -Source 'http://srv103octo01:808/NugetServer/nuget' -OutputDirectory $BootstrapFolder
+$configPath = "$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config"
+[xml]$config = Get-Content $configPath
+$localSource = $config.configuration.nugetLocalServer.add | ? { $_.key -eq 'Source' } | % { $_.value }
+
+nuget install NuGetDbPacker -Source $localSource -OutputDirectory $BootstrapFolder
 
 ls $BootstrapFolder -Directory | % {
     ls $_.FullName -Directory | % {
