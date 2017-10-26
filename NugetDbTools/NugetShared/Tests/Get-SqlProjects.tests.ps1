@@ -1,7 +1,7 @@
-if ( Get-Module NugetDbPacker) {
-	Remove-Module NugetDbPacker
+if ( Get-Module NugetShared) {
+	Remove-Module NugetShared
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
 
 $solutionText = @"
 Microsoft Visual Studio Solution File, Format Version 12.00
