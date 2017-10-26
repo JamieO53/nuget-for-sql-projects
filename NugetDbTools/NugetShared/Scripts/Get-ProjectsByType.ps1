@@ -21,15 +21,18 @@ function Get-ProjectsByType {
 
     $nameGrouping = '(?<name>[^"]+)'
     $pathGrouping = '(?<path>[^"]+)'
-    $regex = "\r\nProject\(`"$ProjId`"\)\s*=\s*`"$nameGrouping`"\s*,\s*`"$pathGrouping`".*"
+    $guidGrouping = '(?<guid>[^\}]+)'
+    $regex = "\r\nProject\(`"$ProjId`"\)\s*=\s*`"$nameGrouping`"\s*,\s*`"$pathGrouping`",\s*`"\{$guidGrouping\}`".*"
     $matches = ([regex]$regex).Matches($sln)
 
     $matches | % {
 		$projName = $_.Groups['name'].Value
         $projPath = $_.Groups['path'].Value
+        $projGuid = $_.Groups['guid'].Value
         New-Object -TypeName PSObject -Property @{
             Project = $projName;
-            ProjectPath = $projPath
+            ProjectPath = $projPath;
+            ProjectGuid = $projGuid
         }
     }
 }

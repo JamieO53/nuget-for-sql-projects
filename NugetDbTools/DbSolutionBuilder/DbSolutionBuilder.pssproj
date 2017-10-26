@@ -38,6 +38,8 @@
     <Compile Include="Scripts\Get-CiSqlProjects.ps1" />
     <Compile Include="Scripts\Get-NuGetPackageVersion.ps1" />
     <Compile Include="Scripts\New-DbSolution.ps1" />
+    <Compile Include="Scripts\New-SqlProject.ps1" />
+    <Compile Include="Scripts\Set-SqlProjectInSolution.ps1" />
     <Compile Include="Scripts\Test-CiDataAvailable.ps1" />
     <Compile Include="Scripts\Test-CiDependenciesMigrated.ps1" />
     <Compile Include="Scripts\Test-NuGetPackage.ps1" />
