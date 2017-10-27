@@ -1,11 +1,11 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <package >
   <metadata>
     <id>NuGetDbPacker.DbTemplate</id>
     <version>0.1.3</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
-    <projectUrl>https://epsdev.visualstudio.com/Continous%20Integration</projectUrl>
+    <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Template SQL project</description>
     <releaseNotes>Initial release</releaseNotes>

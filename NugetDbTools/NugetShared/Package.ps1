@@ -29,7 +29,7 @@ nuget push "$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSo
 del NuGet\* -Recurse -Force
 rmdir NuGet
 del "$id.$version.nupkg"
-if ($loaded) {
+if ($loaded -and (Get-Module NugetShared)) {
 	Remove-Module NugetShared
 }
 popd
