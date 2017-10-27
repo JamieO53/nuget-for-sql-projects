@@ -74,10 +74,15 @@ Describe "New-DbSolution" {
 				}
 			}
 		}
-	}
-	Context "Package Tools" {
-		It "PackageTools folder exists in solution" {
-			Test-Path "$location\$name\PackageTools" | should be $true
+		Context "Package Tools" {
+			It "PackageTools folder exists in solution" {
+				Test-Path "$location\$name\PackageTools" | should be $true
+			}
+			'Bootstrap.ps1','Bootstrap.cmd' | % {
+				It "PackageTools folder contains $_" {
+					Test-Path "$location\$name\PackageTools\$_"
+				}
+			}
 		}
 	}
 }

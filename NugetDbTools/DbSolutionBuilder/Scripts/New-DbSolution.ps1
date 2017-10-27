@@ -19,15 +19,23 @@ function New-DbSolution {
 	$templateFolder = "$env:TEMP\$([Guid]::NewGuid())\template"
 	mkdir $templateFolder | Out-Null
 	nuget install NuGetDbPacker.DbTemplate -source (Get-NuGetLocalSource) -outputDirectory $templateFolder -ExcludeVersion
+
 	$solutionLocation = $Parameters.dbSolution.parameters.location
 	$solutionName = $Parameters.dbSolution.parameters.name
 	$slnFolder = "$solutionLocation\$solutionName"
+
 	mkdir "$slnFolder\$($SolutionName)Pkg" | Out-Null
+	mkdir "$slnFolder\PackageTools"
+
 	$templatePath = "$templateFolder\NuGetDbPacker.DbTemplate\Template"
+	$toolsPath = "$templateFolder\NuGetDbPacker.DbTemplate\PackageTools"
 	copy "$templatePath\Template.DBPkg\Class1.cs" "$slnFolder\$($SolutionName)Pkg"
 	copy "$templatePath\Template.DBPkg\Template.DBPkg.csproj" "$slnFolder\$($SolutionName)Pkg\$($SolutionName)Pkg.csproj"
 	copy "$templatePath\Template.DB.sln" "$slnFolder\$($SolutionName).sln"
-	#$Parameters.dbSolution.databases.database.dbname
+	copy "$toolsPath\*" "$slnFolder\PackageTools"
+
+	iex "$slnFolder\PackageTools\Bootstrap.ps1"
+
 	$newGuid = [Guid]::NewGuid().ToString().ToUpperInvariant()
 	$sln = gc "$slnFolder\$($SolutionName).sln" | Out-String
 	$newSln = Set-SqlProjectInSolution -Parameters $Parameters -SolutionFolder $slnFolder -TemplateFolder $templatePath -SolutionFile $sln
