@@ -1,24 +1,25 @@
-$id='NuGetDbPacker'
+$id='DbSolutionBuilder'
 $contentType='PowerShell'
 $projDir = Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)"
 $slnDir = "$projDir\.."
 pushd $projDir
 
-[xml]$cfg = gc Package.nuspec
-$version=$cfg.package.metadata.version
 
 $loaded = $false
 if (-not (Get-Module NugetShared)) {
 	$loaded = $true
-	Install-Module "bin\Debug\$id\NugetShared.ps1"
+	Import-Module "bin\Debug\$id\NugetShared.ps1"
 }
+
+$version = Set-NuspecVersion -Path Package.nuspec
+
 if (Test-Path NuGet) {
 	del NuGet\* -Recurse -Force
 	rmdir NuGet
 }
-md NuGet
+md NuGet | Out-Null
 cd NuGet
-'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $_ }
+'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $_ | Out-Null }
 cd ..
 copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
 copy "$slnDir\PackageTools\*" "NuGet\content\PackageTools\"

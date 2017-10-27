@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NuGetDbPacker.DbTemplate</id>
-    <version>0.1.4</version>
+    <version>0.1.5</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -13,6 +13,7 @@
     <tags>NuGetDbPacker Template</tags>
   </metadata>
   <files>
+    <file src="content\PackageTools\*" target="PackageTools" />
     <file src="content\Template\*" target="Template" />
     <file src="content\Template\**\*" target="Template" />
   </files>

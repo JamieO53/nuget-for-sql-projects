@@ -74,7 +74,10 @@ Describe "New-DbSolution" {
 				}
 			}
 		}
-		# To Do: Test SQL projects in solution
-		#   Do they exist?
+	}
+	Context "Package Tools" {
+		It "PackageTools folder exists in solution" {
+			Test-Path "$location\$name\PackageTools" | should be $true
+		}
 	}
 }
