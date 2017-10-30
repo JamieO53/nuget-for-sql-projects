@@ -1,5 +1,5 @@
 $SolutionFolder = Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\.."
-$BootstrapFolder = "$SolutionFolder\PackageTools"
+$BootstrapFolder = "$SolutionFolder\Bootstrap"
 
 if (Test-Path $BootstrapFolder) {
     del $BootstrapFolder\* -Recurse -Force
