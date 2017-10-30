@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <package >
   <metadata>
     <id>NuGetDbPacker</id>
-    <version>0.1.22</version>
+    <version>0.1.23</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://epsdev.visualstudio.com/Continous%20Integration</projectUrl>
@@ -12,7 +12,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>NuGetDbPacker 'CI tools'</tags>
     <dependencies>
-      <dependency id="NuGetShared" version="0.1.2"/>
+      <dependency id="NuGetShared" version="0.1.23"/>
     </dependencies>
   </metadata>
   <files>

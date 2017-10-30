@@ -1,7 +1,4 @@
-$SolutionFolder = Split-Path -Path $MyInvocation.MyCommand.Path
-ls $SolutionFolder -Directory | % {
-    $folder = $_.FullName
-    if (Test-Path "$folder\Build.ps1") {
-        & "$folder\Build.ps1"
-    }
-}
+& '.\PowershellBuilder\Build.ps1'
+& '.\NugetShared\Build.ps1'
+& '.\NugetDbPacker\Build.ps1'
+& '.\DbSolutionBuilder\Build.ps1'

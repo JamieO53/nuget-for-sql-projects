@@ -8,10 +8,11 @@ pushd $projDir
 $loaded = $false
 if (-not (Get-Module NugetShared)) {
 	$loaded = $true
-	Import-Module "bin\Debug\$id\NugetShared.ps1"
+	Import-Module ".\bin\Debug\$id\NugetShared.psm1"
 }
 
 $version = Set-NuspecVersion -Path Package.nuspec
+Set-NuspecDependencyVersion -Path Package.nuspec -Dependency 'NuGetShared'
 
 if (Test-Path NuGet) {
 	del NuGet\* -Recurse -Force
@@ -31,6 +32,6 @@ del NuGet\* -Recurse -Force
 rmdir NuGet
 del "$id.$version.nupkg"
 if ($loaded) {
-	Remove-Module NugetShared
+	Remove-Module NugetShared -ErrorAction Ignore
 }
 popd
