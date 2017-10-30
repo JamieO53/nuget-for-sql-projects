@@ -51,6 +51,20 @@ Describe "New-DbSolution" {
 		It "$($name)Pkg project GUID should be changed" {
 			$cs.ProjectGuid | should not be '1D72F9F5-2ED0-4157-9EF8-903203AA428C'
 		}
+		[xml]$prj = gc $cs.ProjectPath
+		Context "Dependencies" {
+			Context "Versions" {
+				$expectedVersions = @{
+					NuGetShared = '0.1.1';
+					NuGetDbPacker = '0.1.21'
+				}
+				$prj.Project.ItemGroup.PackageReference | % {
+					It "$($_.Include) version" {
+						$_.Version | should not be $expectedVersions[$_.Include]
+					}
+				}
+			}
+		}
 		$sql = Get-SqlProjects -SolutionPath "$location\$name\$name.sln"
 		It "Two SQL projects are in the solution" {
 			$sql.Count | should be 2
