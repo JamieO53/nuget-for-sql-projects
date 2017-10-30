@@ -78,9 +78,9 @@ Describe "New-DbSolution" {
 			It "PackageTools folder exists in solution" {
 				Test-Path "$location\$name\PackageTools" | should be $true
 			}
-			'Bootstrap.ps1','Bootstrap.cmd' | % {
+			'Bootstrap.ps1','Bootstrap.cmd', 'Get-PackageContent.ps1', 'GetPackageContent.cmd', 'Publish-DbProjects.ps1', 'PublishDbProjects.cmd' | % {
 				It "PackageTools folder contains $_" {
-					Test-Path "$location\$name\PackageTools\$_"
+					Test-Path "$location\$name\PackageTools\$_" | should be $true
 				}
 			}
 		}
