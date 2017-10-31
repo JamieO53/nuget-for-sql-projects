@@ -42,10 +42,8 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Package.ps1" />
     <Compile Include="Scripts\Add-DbFileNode.ps1" />
     <Compile Include="Scripts\Export-NuGetSettings.ps1" />
-    <Compile Include="Scripts\Format-XmlIndent.ps1" />
     <Compile Include="Scripts\Import-NuGetDb.ps1" />
     <Compile Include="Scripts\Import-NuGetSettings.ps1" />
-    <Compile Include="Scripts\Out-FormattedXml.ps1" />
     <Compile Include="Scripts\Compress-DbPackage.ps1" />
     <Compile Include="Scripts\Publish-DbPackage.ps1" />
     <Compile Include="Scripts\Publish-SolutionDbPackages.ps1" />
