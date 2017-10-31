@@ -51,7 +51,7 @@ Describe "New-DbSolution" {
 		It "$($name)Pkg project GUID should be changed" {
 			$cs.ProjectGuid | should not be '1D72F9F5-2ED0-4157-9EF8-903203AA428C'
 		}
-		[xml]$prj = gc $cs.ProjectPath
+		[xml]$prj = gc "$location\$name\$($cs.ProjectPath)"
 		Context "Dependencies" {
 			Context "Versions" {
 				$expectedVersions = @{
