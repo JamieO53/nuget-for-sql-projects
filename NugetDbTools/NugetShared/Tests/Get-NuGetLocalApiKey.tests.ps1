@@ -24,3 +24,4 @@ Describe "Get-NuGetLocalApiKey" {
 		}
 	}
 }
+$Global:testing = $false

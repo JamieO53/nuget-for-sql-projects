@@ -1,5 +1,8 @@
 $SolutionFolder = Split-Path -Path $MyInvocation.MyCommand.Path
 $SolutionPath = ls "$SolutionFolder\*.sln"
+if (Get-Module NuGetShared) {
+	Remove-Module NuGetShared
+}
 if (-not (Get-Module NuGetShared)) {
 	Import-Module "$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psd1"
 }

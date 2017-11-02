@@ -13,6 +13,14 @@ $dbNames | % {
 		<database dbName=`"$_`"/>
 "@
 }
+$deps = @{dep1='1.0.123'; dep2='1.0.234'}
+$dependencies = ''
+$deps.Keys | % {
+	$dependencies += @"
+
+	<dependency id=`"$_`"/>
+"@
+}
 [xml]$params = @"
 <dbSolution>
 	<parameters>
@@ -21,10 +29,14 @@ $dbNames | % {
 	</parameters>
 	<databases>$databases
 	</databases>
+	<dependencies>$dependencies
+	</dependencies>
 </dbSolution>
 "@
 Describe "New-DbSolution" {
 	Context "Solution folder" {
+		Mock -CommandName 'Invoke-Expression' -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep1 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep1 1.0.123' } -ModuleName NugetShared
+		Mock -CommandName 'Invoke-Expression' -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep2 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep2 1.0.234' } -ModuleName NugetShared
 		$temp = New-DbSolution -Parameters $params
 		It "$location\$name folder exists" {
 			Test-Path "$location\$name" | should be $true
@@ -53,14 +65,23 @@ Describe "New-DbSolution" {
 		}
 		[xml]$prj = gc "$location\$name\$($cs.ProjectPath)"
 		Context "Dependencies" {
+			It "The specified properties were added" {
+				($prj.Project.ItemGroup.PackageReference).Count | should be 3
+			}
 			Context "Versions" {
-				$expectedVersions = @{
+				$originalVersions = @{
 					NuGetShared = '0.1.1';
 					NuGetDbPacker = '0.1.21'
 				}
 				$prj.Project.ItemGroup.PackageReference | % {
-					It "$($_.Include) version" {
-						$_.Version | should not be $expectedVersions[$_.Include]
+					if ($deps[$_.Include]) {
+						It "$($_.Include) version" {
+							$_.Version | should be $deps[$_.Include]
+						}
+					} else {
+						It "$($_.Include) version" {
+							$_.Version | should not be $originalVersions[$_.Include]
+						}
 					}
 				}
 			}

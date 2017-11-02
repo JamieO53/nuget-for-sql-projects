@@ -24,3 +24,4 @@ Describe "Get-NuGetLocalSource" {
 		}
 	}
 }
+$Global:testing = $false

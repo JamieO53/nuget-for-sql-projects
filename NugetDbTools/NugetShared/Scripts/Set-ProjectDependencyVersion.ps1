@@ -22,7 +22,7 @@ function Set-ProjectDependencyVersion {
 		$ref.Version = $newVersion
 	} else {
 		[xml]$new = "<new><PackageReference Include=`"$Dependency`" Version=`"$newVersion`" /></new>"
-		$node = $refs.AppendChild($refs.OwnerDocument.ImportNode($new.FirstChild, $true))
+		$node = $refs.AppendChild($refs.OwnerDocument.ImportNode($new.new.FirstChild, $true))
 	}
 	Out-FormattedXml -Xml $proj -FilePath $Path
 }

@@ -19,3 +19,4 @@ Describe "Get-NuGetDbToolsConfigPath" {
 		}
 	}
 }
+$Global:testing = $false
