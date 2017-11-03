@@ -12,10 +12,11 @@ Function Format-XmlIndent
 	$Settings = New-Object System.XMl.XmlWriterSettings
 	$Settings.Indent = $true
 	$Settings.IndentChars = ' ' * $Indent
+	$Settings.Encoding = [System.Text.Encoding]::UTF8
     
 	$XmlWriter = [System.XMl.XmlWriter]::Create($StringWriter, $Settings)
 
     $Content.WriteContentTo($XmlWriter) 
     $XmlWriter.Flush();$StringWriter.Flush() 
-    $StringWriter.ToString()
+    $StringWriter.ToString().Replace('<?xml version="1.0" encoding="utf-16"?>','<?xml version="1.0" encoding="utf-8"?>')
 }

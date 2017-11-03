@@ -64,6 +64,9 @@ Describe "New-DbSolution" {
 			$cs.ProjectGuid | should not be '1D72F9F5-2ED0-4157-9EF8-903203AA428C'
 		}
 		[xml]$prj = gc "$location\$name\$($cs.ProjectPath)"
+		It "Project encoding" {
+			$prj.xml | should be 'version="1.0" encoding="utf-8"'
+		}
 		Context "Dependencies" {
 			It "The specified properties were added" {
 				($prj.Project.ItemGroup.PackageReference).Count | should be 3
