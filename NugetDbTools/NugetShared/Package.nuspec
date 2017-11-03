@@ -2,10 +2,10 @@
 <package >
   <metadata>
     <id>NuGetShared</id>
-    <version>0.1.23</version>
+    <version>0.1.28</version>
     <authors>joglethorpe</authors>
     <owners>Ecentric Payment Systems</owners>
-    <projectUrl>https://epsdev.visualstudio.com/Continous%20Integration</projectUrl>
+    <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>NuGetShared shared resources for NuGet utilities</description>
     <releaseNotes>Initial release</releaseNotes>
