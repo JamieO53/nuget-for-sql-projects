@@ -24,5 +24,5 @@ function Set-ProjectDependencyVersion {
 		[xml]$new = "<new><PackageReference Include=`"$Dependency`" Version=`"$newVersion`" /></new>"
 		$node = $refs.AppendChild($refs.OwnerDocument.ImportNode($new.new.FirstChild, $true))
 	}
-	Out-FormattedXml -Xml $proj -FilePath $Path
+	Save-CSharpProject -Project $proj -Path $Path
 }
