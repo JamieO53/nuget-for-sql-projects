@@ -39,6 +39,7 @@ function New-DbSolution {
 	}
 
 	iex "$slnFolder\PackageTools\Bootstrap.ps1"
+	iex "$slnFolder\PackageTools\Get-PackageContent.ps1"
 
 	$newGuid = [Guid]::NewGuid().ToString().ToUpperInvariant()
 	$sln = gc "$slnFolder\$($SolutionName).sln" | Out-String

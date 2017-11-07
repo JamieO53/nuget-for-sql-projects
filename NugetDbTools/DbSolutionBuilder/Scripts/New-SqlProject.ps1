@@ -27,4 +27,19 @@ function New-SqlProject {
 		$projectFile = $templateFile.Name.Replace('Template.DBProject', "$ProjectName")
 		copy $templateFile.FullName "$projectFolder\$projectFile"
 	}
+	[xml]$proj = gc $projectPath
+	$group = $proj.Project.ItemGroup | ? { $_.ArtifactReference }
+	ls "$SolutionFolder\Databases\*.dacpac" | % {
+		$ref = [IO.Path]::ChangeExtension($_.Name, '')
+		$node = @"
+  <node>
+    <ArtifactReference Include="..\Databases\$ref.dacpac">
+      <HintPath>..\Databases\$ref.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+    </ArtifactReference>
+  </node>
+"@
+		$dummy = $group.AppendChild($group.OwnerDocument.ImportNode($node.node.FirstChild, $true))
+	}
+	Out-FormattedXML -XML $proj -FilePath $projectPath
 }
