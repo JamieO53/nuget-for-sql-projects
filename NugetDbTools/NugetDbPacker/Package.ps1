@@ -8,29 +8,29 @@ pushd $projDir
 $loaded = $false
 if (-not (Get-Module NugetShared)) {
 	$loaded = $true
-	Import-Module ".\bin\Debug\$id\NugetShared.psm1"
+	Import-Module "$projDir\bin\Debug\$id\NugetShared.psm1"
 }
 
-$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $projDir
-Set-NuspecDependencyVersion -Path Package.nuspec -Dependency 'NuGetShared'
+$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir
+Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetShared'
 
-if (Test-Path NuGet) {
-	del NuGet\* -Recurse -Force
-	rmdir NuGet
+if (Test-Path $projDir\NuGet) {
+	del $projDir\NuGet\* -Recurse -Force
+	rmdir $projDir\NuGet
 }
-md NuGet | Out-Null
-cd NuGet
-'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $_ | Out-Null }
-cd ..
-copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
-copy "$slnDir\PackageTools\*" "NuGet\content\PackageTools\"
 
-NuGet pack -BasePath NuGet
-nuget push "$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
+md "$projDir\NuGet" | Out-Null
+'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $projDir\NuGet\$_ | Out-Null }
 
-del NuGet\* -Recurse -Force
-rmdir NuGet
-del "$id.$version.nupkg"
+copy "$projDir\bin\Debug\$id\$id.ps*1" "$projDir\NuGet\content\$contentType\"
+copy "$slnDir\PackageTools\*" "$projDir\NuGet\content\PackageTools\"
+
+NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
+nuget push "$projDir\$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
+
+del $projDir\NuGet\* -Recurse -Force
+rmdir $projDir\NuGet
+del "$projDir\$id.$version.nupkg"
 if ($loaded) {
 	Remove-Module NugetShared -ErrorAction Ignore
 }
