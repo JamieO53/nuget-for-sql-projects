@@ -11,7 +11,7 @@ function Save-CSharpProject {
     (
  		# The project data
 		[xml]$Project,
-       # The path of the project file
+        # The path of the project file
 		[string]$Path
 	)
 	Out-FormattedXml -Xml $Project -FilePath $Path
