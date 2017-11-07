@@ -11,7 +11,7 @@ if (-not (Get-Module NugetShared)) {
 	Import-Module ".\bin\Debug\$id\NugetShared.psm1"
 }
 
-$version = Set-NuspecVersion -Path Package.nuspec
+$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $projDir
 
 if (Test-Path NuGet) {
 	del NuGet\* -Recurse -Force

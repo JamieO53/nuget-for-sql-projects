@@ -11,7 +11,7 @@ if (-not (Get-Module NugetShared)) {
 	Import-Module ".\bin\Debug\$id\NugetShared.psm1"
 }
 
-$version = Set-NuspecVersion -Path Package.nuspec
+$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $projDir
 Set-NuspecDependencyVersion -Path Package.nuspec -Dependency 'NuGetShared'
 
 if (Test-Path NuGet) {

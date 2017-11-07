@@ -9,7 +9,7 @@ if (-not (Get-Module NuGetShared)) {
 	Import-Module ..\NugetDbTools\NuGetShared\bin\Debug\NuGetShared\NuGetShared.psd1
 }
 
-$version = Set-NuspecVersion -Path Package.nuspec
+$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $slnDir
 
 if (Test-Path NuGet) {
 	del NuGet\* -Recurse -Force

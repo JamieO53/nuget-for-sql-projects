@@ -12,7 +12,9 @@ function Set-NuspecVersion {
     param
     (
         # The path of the .nuspec file
-		[string]$Path
+		[string]$Path,
+		# The folder for version calculations
+		[string]$ProjectFolder
 	)
 
 	[xml]$cfg = gc Package.nuspec
@@ -20,7 +22,7 @@ function Set-NuspecVersion {
 	$versionParts = $oldVersion.Split('.')
 	$majorVersion = $versionParts[0]
 	$minorVersion = $versionParts[1]
-	$newVersion = Get-ProjectVersion -Path $slnDir -MajorVersion $majorVersion -MinorVersion $minorVersion
+	$newVersion = Get-ProjectVersion -Path $ProjectFolder -MajorVersion $majorVersion -MinorVersion $minorVersion
 	$cfgText = gc Package.nuspec | Out-String
 	$cfgText =  $cfgText.Replace($oldVersion, $newVersion).TrimEnd()
 	$cfgText | Out-File -FilePath .\Package.nuspec -Encoding utf8 -Force
