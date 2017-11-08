@@ -34,7 +34,7 @@ function New-SqlProject {
 	{
 		ls "$SolutionFolder\Databases\*.dacpac" | % {
 			$ref = [IO.Path]::ChangeExtension($_.Name, '')
-			$node = @"
+			[xml]$node = @"
   <node>
     <ArtifactReference Include="..\Databases\$ref.dacpac">
       <HintPath>..\Databases\$ref.dacpac</HintPath>
