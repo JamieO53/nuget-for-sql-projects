@@ -1,0 +1,1 @@
+powershell -Command ".\Publish-DbProjects.ps1"
