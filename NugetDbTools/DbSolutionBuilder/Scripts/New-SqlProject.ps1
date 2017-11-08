@@ -27,7 +27,9 @@ function New-SqlProject {
 		$projectFile = $templateFile.Name.Replace('Template.DBProject', "$ProjectName")
 		copy $templateFile.FullName "$projectFolder\$projectFile"
 	}
-	[xml]$proj = gc $projectPath
+	$projText = gc $projectPath | Out-String
+	$projText = $projText.Replace('Template.DBProject', $ProjectName)
+	[xml]$proj = $projText
 	$group = $proj.Project.ItemGroup | ? { $_.ArtifactReference }
 	
 	if (Test-Path $SolutionFolder\Databases)

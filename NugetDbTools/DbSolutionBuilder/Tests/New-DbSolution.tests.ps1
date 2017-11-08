@@ -94,9 +94,20 @@ Describe "New-DbSolution" {
 			$sql.Count | should be 2
 		}
 		$sql | % {
-			Context "SQL project $($_.Project) in solution" {
+			$projectName = $_.Project
+			$projectPath = "$location\$name\$($_.ProjectPath)"
+			$projectFolder = "$location\$name\$ProjectName"
+			$projectNugetConfigPath = "$projectFolder\$projectName.nuget.config"
+			$projText = gc $projectPath | Out-String
+			Context "SQL project $projectName in solution" {
 				It "$($_.Project) project exists" {
-					Test-Path "$location\$name\$($_.ProjectPath)" | should be $true
+					Test-Path $projectPath | should be $true
+				}
+				It "$($_.Project) NuGet configuration exists" {
+					Test-Path $projectNugetConfigPath | should be $true
+				}
+				It "$($_.Project) NuGet configuration referenced from project file" {
+					$projText.Contains("<None Include=`"$projectName.nuget.config`" />") | should be $true
 				}
 				It "Should start witn $name." {
 					$_.Project | should belike "$name.*"
@@ -105,7 +116,7 @@ Describe "New-DbSolution" {
 					$_.Project.Replace("$name.", '') | should bein $dbNames
 				}
 				It "Project path" {
-					$_.ProjectPath | should be "$($_.Project)\$($_.Project).sqlproj"
+					$_.ProjectPath | should be "$projectName\$projectName.sqlproj"
 				}
 				It "$($_.Project) project GUID should be changed" {
 					$sql.ProjectGuid | should not be '96EEF452-0302-4B98-BDBC-D36A24C21EA8'
