@@ -21,6 +21,8 @@ function Set-NuspecDependencyVersion {
 	$newVersion = Get-NuGetPackageVersion $Dependency
 	$newDep = $dep.Replace($oldVersion, $newVersion)
 	$specText = $spec | Out-String
-	$specText =  $specText.Replace($dep, $newDep)
+	$oldText = "<dependency id=`"$Dependency`" version=`"$oldVersion`"/>"
+	$newText = "<dependency id=`"$Dependency`" version=`"$newVersion`"/>"
+	$specText =  $specText.Replace($oldText, $newText)
 	$specText | Out-File -FilePath $Path -Encoding utf8 -Force
 }

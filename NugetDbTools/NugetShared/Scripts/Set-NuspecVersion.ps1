@@ -24,7 +24,9 @@ function Set-NuspecVersion {
 	$minorVersion = $versionParts[1]
 	$newVersion = Get-ProjectVersion -Path $ProjectFolder -MajorVersion $majorVersion -MinorVersion $minorVersion
 	$cfgText = gc Package.nuspec | Out-String
-	$cfgText =  $cfgText.Replace($oldVersion, $newVersion).TrimEnd()
+	$oldText = "<version>$oldVersion</version>"
+	$newText = "<version>$newVersion</version>"
+	$cfgText =  $cfgText.Replace($oldText, $newText).TrimEnd()
 	$cfgText | Out-File -FilePath .\Package.nuspec -Encoding utf8 -Force
 	$newVersion
 }
