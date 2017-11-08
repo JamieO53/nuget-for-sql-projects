@@ -29,9 +29,12 @@ function New-SqlProject {
 	}
 	[xml]$proj = gc $projectPath
 	$group = $proj.Project.ItemGroup | ? { $_.ArtifactReference }
-	ls "$SolutionFolder\Databases\*.dacpac" | % {
-		$ref = [IO.Path]::ChangeExtension($_.Name, '')
-		$node = @"
+	
+	if (Test-Path $SolutionFolder\Databases)
+	{
+		ls "$SolutionFolder\Databases\*.dacpac" | % {
+			$ref = [IO.Path]::ChangeExtension($_.Name, '')
+			$node = @"
   <node>
     <ArtifactReference Include="..\Databases\$ref.dacpac">
       <HintPath>..\Databases\$ref.dacpac</HintPath>
@@ -39,7 +42,8 @@ function New-SqlProject {
     </ArtifactReference>
   </node>
 "@
-		$dummy = $group.AppendChild($group.OwnerDocument.ImportNode($node.node.FirstChild, $true))
+			$dummy = $group.AppendChild($group.OwnerDocument.ImportNode($node.node.FirstChild, $true))
+		}
 	}
 	Out-FormattedXML -XML $proj -FilePath $projectPath
 }
