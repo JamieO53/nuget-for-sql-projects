@@ -36,8 +36,8 @@ function New-SqlProject {
 			$ref = [IO.Path]::ChangeExtension($_.Name, '')
 			[xml]$node = @"
   <node>
-    <ArtifactReference Include="..\Databases\$ref.dacpac">
-      <HintPath>..\Databases\$ref.dacpac</HintPath>
+    <ArtifactReference Include="..\Databases\$($ref)dacpac">
+      <HintPath>..\Databases\$($ref)dacpac</HintPath>
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
     </ArtifactReference>
   </node>
