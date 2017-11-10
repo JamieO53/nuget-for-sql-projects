@@ -71,9 +71,7 @@
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>if not exist $(ProjectDir)Databases\NUL md $(ProjectDir)Databases
-if not exist $(ProjectDir)Databases\$(Configuration)\NUL md $(ProjectDir)Databases\$(Configuration)
 xcopy /y $(TargetDir)$(ProjectName).dacpac $(ProjectDir)Databases
-xcopy /y $(TargetDir)$(AssemblyName).* $(ProjectDir)Databases\$(Configuration)
 xcopy /y $(TargetDir)$(ProjectName)*publish.xml $(ProjectDir)Databases
 </PostBuildEvent>
   </PropertyGroup>
