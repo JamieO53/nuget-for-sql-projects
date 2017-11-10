@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NuGetDbPacker" Version="0.1.21" />
+    <PackageReference Include="NuGetDbPacker" Version="0.1.14" />
   </ItemGroup>
 
 </Project>

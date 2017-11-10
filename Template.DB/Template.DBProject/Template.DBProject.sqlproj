@@ -77,4 +77,7 @@ xcopy /y $(TargetDir)$(AssemblyName).* $(ProjectDir)Databases\$(Configuration)
 xcopy /y $(TargetDir)$(ProjectName)*publish.xml $(ProjectDir)Databases
 </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>if exist  $(ProjectDir)Databases\NUL rmdir $(ProjectDir)Databases /s /q</PreBuildEvent>
+  </PropertyGroup>
 </Project>

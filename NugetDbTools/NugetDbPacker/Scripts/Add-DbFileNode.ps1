@@ -1,7 +1,7 @@
 function Add-DbFileNode ($parentNode) {
 	$files = @"
 <files>
-  <file src="content\Databases\*" target="Databases" />
+  <file src="content\Databases\**" target="Databases" />
 </files>
 "@
 	[xml]$child = $files

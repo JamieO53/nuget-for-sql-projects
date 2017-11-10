@@ -27,8 +27,19 @@ function Import-NuGetDb {
 		$dacpac = ([string]($proj.Project.PropertyGroup.Name | ? { $_ -ne 'PropertyGroup'})).Trim()
 	}
 	[string]$assembly = ([string]$proj.Project.PropertyGroup.AssemblyName).Trim()
-	Copy-Item "$ProjDbFolder\$dacpac.dacpac" $NugetDbFolder
+
+	if (Test-Path "$ProjDbFolder\$dacpac.dacpac") {
+		Copy-Item "$ProjDbFolder\$dacpac.dacpac" $NugetDbFolder
+	}
 	Copy-Item "$ProjDbFolder\$assembly.*" $NugetDbFolder
+	ls $ProjDbFolder -Directory | % {
+		$dir = $_.Name
+		md "$NugetDbFolder\$dir"  | Out-Null
+		if (Test-Path "$ProjDbFolder\$dir\$dacpac.dacpac") {
+			Copy-Item "$ProjDbFolder\$dir\$dacpac.dacpac" "$NugetDbFolder\$dir"
+		}
+		Copy-Item "$ProjDbFolder\$dir\$assembly.*" "$NugetDbFolder\$dir"
+	}
 	[xml]$spec = gc $NugetSpecPath
 	Add-DbFileNode -parentNode $spec.package
 	Out-FormattedXml -Xml $spec -FilePath $NugetSpecPath
