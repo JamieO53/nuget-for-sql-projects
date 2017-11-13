@@ -1,0 +1,1 @@
+iex "$($MyInvocation.MyCommand.Path)\..\Template.DB\Package.ps1"

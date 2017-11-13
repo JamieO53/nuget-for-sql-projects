@@ -42,6 +42,7 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Package.ps1" />
     <Compile Include="Scripts\Add-DbFileNode.ps1" />
     <Compile Include="Scripts\Export-NuGetSettings.ps1" />
+    <Compile Include="Scripts\Get-SolutionPackages.ps1" />
     <Compile Include="Scripts\Import-NuGetDb.ps1" />
     <Compile Include="Scripts\Import-NuGetSettings.ps1" />
     <Compile Include="Scripts\Compress-DbPackage.ps1" />
@@ -50,6 +51,7 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Scripts\Remove-Node.ps1" />
     <Compile Include="Scripts\Remove-NugetFolder.ps1" />
     <Compile Include="Scripts\Set-NodeText.ps1" />
+    <Compile Include="Scripts\Set-NuGetDependencyVersion.ps1" />
     <Compile Include="Tests\Export-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Import-NuGetDb.tests.ps1" />
     <Compile Include="Tests\Import-NuGetSettings.tests.ps1" />
@@ -62,6 +64,7 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Tests\Compress-DbPackage.tests.ps1" />
     <Compile Include="Tests\Publish-DbPackage.tests.ps1" />
     <Compile Include="Tests\Publish-SolutionDbPackages.tests.ps1" />
+    <Compile Include="Tests\Set-NuGetDependencyVersion.tests.ps1" />
     <Compile Include="Tests\Test-NuGetVersionExists.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
