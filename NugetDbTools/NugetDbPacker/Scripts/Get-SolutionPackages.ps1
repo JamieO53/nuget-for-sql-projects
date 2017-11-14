@@ -1,10 +1,10 @@
-function Get-SolutionPackages (
+function Get-SolutionPackages {
 	<#.Synopsis
 	Get the solution's dependency content
 	.DESCRIPTION
     Gets the content of all the solution's NuGet dependencies and updates the SQL projects' NuGet versions for each dependency
 	.EXAMPLE
-	Set-NuGetDependencyVersion -SolutionPath C:\VSTS\Batch\Batch.sln -Dependency 'BackOfficeStateManager.StateManager' -Version '0.1.2'
+	Get-SolutionPackages -SolutionPath C:\VSTS\Batch\Batch.sln -ContentFolder C:\VSTS\Batch\PackageContent
 	#>
     [CmdletBinding()]
     param
@@ -14,16 +14,18 @@ function Get-SolutionPackages (
 		# The folder where the package content is to be installed
 		[string]$ContentFolder
 	)
+	$slnFolder = Split-Path $SolutionPath
 	$localSource = Get-NuGetLocalSource
 
 	Get-CSharpProjects -SolutionPath $slnPath | ? { $_.Project.EndsWith('Pkg') } | % {
-		$projPath = "$SolutionFolder\$($_.ProjectPath)"
+		$projPath = "$slnFolder\$($_.ProjectPath)"
 		$projFolder = Split-Path $projPath
 		[xml]$proj = gc $projPath
 		$proj.Project.ItemGroup.PackageReference | % {
 			$package = $_.Include
 			$version = $_.Version
-			nuget install $package -Version $version -Source $localSource -OutputDirectory $ContentFolder -ExcludeVersion
+			iex "nuget install $package -Version '$version' -Source '$localSource' -OutputDirectory '$ContentFolder' -ExcludeVersion"
+			Set-NuGetDependencyVersion -SolutionPath $SolutionPath -Dependency $_.Include -Version $_.Version
 		}
 	}
-)
+}

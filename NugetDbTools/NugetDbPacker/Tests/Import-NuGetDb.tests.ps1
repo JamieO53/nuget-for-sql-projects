@@ -37,7 +37,7 @@ Describe "Import-NuGetDb" {
 		It "File node should exist" { $spec.package.files.SelectNodes('file') | should not BeNullOrEmpty }
 		Context "File node content" {
 			$fileNode = $spec.package.files.SelectSingleNode('file')
-			It "Source" { $fileNode.src | should be 'content\Databases\*' }
+			It "Source" { $fileNode.src | should be 'content\Databases\**' }
 			It "Target" { $fileNode.target | should be 'Databases' }
 		}
 
