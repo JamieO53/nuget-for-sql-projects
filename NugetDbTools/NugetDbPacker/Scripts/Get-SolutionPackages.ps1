@@ -17,7 +17,7 @@ function Get-SolutionPackages {
 	$slnFolder = Split-Path $SolutionPath
 	$localSource = Get-NuGetLocalSource
 
-	Get-CSharpProjects -SolutionPath $slnPath | ? { $_.Project.EndsWith('Pkg') } | % {
+	Get-CSharpProjects -SolutionPath $SolutionPath | ? { $_.Project.EndsWith('Pkg') } | % {
 		$projPath = "$slnFolder\$($_.ProjectPath)"
 		$projFolder = Split-Path $projPath
 		[xml]$proj = gc $projPath
