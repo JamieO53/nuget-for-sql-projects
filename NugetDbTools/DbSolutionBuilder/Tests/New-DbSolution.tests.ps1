@@ -3,8 +3,18 @@
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psm1"
 
-$location = 'TestDrive:\Solutions'
+$global:testing = $true
+$location = "TestDrive:\Solutions"
 $name = 'TestSolution'
+function New-DummyDacpac {
+	param (
+		[string]$DbName
+	)
+	if (-not (Test-Path "$location\$name\PackageContent\Databases")) {
+		mkdir -Path "$location\$name\PackageContent\Databases"
+	}
+	$Name | Set-Content -Path "$location\$name\PackageContent\Databases\$DbName.dacpac"
+}
 $dbNames = @('db1', 'db2')
 $databases = ''
 $dbNames | % {
@@ -34,9 +44,14 @@ $deps.Keys | % {
 </dbSolution>
 "@
 Describe "New-DbSolution" {
+	mkdir 'TestDrive:\Configuration'
+	copy "$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config" 'TestDrive:\Configuration\NugetDbTools.config'
+	$deps.Keys | % {
+		New-DummyDacpac -DbName $_
+	}
 	Context "Solution folder" {
-		Mock -CommandName 'Invoke-Expression' -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep1 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep1 1.0.123' } -ModuleName NugetShared
-		Mock -CommandName 'Invoke-Expression' -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep2 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep2 1.0.234' } -ModuleName NugetShared
+		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep1 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep1 1.0.123' } -ModuleName NuGetShared
+		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep2 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep2 1.0.234' } -ModuleName NuGetShared
 		$temp = New-DbSolution -Parameters $params
 		It "$location\$name folder exists" {
 			Test-Path "$location\$name" | should be $true
@@ -74,7 +89,7 @@ Describe "New-DbSolution" {
 			Context "Versions" {
 				$originalVersions = @{
 					NuGetShared = '0.1.1';
-					NuGetDbPacker = '0.1.21'
+					NuGetDbPacker = '0.1.1'
 				}
 				$prj.Project.ItemGroup.PackageReference | % {
 					if ($deps[$_.Include]) {
@@ -135,3 +150,4 @@ Describe "New-DbSolution" {
 		}
 	}
 }
+$global:testing = $false
