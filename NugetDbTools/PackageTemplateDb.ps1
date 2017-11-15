@@ -1,1 +1,1 @@
-iex "$($MyInvocation.MyCommand.Path)\..\Template.DB\Package.ps1"
+iex "$(Split-Path $MyInvocation.MyCommand.Path)\..\Template.DB\Package.ps1"
