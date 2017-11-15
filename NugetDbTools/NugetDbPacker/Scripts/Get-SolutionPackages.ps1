@@ -20,6 +20,7 @@ function Get-SolutionPackages {
 	Get-CSharpProjects -SolutionPath $SolutionPath | ? { $_.Project.EndsWith('Pkg') } | % {
 		$projPath = "$slnFolder\$($_.ProjectPath)"
 		$projFolder = Split-Path $projPath
+		$cfg = Import-NuGetSettings -Path $projPath
 		[xml]$proj = gc $projPath
 		$proj.Project.ItemGroup.PackageReference | % {
 			$package = $_.Include
@@ -28,6 +29,10 @@ function Get-SolutionPackages {
 				iex "nuget install $package -Version '$version' -Source '$localSource' -OutputDirectory '$ContentFolder' -ExcludeVersion"
 			}
 			Set-NuGetDependencyVersion -SolutionPath $SolutionPath -Dependency $_.Include -Version $_.Version
+			if ($cfg[$package]) {
+				$cfg[$package] = $version
+			}
 		}
+		Export-NuGetSettings -ProjectPath $projPath -Settings $cfg
 	}
 }

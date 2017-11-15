@@ -114,6 +114,7 @@ Describe "New-DbSolution" {
 			$projectFolder = "$location\$name\$ProjectName"
 			$projectNugetConfigPath = "$projectFolder\$projectName.nuget.config"
 			$projText = gc $projectPath | Out-String
+			$nugetDbToolsVersion = Get-NuGetPackageVersion -PackageName NuGetDbPacker
 			Context "SQL project $projectName in solution" {
 				It "$($_.Project) project exists" {
 					Test-Path $projectPath | should be $true
@@ -123,6 +124,9 @@ Describe "New-DbSolution" {
 				}
 				It "$($_.Project) NuGet configuration referenced from project file" {
 					$projText.Contains("<None Include=`"$projectName.nuget.config`" />") | should be $true
+				}
+				It "Template.DbProject NuGet configuration should not be referenced from project file" {
+					$projText.Contains("<None Include=`"Template.DbProject.nuget.config`" />") | should be $false
 				}
 				It "Should start witn $name." {
 					$_.Project | should belike "$name.*"
@@ -135,6 +139,24 @@ Describe "New-DbSolution" {
 				}
 				It "$($_.Project) project GUID should be changed" {
 					$sql.ProjectGuid | should not be '96EEF452-0302-4B98-BDBC-D36A24C21EA8'
+				}
+			}
+			Context "$projectName.nuget.config content" {
+				[xml]$nconfig = gc $projectNugetConfigPath
+				$nugetDbToolsRef = $nconfig.configuration.nugetDependencies.add | ? { $_.key -eq 'NuGetDbPacker' }
+				It "NuGetDbTools version" {
+					$nugetDbToolsRef.value | should be $nugetDbToolsVersion
+				}
+				$deps.Keys | % {
+					$dep = $_
+					$ref = $nconfig.configuration.nugetDependencies.add | ? { $_.key -eq $dep }
+					It "$dep dependency should exist" {
+						$ref | should not benullorempty
+					}
+					It "$dep dependency version" {
+						$ref.value | should be $deps[$dep]
+					}
+				
 				}
 			}
 		}

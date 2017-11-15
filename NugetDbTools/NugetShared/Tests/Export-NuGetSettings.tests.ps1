@@ -1,7 +1,9 @@
-﻿if ( Get-Module NugetDbPacker) {
-	Remove-Module NugetDbPacker
+﻿if ( Get-Module NugetShared) {
+	Remove-Module NugetShared
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
+
+. .\Initialize-TestNugetConfig.ps1
 
 Describe "Export-NuGetSettings" {
 	$projFolder = "TestDrive:\proj"

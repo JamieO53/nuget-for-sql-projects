@@ -3,4 +3,4 @@
 & '.\NugetDbPacker\Build.ps1'
 & '.\DbSolutionBuilder\Build.ps1'
 
-copy .\PackageTools\* ..\Template.DB\
+copy .\PackageTools\* ..\Template.DB\PackageTools

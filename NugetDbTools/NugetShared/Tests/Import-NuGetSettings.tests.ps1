@@ -1,7 +1,10 @@
-﻿if ( Get-Module NugetDbPacker) {
-	Remove-Module NugetDbPacker
+﻿if ( Get-Module NugetShared) {
+	Remove-Module NugetShared
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
+
+. .\Initialize-TestNugetConfig.ps1
+
 Describe "Import-NuGetSettings" {
 	$projFolder = "TestDrive:\proj"
 	$configPath = "$projFolder\proj.nuget.config"
@@ -29,7 +32,7 @@ Describe "Import-NuGetSettings" {
 </configuration>
 '@
 	md $projFolder
-	$config | sc $configPath
+	$config | sc $configPath -Encoding UTF8
 
 	Context "Exists" {
 		It "Runs" { Import-NuGetSettings -Path $configPath | should not BeNullOrEmpty }

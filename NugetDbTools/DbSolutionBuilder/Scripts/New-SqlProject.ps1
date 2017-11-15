@@ -12,6 +12,8 @@ function New-SqlProject {
     [OutputType([string])]
     param
     (
+		# The DB Solution Builder parameters
+		[xml]$Parameters,
 		# The DB Solution folder
 		[string]$SolutionFolder,
 		# The DB Project name
@@ -26,26 +28,10 @@ function New-SqlProject {
 		$templateFile = $_
 		$projectFile = $templateFile.Name.Replace('Template.DBProject', "$ProjectName")
 		copy $templateFile.FullName "$projectFolder\$projectFile"
+		$text = gc "$projectFolder\$projectFile" | Out-String
+		$text = $text.Replace('Template.DBProject', $ProjectName)
+		$text | sc "$projectFolder\$projectFile" -Encoding UTF8
 	}
-	$projText = gc $projectPath | Out-String
-	$projText = $projText.Replace('Template.DBProject', $ProjectName)
-	[xml]$proj = $projText
-	$group = $proj.Project.ItemGroup | ? { $_.ArtifactReference }
-	
-	if (Test-Path $SolutionFolder\Databases)
-	{
-		ls "$SolutionFolder\Databases\*.dacpac" | % {
-			$ref = [IO.Path]::ChangeExtension($_.Name, '')
-			[xml]$node = @"
-  <node>
-    <ArtifactReference Include="..\Databases\$($ref)dacpac">
-      <HintPath>..\Databases\$($ref)dacpac</HintPath>
-      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
-    </ArtifactReference>
-  </node>
-"@
-			$dummy = $group.AppendChild($group.OwnerDocument.ImportNode($node.node.FirstChild, $true))
-		}
-	}
-	Out-FormattedXML -XML $proj -FilePath $projectPath
+	Set-DbReferencesInProject -SolutionFolder $SolutionFolder -ProjectPath $projectPath
+	Set-NuGetDependenciesInProject -Parameters $Parameters -ProjectPath $projectPath
 }

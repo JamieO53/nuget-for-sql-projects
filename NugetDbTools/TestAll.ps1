@@ -20,7 +20,9 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 		if (Get-Module NuGetShared) {
 			Remove-Module NuGetShared
 		}
+		pushd "$projectFolder\Tests"
 		Invoke-Pester "$projectFolder\Tests" -OutputFile "$SolutionFolder\TestResults\$($_.Project).xml" -OutputFormat NUnitXml
+		popd
 		& NUnitHTMLReportGenerator.exe "$SolutionFolder\TestResults\$($_.Project).xml" "$SolutionFolder\TestResults\HTML\$($_.Project).html"
 		if (Test-Path "$SolutionFolder\TestResults\HTML\$($_.Project).html") {
 			$links += @"

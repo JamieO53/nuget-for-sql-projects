@@ -30,7 +30,7 @@ $slnPath = "$slnFolder\solution.sln"
 Describe "Get-SqlProjects" {
     Context "Get solution SQL projects" {
         mkdir $slnFolder
-        $solutionText | sc $slnPath
+        $solutionText | sc $slnPath -Encoding UTF8
         $actual = Get-SqlProjects -SolutionPath $slnPath
         Context "Actual projects as expected" {
             $actual | % {

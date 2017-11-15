@@ -41,10 +41,8 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="NugetDbPacker.psm1" />
     <Compile Include="Package.ps1" />
     <Compile Include="Scripts\Add-DbFileNode.ps1" />
-    <Compile Include="Scripts\Export-NuGetSettings.ps1" />
     <Compile Include="Scripts\Get-SolutionPackages.ps1" />
     <Compile Include="Scripts\Import-NuGetDb.ps1" />
-    <Compile Include="Scripts\Import-NuGetSettings.ps1" />
     <Compile Include="Scripts\Compress-DbPackage.ps1" />
     <Compile Include="Scripts\Publish-DbPackage.ps1" />
     <Compile Include="Scripts\Publish-SolutionDbPackages.ps1" />
@@ -52,9 +50,7 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Scripts\Remove-NugetFolder.ps1" />
     <Compile Include="Scripts\Set-NodeText.ps1" />
     <Compile Include="Scripts\Set-NuGetDependencyVersion.ps1" />
-    <Compile Include="Tests\Export-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Import-NuGetDb.tests.ps1" />
-    <Compile Include="Tests\Import-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />
     <Compile Include="Scripts\Initialize-DbPackage.ps1" />
     <Compile Include="Scripts\Initialize-NuGetFolders.ps1" />

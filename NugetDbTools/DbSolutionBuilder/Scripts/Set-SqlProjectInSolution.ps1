@@ -45,7 +45,7 @@ EndProject
 		$dbGuid = [Guid]::NewGuid().ToString().ToUpper()
 		$newSqlProjects += $templateSqlProject.Replace('Template.DBProject', "$slnName.$dbName").Replace($templateGuid, $dbGuid)
 		$newSqlConfiguration += $templateSqlConfiguration.Replace($templateGuid, $dbGuid)
-		New-SqlProject -SolutionFolder $SolutionFolder -ProjectName "$slnName.$dbName" -TemplateFolder $TemplateFolder
+		New-SqlProject -Parameters $Parameters -SolutionFolder $SolutionFolder -ProjectName "$slnName.$dbName" -TemplateFolder $TemplateFolder
 	}
 	$newSln = $SolutionFile.Replace($templateSqlProject, $newSqlProjects).Replace($templateSqlConfiguration,$newSqlConfiguration)
 	return $newSln

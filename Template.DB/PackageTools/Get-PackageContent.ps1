@@ -3,7 +3,10 @@ $SolutionFolder = Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)
 $packageContentFolder = "$SolutionFolder\PackageContent"
 
 if (Test-Path $packageContentFolder) {
-    del $packageContentFolder\* -Recurse -Force
+    if (-not $global:testing)
+	{
+		del $packageContentFolder\* -Recurse -Force
+	}
 } else {
     mkdir $packageContentFolder | Out-Null
 }
