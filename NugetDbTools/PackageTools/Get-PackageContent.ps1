@@ -11,10 +11,9 @@ if (Test-Path $packageContentFolder) {
     mkdir $packageContentFolder | Out-Null
 }
 
-if ( Get-Module NugetDbPacker) {
-	Remove-Module NugetDbPacker
+if (-not (Get-Module NugetDbPacker)) {
+	Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1"
 }
-Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1"
 
 Get-SolutionPackages -SolutionPath $slnPath -ContentFolder $packageContentFolder
 

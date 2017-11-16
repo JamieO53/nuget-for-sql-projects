@@ -29,8 +29,8 @@ function Get-SolutionPackages {
 				iex "nuget install $package -Version '$version' -Source '$localSource' -OutputDirectory '$ContentFolder' -ExcludeVersion"
 			}
 			Set-NuGetDependencyVersion -SolutionPath $SolutionPath -Dependency $_.Include -Version $_.Version
-			if ($cfg[$package]) {
-				$cfg[$package] = $version
+			if ($cfg.nugetDependencies[$package]) {
+				$cfg.nugetDependencies[$package] = $version
 			}
 		}
 		Export-NuGetSettings -ProjectPath $projPath -Settings $cfg
