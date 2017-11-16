@@ -20,6 +20,7 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 		if (Get-Module NuGetShared) {
 			Remove-Module NuGetShared
 		}
+		Import-Module "$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psd1" 
 		pushd "$projectFolder\Tests"
 		Invoke-Pester "$projectFolder\Tests" -OutputFile "$SolutionFolder\TestResults\$($_.Project).xml" -OutputFormat NUnitXml
 		popd
