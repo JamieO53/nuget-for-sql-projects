@@ -43,10 +43,11 @@ function New-DbSolution {
 	$newGuid = [Guid]::NewGuid().ToString().ToUpperInvariant()
 	$sln = gc "$slnFolder\$($SolutionName).sln" | Out-String
 	$sln = $sln.Replace('Template.DBPkg', "$($SolutionName)Pkg").Replace('1D72F9F5-2ED0-4157-9EF8-903203AA428C', $newGuid)
+	$sln = Set-SqlProjectInSolution -Parameters $Parameters -SolutionFolder $slnFolder -TemplateFolder $templatePath -SolutionFile $sln
 	$sln | Out-File -FilePath "$slnFolder\$($SolutionName).sln" -Encoding utf8
 	iex "$slnFolder\PackageTools\Get-PackageContent.ps1"
 
-	$sln = Set-SqlProjectInSolution -Parameters $Parameters -SolutionFolder $slnFolder -TemplateFolder $templatePath -SolutionFile $sln
+	$sln = Set-SqlProjectDependenciesInSolution -SolutionPath $slnFolder
 	$sln | Out-File -FilePath "$slnFolder\$($SolutionName).sln" -Encoding utf8
 	Return $slnFolder
 }

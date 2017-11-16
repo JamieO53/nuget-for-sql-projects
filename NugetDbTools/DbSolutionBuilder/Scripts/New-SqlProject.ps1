@@ -33,5 +33,4 @@ function New-SqlProject {
 		$text | sc "$projectFolder\$projectFile" -Encoding UTF8
 	}
 	Set-DbReferencesInProject -SolutionFolder $SolutionFolder -ProjectPath $projectPath
-	Set-NuGetDependenciesInProject -Parameters $Parameters -ProjectPath $projectPath
 }
