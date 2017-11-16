@@ -20,6 +20,11 @@ function Set-NuGetDependencyVersion {
     Get-SqlProjects -SolutionPath $SolutionPath | % {
         $project = $_.Project
         [string]$projectPath = [IO.Path]::Combine($solutionFolder, $_.ProjectPath)
-        
+		$cfgPath = [IO.Path]::ChangeExtension($projectPath, '.nuget.config')
+		$cfg = Import-NuGetSettings -Path $cfgPath
+			if ($cfg.nugetDependencies[$Dependency]) {
+				$cfg.nugetDependencies[$Dependency] = $Version
+			}
+ 		Export-NuGetSettings -ProjectPath $projPath -Settings $cfg
     }
 }
