@@ -4,17 +4,16 @@ function Export-NuGetSettings {
 	.DESCRIPTION
 	Exports the settings to the project's NuGet configuration file
 	.EXAMPLE
-	Export-NuGetSettings -ProjectPath C:\VSTS\EcsShared\SupportRoles\EcsShared.SupportRoles.sqlproj -Settings $settings
+	Export-NuGetSettings -NugetConfigPath C:\VSTS\EcsShared\SupportRoles\EcsShared.SupportRoles.nuget.config -Settings $settings
 	#>
     [CmdletBinding()]
     param
     (
-        # The location of .sqlproj file of the project being packaged
-        [string]$ProjectPath,
+        # The location of .nuget.config file of the project being packaged
+        [string]$NugetConfigPath,
 		# The values to be set in the NuGet spec
 		[PSObject]$Settings
 	)
-	$configPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
 	$major = $Settings.nugetOptions.majorVersion
 	$minor = $Settings.nugetOptions.minorVersion
 	$configText = @"
@@ -74,5 +73,5 @@ function Export-NuGetSettings {
 		}
 		$childNode = $parentNode.AppendChild($parentNode.OwnerDocument.ImportNode($dependenciesNode, $true))
 	}
-	Out-FormattedXml -Xml $xml -FilePath $configPath
+	Out-FormattedXml -Xml $xml -FilePath $NugetConfigPath
 }

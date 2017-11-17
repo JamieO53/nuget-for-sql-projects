@@ -17,7 +17,7 @@ function Publish-DbPackage {
     $configPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
     $projFolder = Split-Path $ProjectPath -Resolve
     $nugetFolder = [IO.Path]::Combine($projFolder, 'NuGet')
-    $settings = Import-NuGetSettings -Path $configPath
+    $settings = Import-NuGetSettings -NugetConfigPath $configPath
     $id = $settings.nugetSettings.Id
     $version = $settings.nugetSettings.version
     if (-not (Test-NuGetVersionExists -Id $id -Version $version)) {

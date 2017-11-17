@@ -23,6 +23,8 @@ function New-DbSolution {
 	$solutionLocation = $Parameters.dbSolution.parameters.location
 	$solutionName = $Parameters.dbSolution.parameters.name
 	$slnFolder = "$solutionLocation\$solutionName"
+    $slnPath = "$slnFolder\$($SolutionName).sln"
+	$pkgProjectPath = "$slnFolder\$($SolutionName)Pkg\$($SolutionName)Pkg.csproj"
 
 	mkdir "$slnFolder\$($SolutionName)Pkg" | Out-Null
 	mkdir "$slnFolder\PackageTools"
@@ -30,24 +32,32 @@ function New-DbSolution {
 	$templatePath = "$templateFolder\NuGetDbPacker.DbTemplate\Template"
 	$toolsPath = "$templateFolder\NuGetDbPacker.DbTemplate\PackageTools"
 	copy "$templatePath\Template.DBPkg\Class1.cs" "$slnFolder\$($SolutionName)Pkg"
-	copy "$templatePath\Template.DBPkg\Template.DBPkg.csproj" "$slnFolder\$($SolutionName)Pkg\$($SolutionName)Pkg.csproj"
-	copy "$templatePath\Template.DB.sln" "$slnFolder\$($SolutionName).sln"
+	copy "$templatePath\Template.DBPkg\Template.DBPkg.csproj" $pkgProjectPath
+	copy "$templatePath\Template.DB.sln" $slnPath
 	copy "$toolsPath\*" "$slnFolder\PackageTools"
-	Set-ProjectDependencyVersion -Path "$slnFolder\$($SolutionName)Pkg\$($SolutionName)Pkg.csproj" -Dependency NuGetDbPacker
+	Set-ProjectDependencyVersion -Path $pkgProjectPath -Dependency NuGetDbPacker
 	$Parameters.dbSolution.dependencies.dependency | % {
-		Set-ProjectDependencyVersion -Path "$slnFolder\$($SolutionName)Pkg\$($SolutionName)Pkg.csproj" -Dependency $_.Id
+		Set-ProjectDependencyVersion -Path $pkgProjectPath -Dependency $_.Id
 	}
 
 	iex "$slnFolder\PackageTools\Bootstrap.ps1"
 
 	$newGuid = [Guid]::NewGuid().ToString().ToUpperInvariant()
-	$sln = gc "$slnFolder\$($SolutionName).sln" | Out-String
+	$sln = gc $slnPath | Out-String
 	$sln = $sln.Replace('Template.DBPkg', "$($SolutionName)Pkg").Replace('1D72F9F5-2ED0-4157-9EF8-903203AA428C', $newGuid)
-	$sln = Set-SqlProjectInSolution -Parameters $Parameters -SolutionFolder $slnFolder -TemplateFolder $templatePath -SolutionFile $sln
-	$sln | Out-File -FilePath "$slnFolder\$($SolutionName).sln" -Encoding utf8
-	iex "$slnFolder\PackageTools\Get-PackageContent.ps1"
+	$sln | Out-File -FilePath $slnPath -Encoding utf8
 
-	$sln = Set-SqlProjectDependenciesInSolution -SolutionPath $slnFolder
-	$sln | Out-File -FilePath "$slnFolder\$($SolutionName).sln" -Encoding utf8
+	if (-not (Get-Module NugetDbPacker)) {
+		Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1"
+	}
+
+	Get-SolutionContent -SolutionPath $slnPath
+
+	$sln = gc $slnPath | Out-String
+	$sln = Set-SqlProjectInSolution -Parameters $Parameters -SolutionFolder $slnFolder -TemplateFolder $templatePath -SolutionFile $sln -PkgProjectPath $pkgProjectPath
+	$sln | Out-File -FilePath $slnPath -Encoding utf8
+	#iex "$slnFolder\PackageTools\Get-PackageContent.ps1"
+
+	#Set-SqlProjectDependenciesInSolution -SolutionPath $slnPath
 	Return $slnFolder
 }

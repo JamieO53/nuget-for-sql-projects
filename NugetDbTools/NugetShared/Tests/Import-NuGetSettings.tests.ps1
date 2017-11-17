@@ -35,13 +35,13 @@ Describe "Import-NuGetSettings" {
 	$config | sc $configPath -Encoding UTF8
 
 	Context "Exists" {
-		It "Runs" { Import-NuGetSettings -Path $configPath | should not BeNullOrEmpty }
+		It "Runs" { Import-NuGetSettings -NugetConfigPath $configPath | should not BeNullOrEmpty }
 	}
 	Context "Content" {
 		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NugetShared
 		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NugetShared
 		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName NugetShared
-		$content = Import-NuGetSettings -Path $configPath
+		$content = Import-NuGetSettings -NugetConfigPath $configPath
 		It "Settings count" { $content.nugetSettings.Count | Should Be $expectedSettings.nugetSettings.Count }
 		$content.nugetSettings.Keys | % {
 			It "$_ content is as expected" { $content.nugetSettings[$_] | should be $expectedSettings.nugetSettings[$_] }

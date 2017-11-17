@@ -1,6 +1,6 @@
 function Get-SolutionPackages {
 	<#.Synopsis
-	Get the solution's dependency content
+	Get the solution's dependency packages
 	.DESCRIPTION
     Gets the content of all the solution's NuGet dependencies and updates the SQL projects' NuGet versions for each dependency
 	.EXAMPLE

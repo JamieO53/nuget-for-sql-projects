@@ -7,6 +7,7 @@ Describe "Compress-DbPackage" {
 	$projFolder = "$testDrive\proj"
 	$projDbFolder = "$projFolder\Databases"
 	$projPath = "$projFolder\proj.sqlproj"
+	$configPath = "$projFolder\proj.nuget.config"
 	$nugetFolder = "$projFolder\NuGet"
 	$nugetSpecPath = "$nugetFolder\Package.nuspec"
 	$projText = @"
@@ -30,7 +31,7 @@ Context "Exists" {
 		mkdir $nugetFolder
 		$projText | Set-Content $projPath
 		$nugetSettings = Initialize-TestNugetConfig -NoDependencies
-		Export-NuGetSettings -ProjectPath $projPath -Settings $nugetSettings
+		Export-NuGetSettings -NugetConfigPath $configPath -Settings $nugetSettings
 
 		'dacpac' | Set-Content "$projDbFolder\ProjDb.dacpac"
 		'lib' | Set-Content "$projDbFolder\ProjLib.dll"

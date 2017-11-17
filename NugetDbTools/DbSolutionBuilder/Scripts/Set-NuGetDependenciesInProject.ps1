@@ -18,10 +18,10 @@ function Set-NuGetDependenciesInProject {
 		[string]$projectPath
 	)
 	$cfgPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
-	$cfg = Import-NuGetSettings -Path $cfgPath
+	$cfg = Import-NuGetSettings -NugetConfigPath $cfgPath
 	$Parameters.dbSolution.dependencies.dependency | % {
 		$version = Get-NugetPackageVersion $_.id
 		$cfg.nugetDependencies[$_.id] = $version
 	}
-	Export-NuGetSettings -ProjectPath $projectPath -Settings $cfg
+	Export-NuGetSettings -NugetConfigPath $cfgPath -Settings $cfg
 }

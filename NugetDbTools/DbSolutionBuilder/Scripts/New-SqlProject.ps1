@@ -19,7 +19,9 @@ function New-SqlProject {
 		# The DB Project name
 		[string]$ProjectName,
 		# The DB Solution template folder
-		[string]$TemplateFolder
+		[string]$TemplateFolder,
+		# The location of the solution's Pkg project
+		[string]$PkgProjectPath
 	)
 	$projectFolder = "$SolutionFolder\$ProjectName"
 	$projectPath = "$projectFolder\$projectName.sqlproj"
@@ -32,5 +34,13 @@ function New-SqlProject {
 		$text = $text.Replace('Template.DBProject', $ProjectName)
 		$text | sc "$projectFolder\$projectFile" -Encoding UTF8
 	}
+	$cfgPath = [IO.Path]::ChangeExtension($projectPath, '.nuget.config')
+	[xml]$proj = gc $PkgProjectPath
+	$proj.Project.ItemGroup.PackageReference | % {
+		$package = $_.Include
+		$version = $_.Version
+		Set-NuGetProjectDependencyVersion -NugetConfigPath $cfgPath -Dependency $_.Include -Version $_.Version
+	}
 	Set-DbReferencesInProject -SolutionFolder $SolutionFolder -ProjectPath $projectPath
+	Set-NuGetDependenciesInProject -Parameters $Parameters -ProjectPath $projectPath
 }

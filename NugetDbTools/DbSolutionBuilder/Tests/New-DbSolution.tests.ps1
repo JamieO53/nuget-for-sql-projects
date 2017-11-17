@@ -3,6 +3,11 @@
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psm1"
 
+if ( Get-Module NugetDbPacker) {
+	Remove-Module NugetDbPacker
+}
+Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\NugetDbPacker.psm1"
+
 $global:testing = $true
 $location = "TestDrive:\Solutions"
 $name = 'TestSolution'
@@ -10,10 +15,10 @@ function New-DummyDacpac {
 	param (
 		[string]$DbName
 	)
-	if (-not (Test-Path "$location\$name\PackageContent\Databases")) {
-		mkdir -Path "$location\$name\PackageContent\Databases"
+	if (-not (Test-Path "$location\$name\PackageContent\$DbName\Databases")) {
+		mkdir -Path "$location\$name\PackageContent\$DbName\Databases"
 	}
-	$Name | Set-Content -Path "$location\$name\PackageContent\Databases\$DbName.dacpac"
+	$DbName | Set-Content -Path "$location\$name\PackageContent\$DbName\Databases\$DbName.dacpac"
 }
 $dbNames = @('db1', 'db2')
 $databases = ''
@@ -31,7 +36,9 @@ $deps.Keys | % {
 	<dependency id=`"$_`"/>
 "@
 }
-[xml]$params = @"
+Describe "New-DbSolution" {
+	$location = "$testDrive\Solutions"
+	[xml]$params = @"
 <dbSolution>
 	<parameters>
 		<location>$location</location>
@@ -43,7 +50,6 @@ $deps.Keys | % {
 	</dependencies>
 </dbSolution>
 "@
-Describe "New-DbSolution" {
 	mkdir 'TestDrive:\Configuration'
 	copy "$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config" 'TestDrive:\Configuration\NugetDbTools.config'
 	$deps.Keys | % {

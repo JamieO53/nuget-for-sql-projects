@@ -20,7 +20,9 @@ function Set-SqlProjectInSolution {
 		# The DB Solution template folder
 		[string]$TemplateFolder,
 		# The body of the solution file
-		[string]$SolutionFile
+		[string]$SolutionFile,
+		# The location of the solution's Pkg project
+		[string]$PkgProjectPath
 	)
 	$templateGuid = '96EEF452-0302-4B98-BDBC-D36A24C21EA8'
 	$templateSqlProject = @'
@@ -40,12 +42,12 @@ EndProject
 	$slnName = $Parameters.dbSolution.parameters.name
 	$newSqlProjects = ''
 	$newSqlConfiguration = ''
-	$slnName = $Parameters.dbSolution.databases.database.dbname | % {
+	$Parameters.dbSolution.databases.database.dbname | % {
 		$dbName = $_
 		$dbGuid = [Guid]::NewGuid().ToString().ToUpper()
 		$newSqlProjects += $templateSqlProject.Replace('Template.DBProject', "$slnName.$dbName").Replace($templateGuid, $dbGuid)
 		$newSqlConfiguration += $templateSqlConfiguration.Replace($templateGuid, $dbGuid)
-		New-SqlProject -Parameters $Parameters -SolutionFolder $SolutionFolder -ProjectName "$slnName.$dbName" -TemplateFolder $TemplateFolder
+		New-SqlProject -Parameters $Parameters -SolutionFolder $SolutionFolder -ProjectName "$slnName.$dbName" -TemplateFolder $TemplateFolder -PkgProjectPath $PkgProjectPath
 	}
 	$newSln = $SolutionFile.Replace($templateSqlProject, $newSqlProjects).Replace($templateSqlConfiguration,$newSqlConfiguration)
 	return $newSln
