@@ -48,7 +48,7 @@ function New-DbSolution {
 	$sln | Out-File -FilePath $slnPath -Encoding utf8
 
 	if (-not (Get-Module NugetDbPacker)) {
-		Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1"
+		Import-Module "$slnFolder\PowerShell\NugetDbPacker.psd1"
 	}
 
 	Get-SolutionContent -SolutionPath $slnPath

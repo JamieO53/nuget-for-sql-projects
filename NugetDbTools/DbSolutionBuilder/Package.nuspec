@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>DbSolutionBuilder</id>
-    <version>0.1.37</version>
+    <version>0.1.38</version>
     <authors>joglethorpe</authors>
     <owners>Ecentric Payment Systems</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
