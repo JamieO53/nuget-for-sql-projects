@@ -264,3 +264,4 @@ __pycache__/
 /NugetDbTools/CiTools
 /Template.DB/PowerShell
 /Template.DB/Databases
+/Template.DB/Template.DBProject/Databases/Template.DBProject.dacpac

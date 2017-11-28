@@ -70,10 +70,8 @@
     </ArtifactReference>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>if not exist $(ProjectDir)Databases\NUL md $(ProjectDir)Databases
-xcopy /y $(TargetDir)$(ProjectName).dacpac $(ProjectDir)Databases
-xcopy /y $(TargetDir)$(ProjectName)*publish.xml $(ProjectDir)Databases
-</PostBuildEvent>
+    <PostBuildEvent>PowerShell -File $(SolutionDir)PackageTools\Invoke-PostBuildEvent.ps1 -ProjectName  $(ProjectName) -ProjectDir $(ProjectDir) -SolutionDir $(SolutionDir)  -TargetDir $(TargetDir) -AssemblyName $(AssemblyName)
+REM Add -CopyAssembly if the CLR assembly is to be copied</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>if exist  $(ProjectDir)Databases\NUL rmdir $(ProjectDir)Databases /s /q</PreBuildEvent>
