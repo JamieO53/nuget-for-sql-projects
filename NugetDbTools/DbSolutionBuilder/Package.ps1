@@ -1,6 +1,6 @@
 $id='DbSolutionBuilder'
 $contentType='PowerShell'
-$projDir = Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)"
+$projDir = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)").Path
 $slnDir = "$projDir\.."
 pushd $projDir
 

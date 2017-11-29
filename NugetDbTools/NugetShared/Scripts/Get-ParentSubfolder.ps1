@@ -17,7 +17,7 @@ function Get-ParentSubfolder
         # The pattern being matched
         [string]$Filter
 	)
-	[string]$myPath = Resolve-Path $Path
+	[string]$myPath = (Resolve-Path $Path).Path
 	while ($myPath -and -not (Test-Path ([IO.Path]::Combine($myPath,$Filter)))) {
 		$myPath = Split-Path $myPath
 	}

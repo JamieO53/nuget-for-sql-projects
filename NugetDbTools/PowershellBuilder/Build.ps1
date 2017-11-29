@@ -1,5 +1,5 @@
 $ProjectName = 'PowershellBuilder'
-$SolutionDir = Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\.."
+$SolutionDir = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..").Path
 $ProjectDir = "$SolutionDir\$ProjectName"
 $Dependencies = @()
 $Dependents = @()

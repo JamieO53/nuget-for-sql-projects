@@ -1,6 +1,6 @@
 $id='NuGetDbPacker.DbTemplate'
 $contentType='Template'
-$slnDir = Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)"
+$slnDir = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)").Path
 pushd $slnDir
 
 $loaded = $false

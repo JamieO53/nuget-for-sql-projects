@@ -8,6 +8,6 @@ param (
 $prjFolder = $ProjectDir.TrimEnd("\")
 $outputFolder = "$prjFolder\Databases"
 
-if (Test-Path "$outputFolder\unzipped") {
-	rmdir $outputFolder\unzipped* -Recurse -Force
+if (Test-Path "$outputFolder") {
+	rmdir $outputFolder* -Recurse -Force
 }

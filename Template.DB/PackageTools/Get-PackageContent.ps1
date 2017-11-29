@@ -1,4 +1,4 @@
-$SolutionFolder = Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\.."
+$SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..").Path
 [string]$slnPath=ls $SolutionFolder\*.sln | ? { $_ } | % { $_.FullName }
 $packageContentFolder = "$SolutionFolder\PackageContent"
 

@@ -1,4 +1,4 @@
-$SolutionFolder = Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\.."
+$SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..").Path
 $BootstrapFolder = "$SolutionFolder\Bootstrap"
 
 if (Test-Path $BootstrapFolder) {
