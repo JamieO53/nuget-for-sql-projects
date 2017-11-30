@@ -265,3 +265,7 @@ __pycache__/
 /Template.DB/PowerShell
 /Template.DB/Databases
 /Template.DB/Template.DBProject/Databases/Template.DBProject.dacpac
+/NugetDbTools/NugetDbPackerDb/PowerShell/NuGetShared.psm1
+/NugetDbTools/NugetDbPackerDb/PowerShell/NuGetShared.psd1
+/NugetDbTools/NugetDbPackerDb/PowerShell/NuGetDbPacker.psm1
+/NugetDbTools/NugetDbPackerDb/PowerShell/NuGetDbPacker.psd1

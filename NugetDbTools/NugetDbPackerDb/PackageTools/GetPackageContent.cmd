@@ -1,0 +1,1 @@
+powershell -Command ".\Get-PackageContent.ps1"
