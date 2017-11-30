@@ -68,6 +68,10 @@
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
       <DatabaseVariableLiteralValue>master</DatabaseVariableLiteralValue>
     </ArtifactReference>
+    <ArtifactReference Include="..\Databases\NugetDbPackerDb.Root.dacpac">
+      <HintPath>..\Databases\NugetDbPackerDb.Root.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+    </ArtifactReference>
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>PowerShell -File $(SolutionDir)PackageTools\Invoke-PostBuildEvent.ps1 -ProjectName  $(ProjectName) -ProjectDir $(ProjectDir) -SolutionDir $(SolutionDir) -TargetDir $(TargetDir) -AssemblyName $(AssemblyName)
