@@ -24,7 +24,9 @@ function Set-DbReferencesInProject {
 	{
 		ls "$SolutionFolder\Databases\*.dacpac" | % {
 			$ref = [IO.Path]::ChangeExtension($_.Name, '')
-			[xml]$node = @"
+			$exists = ($group.ArtifactReference | ? { $_.Include -eq "..\Databases\$($ref)dacpac" }) -ne $null
+			if (-not $exists) {
+				[xml]$node = @"
   <node>
     <ArtifactReference Include="..\Databases\$($ref)dacpac">
       <HintPath>..\Databases\$($ref)dacpac</HintPath>
@@ -32,7 +34,8 @@ function Set-DbReferencesInProject {
     </ArtifactReference>
   </node>
 "@
-			$dummy = $group.AppendChild($group.OwnerDocument.ImportNode($node.node.FirstChild, $true))
+				$dummy = $group.AppendChild($group.OwnerDocument.ImportNode($node.node.FirstChild, $true))
+			}
 		}
 	}
 	Out-FormattedXML -XML $proj -FilePath $ProjectPath
