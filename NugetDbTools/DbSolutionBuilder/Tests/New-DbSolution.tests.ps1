@@ -90,11 +90,12 @@ Describe "New-DbSolution" {
 		}
 		Context "Dependencies" {
 			It "The specified properties were added" {
-				($prj.Project.ItemGroup.PackageReference).Count | should be 3
+				($prj.Project.ItemGroup.PackageReference).Count | should be 4
 			}
 			Context "Versions" {
 				$originalVersions = @{
 					NuGetShared = '0.1.1';
+					NuGetSharedPacker = '0.1.1';
 					NuGetDbPacker = '0.1.1'
 				}
 				$prj.Project.ItemGroup.PackageReference | % {

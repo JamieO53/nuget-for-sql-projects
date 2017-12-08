@@ -6,6 +6,12 @@ if (Get-Module NuGetShared) {
 if (-not (Get-Module NuGetShared)) {
 	Import-Module "$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psd1"
 }
+if (Get-Module NuGetSharedPacker) {
+	Remove-Module NuGetSharedPacker
+}
+if (-not (Get-Module NuGetSharedPacker)) {
+	Import-Module "$SolutionFolder\NugetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1"
+}
 if (Test-Path "$SolutionFolder\TestResults") {
 	rmdir "$SolutionFolder\TestResults\*" -Recurse -Force
 }
@@ -21,6 +27,10 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 			Remove-Module NuGetShared
 		}
 		Import-Module "$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psd1" 
+		if (Get-Module NuGetSharedPacker) {
+			Remove-Module NuGetSharedPacker
+		}
+		Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1" 
 		pushd "$projectFolder\Tests"
 		Invoke-Pester "$projectFolder\Tests" -OutputFile "$SolutionFolder\TestResults\$($_.Project).xml" -OutputFormat NUnitXml
 		popd
