@@ -6,7 +6,8 @@ Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1"
 Describe "Publish-SolutionDbPackages" {
 	Context "Exists" {
 		It "Runs" {
-			Publish-SolutionDbPackages -SolutionPath ..\..\..\Template.Db\Template.Db.sln
+			$sln = (Get-Item -LiteralPath ..\..\..\Template.Db\Template.Db.sln).FullName
+			Publish-SolutionDbPackages -SolutionPath $sln
 		}
 	}
 }

@@ -1,7 +1,7 @@
-﻿if ( Get-Module NugetDbPacker) {
-	Remove-Module NugetDbPacker
+﻿if ( Get-Module NugetSharedPacker) {
+	Remove-Module NugetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1"
 
 Describe "Compress-Package" {
 	$projFolder = "$testDrive\proj"

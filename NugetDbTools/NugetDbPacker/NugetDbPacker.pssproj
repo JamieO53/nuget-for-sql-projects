@@ -44,24 +44,17 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Scripts\Get-SolutionContent.ps1" />
     <Compile Include="Scripts\Get-SolutionPackages.ps1" />
     <Compile Include="Scripts\Import-NuGetDb.ps1" />
-    <Compile Include="Scripts\Compress-Package.ps1" />
     <Compile Include="Scripts\Publish-DbPackage.ps1" />
     <Compile Include="Scripts\Publish-SolutionDbPackages.ps1" />
     <Compile Include="Scripts\Remove-NugetFolder.ps1" />
     <Compile Include="Scripts\Set-NuGetDependencyVersion.ps1" />
     <Compile Include="Scripts\Set-NuGetProjectDependencyVersion.ps1" />
     <Compile Include="Tests\Import-NuGetDb.tests.ps1" />
-    <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />
     <Compile Include="Scripts\Initialize-DbPackage.ps1" />
-    <Compile Include="Scripts\Initialize-NuGetFolders.ps1" />
     <Compile Include="Scripts\Initialize-NuGetSpec.ps1" />
     <Compile Include="Tests\Initialize-NuGetSpec.tests.ps1" />
     <Compile Include="Tests\Initialize-TestNugetConfig.ps1" />
-    <Compile Include="Tests\Compress-Package.tests.ps1" />
-    <Compile Include="Tests\Publish-DbPackage.tests.ps1" />
     <Compile Include="Tests\Publish-SolutionDbPackages.tests.ps1" />
-    <Compile Include="Tests\Set-NuGetDependencyVersion.tests.ps1" />
-    <Compile Include="Tests\Test-NuGetVersionExists.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.nuspec" />

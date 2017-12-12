@@ -16,7 +16,6 @@ function Publish-SolutionDbPackages {
 	)
     $solutionFolder = Split-Path -Path $SolutionPath
     Get-SqlProjects -SolutionPath $SolutionPath | % {
-        $project = $_.Project
         [string]$projectPath = [IO.Path]::Combine($solutionFolder, $_.ProjectPath)
         Publish-DbPackage -ProjectPath $projectPath
     }
