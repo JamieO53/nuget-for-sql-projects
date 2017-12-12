@@ -1,11 +1,11 @@
-function Compress-DbPackage
+function Compress-Package
 {
 	<#.Synopsis
-	Pack the database NuGet package
+	Pack the NuGet package
 	.DESCRIPTION
 	Uses the NuGet command to create the nuget package from the data at the specified location
 	.EXAMPLE
-	Compress-DbPackage -NugetPath .\Nuget
+	Compress-Package -NugetPath .\Nuget
 	#>
     [CmdletBinding()]
     param

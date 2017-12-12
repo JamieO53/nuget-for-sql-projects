@@ -35,6 +35,9 @@
     <Compile Include="NuGetSharedPacker.tests.ps1" />
     <Compile Include="Package.ps1" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
 </Project>

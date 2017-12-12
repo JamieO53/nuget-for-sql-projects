@@ -49,7 +49,9 @@
     <Compile Include="Scripts\Get-SqlProjects.ps1" />
     <Compile Include="Scripts\Import-NuGetSettings.ps1" />
     <Compile Include="Scripts\Out-FormattedXml.ps1" />
+    <Compile Include="Scripts\Remove-Node.ps1" />
     <Compile Include="Scripts\Save-CSharpProject.ps1" />
+    <Compile Include="Scripts\Set-NodeText.ps1" />
     <Compile Include="Scripts\Set-NuspecDependencyVersion.ps1" />
     <Compile Include="Scripts\Set-NuspecVersion.ps1" />
     <Compile Include="Scripts\Set-ProjectDependencyVersion.ps1" />

@@ -3,7 +3,7 @@
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1"
 
-Describe "Compress-DbPackage" {
+Describe "Compress-Package" {
 	$projFolder = "$testDrive\proj"
 	$projDbFolder = "$projFolder\Databases"
 	$projPath = "$projFolder\proj.sqlproj"
@@ -37,7 +37,7 @@ Context "Exists" {
 		'lib' | Set-Content "$projDbFolder\ProjLib.dll"
 		'pdb' | Set-Content "$projDbFolder\ProjLib.pdb"
 		Initialize-DbPackage -ProjectPath $projPath
-		Compress-DbPackage -NugetPath $nugetFolder
+		Compress-Package -NugetPath $nugetFolder
 
 		$id = $nugetSettings.nugetSettings.id
 		$version = $nugetSettings.nugetSettings.version
