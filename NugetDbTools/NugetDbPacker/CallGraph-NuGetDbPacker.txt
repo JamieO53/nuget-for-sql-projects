@@ -1,0 +1,102 @@
+﻿strict digraph "NuGetDbPacker.psm1" {
+compound=true;
+rankdir=LR;
+pencolor=white;
+node [shape=box fontsize=12];
+subgraph "clusterPublish-SolutionDbPackages" {
+{ node [shape=octagon]; "Publish-SolutionDbPackages" }
+"Publish-SolutionDbPackages" -> { node [shape=octagon]; "Get-SqlProjects" }
+{ node [shape=octagon]; "Get-SqlProjects" }
+"Publish-SolutionDbPackages" -> "Publish-DbPackage";
+{ node [shape=octagon]; "Publish-DbPackage" }
+"Publish-DbPackage" -> { node [shape=octagon]; "Import-NuGetSettings" }
+{ node [shape=octagon]; "Import-NuGetSettings" }
+{ node [shape=octagon]; "Publish-DbPackage" }
+"Publish-DbPackage" -> { node [shape=octagon]; "Test-NuGetVersionExists" }
+{ node [shape=octagon]; "Test-NuGetVersionExists" }
+"Publish-DbPackage" -> "Initialize-DbPackage";
+"Initialize-DbPackage" -> "Initialize-NuGetFolders";
+"Initialize-NuGetFolders" -> "Remove-NugetFolder";
+{ node [shape=octagon]; "Initialize-DbPackage" }
+"Initialize-DbPackage" -> { node [shape=octagon]; "Import-NuGetSettings" }
+{ node [shape=octagon]; "Import-NuGetSettings" }
+"Initialize-DbPackage" -> "Initialize-NuGetSpec";
+"Initialize-NuGetSpec" -> "Remove-Node";
+"Initialize-NuGetSpec" -> "Set-NodeText";
+{ node [shape=octagon]; "Initialize-NuGetSpec" }
+"Initialize-NuGetSpec" -> { node [shape=octagon]; "Out-FormattedXml" }
+"Initialize-DbPackage" -> "Import-NuGetDb";
+"Import-NuGetDb" -> "Add-DbFileNode";
+{ node [shape=octagon]; "Import-NuGetDb" }
+"Import-NuGetDb" -> { node [shape=octagon]; "Out-FormattedXml" }
+"Initialize-DbPackage" -> "Compress-DbPackage";
+{ node [shape=octagon]; "Publish-DbPackage" }
+"Publish-DbPackage" -> { node [shape=octagon]; "Get-NuGetLocalSource" }
+{ node [shape=octagon]; "Get-NuGetLocalSource" }
+{ node [shape=octagon]; "Publish-DbPackage" }
+"Publish-DbPackage" -> { node [shape=octagon]; "Get-NuGetLocalApiKey" }
+{ node [shape=octagon]; "Get-NuGetLocalApiKey" }
+"Publish-DbPackage" -> "Remove-NugetFolder";
+}
+subgraph "clusterGet-SolutionContent" {
+"Get-SolutionContent" -> "Get-SolutionPackages";
+{ node [shape=octagon]; "Get-SolutionPackages" }
+"Get-SolutionPackages" -> { node [shape=octagon]; "Get-NuGetLocalSource" }
+{ node [shape=octagon]; "Get-NuGetLocalSource" }
+{ node [shape=octagon]; "Get-SolutionPackages" }
+"Get-SolutionPackages" -> { node [shape=octagon]; "Get-CSharpProjects" }
+{ node [shape=octagon]; "Get-CSharpProjects" }
+{ node [shape=octagon]; "Get-SolutionPackages" }
+"Get-SolutionPackages" -> { node [shape=octagon]; "Test-NuGetVersionExists" }
+{ node [shape=octagon]; "Test-NuGetVersionExists" }
+"Get-SolutionPackages" -> "Set-NuGetDependencyVersion";
+{ node [shape=octagon]; "Set-NuGetDependencyVersion" }
+"Set-NuGetDependencyVersion" -> { node [shape=octagon]; "Get-SqlProjects" }
+{ node [shape=octagon]; "Get-SqlProjects" }
+"Set-NuGetDependencyVersion" -> "Set-NuGetProjectDependencyVersion";
+{ node [shape=octagon]; "Set-NuGetProjectDependencyVersion" }
+"Set-NuGetProjectDependencyVersion" -> { node [shape=octagon]; "Import-NuGetSettings" }
+{ node [shape=octagon]; "Import-NuGetSettings" }
+{ node [shape=octagon]; "Set-NuGetProjectDependencyVersion" }
+"Set-NuGetProjectDependencyVersion" -> { node [shape=octagon]; "Export-NuGetSettings" }
+{ node [shape=octagon]; "Export-NuGetSettings" }
+{ node [shape=octagon]; "Export-NuGetSettings" }
+}
+subgraph "clusterInitialize-TestNugetConfig" {
+}
+subgraph "clusterNugetShared" {
+"Test-NuGetVersionExists";
+"Out-FormattedXml";
+"Get-NuGetLocalSource";
+"Get-CSharpProjects";
+"Get-NuGetLocalApiKey";
+"Get-SqlProjects";
+"Add-DictionaryNode";
+"Get-NuGetDbToolsConfig";
+"Import-NuGetSettings";
+"Get-ProjectsByType";
+"Export-NuGetSettings";
+"Get-ProjectVersion";
+label="NugetShared";
+color="black"
+}
+subgraph "clusterNuGetDbPacker" {
+"Initialize-NuGetSpec";
+"Publish-DbPackage";
+"Add-DbFileNode";
+"Set-NodeText";
+"Get-SolutionPackages";
+"Remove-NugetFolder";
+"Compress-DbPackage";
+"Set-NuGetDependencyVersion";
+"Set-NuGetProjectDependencyVersion";
+"Initialize-DbPackage";
+"Remove-Node";
+"Initialize-NuGetFolders";
+"Import-NuGetDb";
+label="NuGetDbPacker";
+color="black"
+}
+fontsize=16
+label="NuGetDbPacker";
+}
