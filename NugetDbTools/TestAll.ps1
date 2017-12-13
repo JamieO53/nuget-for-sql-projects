@@ -15,12 +15,16 @@ if (-not (Get-Module NuGetSharedPacker)) {
 if (Test-Path "$SolutionFolder\TestResults") {
 	rmdir "$SolutionFolder\TestResults\*" -Recurse -Force
 }
-md "$SolutionFolder\TestResults\HTML"
+mkdir "$SolutionFolder\TestResults\HTML" | Out-Null
 
 $links = ''
+$results = @{}
+$statistics = @()
+$failCount = 0
 
 Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 	$projectFolder = Split-Path "$SolutionFolder\$($_.ProjectPath)"
+	$testName = [IO.Path]::GetFileNameWithoutExtension($_.ProjectPath)
 	if (Test-Path "$projectFolder\Tests")
 	{
 		if (Get-Module NuGetShared) {
@@ -32,13 +36,34 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 		}
 		Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1" 
 		pushd "$projectFolder\Tests"
-		Invoke-Pester "$projectFolder\Tests" -OutputFile "$SolutionFolder\TestResults\$($_.Project).xml" -OutputFormat NUnitXml
+		$testResult = Invoke-Pester "$projectFolder\Tests" -OutputFile "$SolutionFolder\TestResults\$($_.Project).xml" -OutputFormat NUnitXml -PassThru -EnableExit
+		$failCount += $LASTEXITCODE
 		popd
+		$statistic = New-Object -TypeName PSObject -Property @{
+			Name=$testName;
+			TotalCount=$testResult.TotalCount;
+			PassedCount=$testResult.PassedCount;
+			FailedCount=$testResult.FailedCount;
+			SkippedCount=$testResult.SkippedCount;
+			PendingCount=$testResult.PendingCount;
+			InconclusiveCount=$testResult.InconclusiveCount;
+			Time=$testResult.Time;
+			TimeTicks=$testResult.Time.Ticks
+		}
+		$statistics += $statistic
 		& NUnitHTMLReportGenerator.exe "$SolutionFolder\TestResults\$($_.Project).xml" "$SolutionFolder\TestResults\HTML\$($_.Project).html"
 		if (Test-Path "$SolutionFolder\TestResults\HTML\$($_.Project).html") {
 			$links += @"
-
-			<li><a href=`"$($_.Project).html`">$($_.Project)</a></li>
+		<tr>
+			<td align="left"><a href=`"$($_.Project).html`">$($_.Project)</a></td>
+			<td align="right">$($statistic.TotalCount)</td>
+			<td align="right">$($statistic.PassedCount)</td>
+			<td align="right">$($statistic.FailedCount)</td>
+			<td align="right">$($statistic.SkippedCount)</td>
+			<td align="right">$($statistic.PendingCount)</td>
+			<td align="right">$($statistic.InconclusiveCount)</td>
+			<td align="left">$($statistic.Time)</td>
+		</tr>
 "@
 		}
 		if (Test-Path variable:\global:testing) {
@@ -49,6 +74,15 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 		}
 	}
 }
+$total = @{Name='Total'}
+$statistics |
+	Measure-Object -Property TotalCount,PassedCount,FailedCount,SkippedCount,PendingCount,InconclusiveCount,TimeTicks -sum | % {
+		$total[$_.Property] = $_.Sum
+	}
+$total['Time'] = [timespan]::new($total['TimeTicks'])
+$totalStatistic = New-Object -TypeName PSObject -Property $total
+$statistics += $totalStatistic
+
 $allTests = @"
 <!doctype html>
 <html lang="en">
@@ -59,11 +93,35 @@ $allTests = @"
   </head>
   <body>
 	<h1>NuGetDbTools test results</h1>
-	<ul>
+	<table>
+		<tr>
+			<thead>
+				<th align="left">Name</th>
+				<th align="left">TotalCount</th>
+				<th align="left">PassedCount</th>
+				<th align="left">FailedCount</th>
+				<th align="left">SkippedCount</th>
+				<th align="left">PendingCount</th>
+				<th align="left">InconclusiveCount</th>
+				<th align="left">Time</th>
+			</thead>
+		</tr>
 $links
-	</ul>
+		<tr>
+			<td align="left">$($total['Name'])</td>
+			<td align="right">$($total['TotalCount'])</td>
+			<td align="right">$($total['PassedCount'])</td>
+			<td align="right">$($total['FailedCount'])</td>
+			<td align="right">$($total['SkippedCount'])</td>
+			<td align="right">$($total['PendingCount'])</td>
+			<td align="right">$($total['InconclusiveCount'])</td>
+			<td align="left">$($total['Time'])</td>
+		</tr>
+	</table>
   </body>
 </html>
 "@
 $allTests | Out-File "$SolutionFolder\TestResults\HTML\TestResults.html" -Force
 iex "$SolutionFolder\TestResults\HTML\TestResults.html"
+$statistics | Format-Table -Property Name,TotalCount,PassedCount,FailedCount,SkippedCount,PendingCount,InconclusiveCount,Time
+exit $failCount
