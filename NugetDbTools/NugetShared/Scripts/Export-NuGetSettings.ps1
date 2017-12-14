@@ -14,14 +14,21 @@ function Export-NuGetSettings {
 		# The values to be set in the NuGet spec
 		[PSObject]$Settings
 	)
-	$major = $Settings.nugetOptions.majorVersion
-	$minor = $Settings.nugetOptions.minorVersion
+	$options = $Settings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
+	$optionItems = ''
+	$options | % {
+		$field = $_
+		$value = (iex "`$Settings.nugetOptions.$field")
+		$optionItems += @"
+
+		<add key=`"$field`" value=`"$value`"/>
+"@
+	}
 	$configText = @"
 <?xml version=`"1.0`"?>
 <configuration>
 	<nugetOptions>
-		<add key=`"majorVersion`" value=`"$major`"/>
-		<add key=`"minorVersion`" value=`"$minor`"/>
+$optionItems
 	</nugetOptions>
 </configuration>
 "@

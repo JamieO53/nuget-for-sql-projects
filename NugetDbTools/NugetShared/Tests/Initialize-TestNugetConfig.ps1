@@ -6,7 +6,8 @@ function Initialize-TestNugetConfig {
 	)
 	$nugetOptions = New-Object -TypeName PSObject -Property @{
 		majorVersion = '1';
-		minorVersion = '0'
+		minorVersion = '0';
+		contentFolders = 'Database'
 	}
 	$nugetSettings = @{
 		id = 'TestPackage';

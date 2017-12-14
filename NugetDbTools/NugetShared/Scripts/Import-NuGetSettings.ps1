@@ -18,7 +18,8 @@ function Import-NuGetSettings
 	$nugetSettings = New-Object -TypeName PSObject -Property @{
 		nugetOptions = New-Object -TypeName PSObject -Property @{
 				majorVersion = '';
-				minorVersion = ''
+				minorVersion = '';
+				contentFolders = '';
 			};
 		nugetSettings = @{};
 		nugetDependencies = @{}
@@ -31,6 +32,8 @@ function Import-NuGetSettings
 			    $nugetSettings.nugetOptions.majorVersion = $_.value
 		    } elseif ($_.key -eq 'minorVersion') {
 			    $nugetSettings.nugetOptions.minorVersion = $_.value
+		    } elseif ($_.key -eq 'contentFolders') {
+			    $nugetSettings.nugetOptions.contentFolders = $_.value
 		    }
 	    }
 	    $cfg.configuration.nugetSettings.add | ? { $_ } | % {

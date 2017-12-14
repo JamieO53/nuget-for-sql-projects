@@ -18,7 +18,7 @@ function Initialize-Package
 	$projectFolder = Split-Path -LiteralPath $ProjectPath -Resolve
 	$nugetPath = Join-Path -Path $projectFolder -ChildPath 'Nuget'
 	$configPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
-	Initialize-NuGetFolders -Path $nugetPath
 	$nugetSettings = Import-NuGetSettings -NugetConfigPath $configPath
+	Initialize-NuGetFolders -Path $nugetPath
 	Initialize-NuGetSpec -Path $nugetPath -setting $nugetSettings
 }

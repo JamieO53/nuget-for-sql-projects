@@ -1,9 +1,9 @@
 ﻿if ( Get-Module NugetShared) {
 	Remove-Module NugetShared
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
+Import-Module $PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1
 
-. .\Initialize-TestNugetConfig.ps1
+. $PSScriptRoot\Initialize-TestNugetConfig.ps1
 
 Describe "Export-NuGetSettings" {
 	$projFolder = "TestDrive:\proj"
@@ -12,6 +12,7 @@ Describe "Export-NuGetSettings" {
 	md $projFolder
 	Context "Content" {
 		$expectedSettings = Initialize-TestNugetConfig
+		$expectedOptions = $expectedSettings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
 		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NugetShared
 		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NugetShared
 		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName NugetShared
@@ -19,8 +20,15 @@ Describe "Export-NuGetSettings" {
 			Export-NuGetSettings -NugetConfigPath $configPath -Settings $expectedSettings
 			It "Exported nuGet config exists" { Test-Path $configPath | should be $true }
 			$importedSettings = Import-NuGetSettings -NugetConfigPath $configPath
-			It "Major version" { $importedSettings.nugetOptions.MajorVersion | should be $expectedSettings.nugetOptions.MajorVersion}
-			It "Minor version" { $importedSettings.nugetOptions.MinorVersion | should be $expectedSettings.nugetOptions.MinorVersion}
+			$importedOptions = $importedSettings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
+			It "Options count" { $importedOptions.Length | Should Be $expectedOptions.Length }
+			$expectedOptions | % {
+				$field = $_
+				It "$field content is as expected" {
+					iex "`$importedSettings.nugetOptions.$field" |
+					should be (iex "`$expectedSettings.nugetOptions.$field") 
+				}
+			}
 			It "Settings count" { $importedSettings.nugetSettings.Count | Should Be $expectedSettings.nugetSettings.Count }
 			$importedSettings.nugetSettings.Keys | % {
 				It "$_ setting is as expected" { $importedSettings.nugetSettings[$_] | should be $expectedSettings.nugetSettings[$_] }
@@ -35,8 +43,15 @@ Describe "Export-NuGetSettings" {
 			Export-NuGetSettings -NugetConfigPath $configPath -Settings $expectedSettings
 			It "Exported nuGet config exists" { Test-Path $configPath | should be $true }
 			$importedSettings = Import-NuGetSettings -NugetConfigPath $configPath
-			It "Major version" { $importedSettings.nugetOptions.MajorVersion | should be $expectedSettings.nugetOptions.MajorVersion}
-			It "Minor version" { $importedSettings.nugetOptions.MinorVersion | should be $expectedSettings.nugetOptions.MinorVersion}
+			$importedOptions = $importedSettings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
+			It "Options count" { $importedOptions.Length | Should Be $expectedOptions.Length }
+			$expectedOptions | % {
+				$field = $_
+				It "$field content is as expected" {
+					iex "`$importedSettings.nugetOptions.$field" |
+					should be (iex "`$expectedSettings.nugetOptions.$field") 
+				}
+			}
 			It "Settings count" { $importedSettings.nugetSettings.Count | Should Be $expectedSettings.nugetSettings.Count }
 			$importedSettings.nugetSettings.Keys | % {
 				It "$_ setting is as expected" { $importedSettings.nugetSettings[$_] | should be $expectedSettings.nugetSettings[$_] }
