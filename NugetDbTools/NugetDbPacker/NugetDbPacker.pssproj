@@ -51,8 +51,6 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Scripts\Set-NuGetProjectDependencyVersion.ps1" />
     <Compile Include="Tests\Import-NuGetDb.tests.ps1" />
     <Compile Include="Scripts\Initialize-DbPackage.ps1" />
-    <Compile Include="Scripts\Initialize-NuGetSpec.ps1" />
-    <Compile Include="Tests\Initialize-NuGetSpec.tests.ps1" />
     <Compile Include="Tests\Initialize-TestNugetConfig.ps1" />
     <Compile Include="Tests\Publish-SolutionDbPackages.tests.ps1" />
   </ItemGroup>

@@ -35,10 +35,12 @@
     <Compile Include="Package.ps1" />
     <Compile Include="Scripts\Compress-Package.ps1" />
     <Compile Include="Scripts\Initialize-NuGetFolders.ps1" />
+    <Compile Include="Scripts\Initialize-NuGetSpec.ps1" />
     <Compile Include="Scripts\Initialize-Package.ps1" />
     <Compile Include="Scripts\Publish-Package.ps1" />
     <Compile Include="Tests\Compress-Package.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />
+    <Compile Include="Tests\Initialize-NuGetSpec.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\" />
