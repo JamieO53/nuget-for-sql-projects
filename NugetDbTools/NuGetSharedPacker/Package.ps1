@@ -1,4 +1,4 @@
-$id='NuGetProjectPacker'
+$id='NuGetSharedPacker'
 $contentType='PowerShell'
 $projDir = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)").Path
 $slnDir = "$projDir\.."

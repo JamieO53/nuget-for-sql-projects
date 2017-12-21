@@ -12,7 +12,7 @@ if (-not (Get-Module NugetShared)) {
 }
 
 $version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir
-Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetShared'
+Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetSharedPacker'
 
 if (Test-Path $projDir\NuGet) {
 	del $projDir\NuGet\* -Recurse -Force

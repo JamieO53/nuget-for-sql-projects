@@ -270,3 +270,5 @@ __pycache__/
 /NugetDbTools/NugetDbPackerDb/PowerShell/NuGetDbPacker.psm1
 /NugetDbTools/NugetDbPackerDb/PowerShell/NuGetDbPacker.psd1
 CallGraph_*
+/NugetDbTools/NugetDbPacker/CallGraph-NuGetDbPacker.txt
+/NugetDbTools/NugetDbPacker/CallGraph-NuGetDbPacker.ps1
