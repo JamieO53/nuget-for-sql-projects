@@ -22,11 +22,11 @@ function Import-NuGetDb {
 		[string]$NugetSpecPath
 	)
 	[xml]$proj = Get-Content $ProjectPath
-	[string]$dacpac = ([string]$proj.Project.PropertyGroup.DacApplicationName).Trim()
+	[string]$dacpac = Get-ProjectProperty -Proj $proj -Property DacApplicationName
 	if ($dacpac -eq '') {
 		$dacpac = ([string]($proj.Project.PropertyGroup.Name | ? { $_ -ne 'PropertyGroup'})).Trim()
 	}
-	[string]$assembly = ([string]$proj.Project.PropertyGroup.AssemblyName).Trim()
+	[string]$assembly = Get-ProjectProperty -Proj $proj -Property AssemblyName
 
 	if (Test-Path "$ProjDbFolder\$dacpac.dacpac") {
 		Copy-Item "$ProjDbFolder\$dacpac.dacpac" $NugetDbFolder
