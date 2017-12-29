@@ -30,6 +30,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build.ps1" />
+    <Compile Include="Scripts\Import-NuGetProject.ps1" />
+    <Compile Include="Tests\Import-NuGetProject.tests.ps1" />
     <Compile Include="NuGetProjectPacker.psd1" />
     <Compile Include="NuGetProjectPacker.psm1" />
     <Compile Include="Package.ps1" />
