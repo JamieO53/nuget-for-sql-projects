@@ -22,7 +22,6 @@ cd NuGet
 'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $_ | Out-Null }
 cd ..
 copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
-copy "$slnDir\PackageTools\*" "NuGet\content\PackageTools\"
 
 NuGet pack -BasePath NuGet
 nuget push "$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
