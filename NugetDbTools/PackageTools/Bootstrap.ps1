@@ -30,4 +30,8 @@ ls $BootstrapFolder -Directory | % {
     }
 }
 
+if (Test-Path "$SolutionFolder\Package.nuspec.txt") {
+	Rename-Item "$SolutionFolder\Package.nuspec.txt" 'Package.nuspec'
+}
+
 del $BootstrapFolder -Include '*' -Recurse
