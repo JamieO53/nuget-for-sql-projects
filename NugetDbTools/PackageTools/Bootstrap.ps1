@@ -22,13 +22,12 @@ ls $BootstrapFolder -Directory | % {
         if (-not (Test-Path "$SolutionFolder\$($_.Name)")) {
             mkdir "$SolutionFolder\$($_.Name)"
         }
-        if ($_.Name -eq 'Bootstrap.cmd') {
-			"powershell -Command `"& { .\Bootstrap.ps1 -ProjectType Project }`""
-		} else {
-			copy "$($_.FullName)\*" "$SolutionFolder\$($_.Name)"
-		}
+		copy "$($_.FullName)\*" "$SolutionFolder\$($_.Name)"
     }
 }
+
+"powershell -Command `"& { .\Bootstrap.ps1 -ProjectType $ProjectType }`"" |
+	sc "$SolutionFolder\Bootstrap.cmd" -Encoding UTF8
 
 if (Test-Path "$SolutionFolder\Package.nuspec.txt") {
 	Rename-Item "$SolutionFolder\Package.nuspec.txt" 'Package.nuspec'
