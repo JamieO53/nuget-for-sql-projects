@@ -26,7 +26,7 @@ md "$projDir\NuGet" | Out-Null
 copy "$projDir\bin\Debug\$id\$id.ps*1" "$projDir\NuGet\content\$contentType\"
 copy "$slnDir\PackageTools\*" "$projDir\NuGet\content\PackageTools\"
 copy "$slnDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\"
-"powershell -Command `".\Bootstrap.ps1`" -ProjectType $ProjectType" |
+powershell -Command `"& { .\Bootstrap.ps1 -ProjectType Project }`" |
 	Set-Content "$projDir\NuGet\content\PackageTools\Bootstrap.cmd" -Encoding UTF8
 
 NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir

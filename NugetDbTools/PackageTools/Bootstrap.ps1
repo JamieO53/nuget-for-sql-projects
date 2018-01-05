@@ -23,7 +23,7 @@ ls $BootstrapFolder -Directory | % {
             mkdir "$SolutionFolder\$($_.Name)"
         }
         if ($_.Name -eq 'Bootstrap.cmd') {
-			"powershell -Command `".\Bootstrap.ps1`" -ProjectType $ProjectType"
+			"powershell -Command `"& { .\Bootstrap.ps1 -ProjectType Project }`""
 		} else {
 			copy "$($_.FullName)\*" "$SolutionFolder\$($_.Name)"
 		}
