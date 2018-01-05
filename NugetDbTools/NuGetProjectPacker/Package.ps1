@@ -1,4 +1,5 @@
-$id='NuGetProjectPacker'
+$projectType = 'Project'
+$id="NuGet$($projectType)Packer"
 $contentType='PowerShell'
 $projDir = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)").Path
 $slnDir = "$projDir\.."
@@ -20,10 +21,13 @@ if (Test-Path $projDir\NuGet) {
 }
 
 md "$projDir\NuGet" | Out-Null
-'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $projDir\NuGet\$_ | Out-Null }
+'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $projDir\NuGet\$_ | Out-Null }
 
 copy "$projDir\bin\Debug\$id\$id.ps*1" "$projDir\NuGet\content\$contentType\"
 copy "$slnDir\PackageTools\*" "$projDir\NuGet\content\PackageTools\"
+copy "$slnDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\"
+"powershell -Command `".\Bootstrap.ps1`" -ProjectType $ProjectType" |
+	Set-Content "$projDir\NuGet\content\PackageTools\Bootstrap.cmd" -Encoding UTF8
 
 NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
 nuget push "$projDir\$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
