@@ -1,6 +1,6 @@
-params {
+param (
 	[string]$ProjectType = 'Db'
-}
+)
 $SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..").Path
 $BootstrapFolder = "$SolutionFolder\Bootstrap"
 
