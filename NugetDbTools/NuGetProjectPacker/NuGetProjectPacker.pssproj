@@ -36,6 +36,10 @@
     <Compile Include="NuGetProjectPacker.psm1" />
     <Compile Include="Package.ps1" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+    <Folder Include="Tests\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
 </Project>
