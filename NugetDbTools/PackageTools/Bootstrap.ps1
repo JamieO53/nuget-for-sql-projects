@@ -26,11 +26,8 @@ ls $BootstrapFolder -Directory | % {
     }
 }
 
-"powershell -Command `"& { .\Bootstrap.ps1 -ProjectType $ProjectType }`"" |
-	sc "$SolutionFolder\Bootstrap.cmd" -Encoding UTF8
-
-if (Test-Path "$SolutionFolder\Package.nuspec.txt") {
-	Rename-Item "$SolutionFolder\Package.nuspec.txt" 'Package.nuspec'
+if (Test-Path "$SolutionFolder\PackageTools\Package.nuspec.txt") {
+	Rename-Item "$SolutionFolder\PackageTools\Package.nuspec.txt" 'Package.nuspec'
 }
 
 del $BootstrapFolder -Include '*' -Recurse
