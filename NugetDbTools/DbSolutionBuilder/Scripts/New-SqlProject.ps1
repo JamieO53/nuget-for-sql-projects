@@ -42,5 +42,5 @@ function New-SqlProject {
 		Set-NuGetProjectDependencyVersion -NugetConfigPath $cfgPath -Dependency $_.Include -Version $_.Version
 	}
 	Set-DbReferencesInProject -SolutionFolder $SolutionFolder -ProjectPath $projectPath
-	Set-NuGetDependenciesInProject -Parameters $Parameters -ProjectPath $projectPath
+	Set-NuGetDependenciesInPkgProject -Parameters $Parameters -ProjectPath $projectPath
 }

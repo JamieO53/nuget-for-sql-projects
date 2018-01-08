@@ -37,7 +37,7 @@
     <Compile Include="Scripts\New-DbSolution.ps1" />
     <Compile Include="Scripts\New-SqlProject.ps1" />
     <Compile Include="Scripts\Set-DbReferencesInProject.ps1" />
-    <Compile Include="Scripts\Set-NuGetDependenciesInProject.ps1" />
+    <Compile Include="Scripts\Set-NuGetDependenciesInPkgProject.ps1" />
     <Compile Include="Scripts\Set-SqlProjectDependenciesInSolution.ps1" />
     <Compile Include="Scripts\Set-SqlProjectInSolution.ps1" />
     <Compile Include="Tests\New-DbSolution.tests.ps1" />

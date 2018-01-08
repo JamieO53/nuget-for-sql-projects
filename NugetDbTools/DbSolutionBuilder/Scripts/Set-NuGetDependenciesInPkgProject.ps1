@@ -1,4 +1,4 @@
-function Set-NuGetDependenciesInProject {
+function Set-NuGetDependenciesInPkgProject {
 	<#.Synopsis
 	Sets the NuGet dependencies in the SQL project configuration file
 	.DESCRIPTION
@@ -6,7 +6,7 @@ function Set-NuGetDependenciesInProject {
 
 	The modified project file is saved to disk
 	.EXAMPLE
-	Set-NuGetDependenciesInProject -Parameters $Parameters -ConfigPath "$projectFolder\$projectName.nuget.config"
+	Set-NuGetDependenciesInPkgProject -Parameters $Parameters -ConfigPath "$projectFolder\$projectName.nuget.config"
 	#>
     [CmdletBinding()]
     [OutputType([string])]
