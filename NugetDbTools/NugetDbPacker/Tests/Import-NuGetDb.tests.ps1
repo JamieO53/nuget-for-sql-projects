@@ -2,6 +2,9 @@
 	Remove-Module NugetDbPacker
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1"
+if (-not (Get-Module TestUtils)) {
+	Import-Module "$SolutionFolder\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+}
 Describe "Import-NuGetDb" {
 	$projFolder = "TestDrive:\proj"
 	$projDbFolder = "$projFolder\Databases"

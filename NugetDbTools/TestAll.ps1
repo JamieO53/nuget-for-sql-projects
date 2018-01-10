@@ -1,5 +1,8 @@
 $SolutionFolder = Split-Path -Path $MyInvocation.MyCommand.Path
 $SolutionPath = ls "$SolutionFolder\*.sln"
+if (Get-Module NuGetSharedPacker) {
+	Remove-Module NuGetSharedPacker
+}
 if (Get-Module NuGetShared) {
 	Remove-Module NuGetShared
 }
@@ -27,6 +30,9 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 	$testName = [IO.Path]::GetFileNameWithoutExtension($_.ProjectPath)
 	if (Test-Path "$projectFolder\Tests")
 	{
+		if (Get-Module TestUtils) {
+			Remove-Module TestUtils
+		}
 		if (Get-Module NuGetShared) {
 			Remove-Module NuGetShared
 		}

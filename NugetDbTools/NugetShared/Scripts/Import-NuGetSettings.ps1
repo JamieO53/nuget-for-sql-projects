@@ -15,15 +15,7 @@ function Import-NuGetSettings
 		[Parameter(Mandatory=$true, Position=0)]
 		[string]$NugetConfigPath
 	)
-	$nugetSettings = New-Object -TypeName PSObject -Property @{
-		nugetOptions = New-Object -TypeName PSObject -Property @{
-				majorVersion = '';
-				minorVersion = '';
-				contentFolders = '';
-			};
-		nugetSettings = @{};
-		nugetDependencies = @{}
-	}
+	$nugetSettings = New-NuGetSettings
 
 	if (Test-Path $NugetConfigPath) {
         [xml]$cfg = gc $NugetConfigPath

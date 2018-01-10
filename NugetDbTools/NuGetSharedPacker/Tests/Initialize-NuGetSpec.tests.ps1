@@ -1,7 +1,10 @@
-﻿if ( Get-Module NugetDbPacker) {
-	Remove-Module NugetDbPacker
+﻿if ( Get-Module NugetSharedPacker) {
+	Remove-Module NugetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1"
+if (-not (Get-Module TestUtils)) {
+	Import-Module "$SolutionFolder\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+}
 
 Describe Initialize-NuGetSpec {
 	BeforeAll {
@@ -21,7 +24,6 @@ Describe Initialize-NuGetSpec {
 	Context "Drop unused Nuget spec settings" {
 		Initialize-NuGetFolders -Path $nugetFolder
 		Initialize-NuGetSpec -Path $nugetFolder -setting $nugetSettings
-		copy $nugetSpecPath "$PSScriptRoot\..\bin\Debug\TestOut.txt"
 		[xml]$spec = Get-Content $nugetSpecPath
 		$metadata = $spec.package.metadata
 		Context "Settings removed" {

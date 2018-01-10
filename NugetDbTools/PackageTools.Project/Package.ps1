@@ -1,6 +1,8 @@
 $id='Triton'
 $contentType='lib'
 $projDir = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)").Path
+$projPath = "$projDir\$id.csproj"
+$nuspecPath = "$projDir\$id.nuspec"
 $slnDir = (Get-Item "$projDir\..").FullName
 pushd $projDir
 
@@ -11,7 +13,9 @@ if (-not (Get-Module NuGetProjectPacker)) {
 	Import-Module "$slnDir\PowerShell\NuGetProjectPacker.psd1"
 }
 
-$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir
+Initialize-NuGetFolders -Path $nuspecPath
+[xml]$spec = Import-NugetSettingsFramework -ProjectPath $projPath
+$version = Set-NuspecVersion -Path $nuspecPath -ProjectFolder $projDir
 #Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetShared'
 
 if (Test-Path $projDir\NuGet) {

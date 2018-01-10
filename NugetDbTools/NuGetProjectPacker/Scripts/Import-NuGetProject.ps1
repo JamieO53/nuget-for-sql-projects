@@ -12,7 +12,7 @@ function Import-NuGetProject {
     [CmdletBinding()]
     param
     (
-        # The location of .sqlproj file of the project being packaged
+        # The location of .csproj file of the project being packaged
         [string]$ProjectPath,
 		# The location of the project bin folder
 		[string]$ProjBinFolder,

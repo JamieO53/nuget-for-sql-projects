@@ -34,11 +34,13 @@
     <Compile Include="NuGetSharedPacker.psm1" />
     <Compile Include="Package.ps1" />
     <Compile Include="Scripts\Compress-Package.ps1" />
+    <Compile Include="Scripts\Get-NuspecProperty.ps1" />
     <Compile Include="Scripts\Get-ProjectProperty.ps1" />
     <Compile Include="Scripts\Initialize-NuGetFolders.ps1" />
     <Compile Include="Scripts\Initialize-NuGetSpec.ps1" />
     <Compile Include="Scripts\Initialize-Package.ps1" />
     <Compile Include="Scripts\Publish-Package.ps1" />
+    <Compile Include="Scripts\Remove-NugetFolder.ps1" />
     <Compile Include="Tests\Compress-Package.tests.ps1" />
     <Compile Include="Tests\Get-ProjectProperty.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />

@@ -6,7 +6,7 @@ function Publish-Package {
     
     If not, a new package is created and is pushed to the NuGet server
 	.EXAMPLE
-	Publish-DbPackage -ProjectPath C:\VSTS\EcsShared\SupportRoles\EcsShared.SupportRoles.sqlproj
+	Publish-Package -ProjectPath C:\VSTS\EcsShared\SupportRoles\EcsShared.SupportRoles.sqlproj
 	#>
     [CmdletBinding()]
     param
