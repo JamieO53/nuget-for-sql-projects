@@ -2,6 +2,7 @@ if (git status --porcelain) {
 	Write-Error 'Commit changes before publishing the projects to NuGet'
 }
 else {
+	Remove-Variable * -ErrorAction SilentlyContinue
 	pushd .\NugetShared
 	& '.\Package.ps1'
 	popd
