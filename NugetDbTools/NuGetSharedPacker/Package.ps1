@@ -29,9 +29,11 @@ if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
 	nuget push "$projDir\$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
 }
 
-del $projDir\NuGet\* -Recurse -Force
-rmdir $projDir\NuGet
-del "$projDir\$id.$version.nupkg"
+del $projDir\NuGet* -Recurse -Force
+if (Test-Path "$projDir\$id.$version.nupkg")
+{
+	del "$projDir\$id.$version.nupkg"
+}
 if ($loaded) {
 	Remove-Module NugetShared -ErrorAction Ignore
 }

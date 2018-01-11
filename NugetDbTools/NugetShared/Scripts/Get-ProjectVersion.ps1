@@ -30,7 +30,7 @@ function Get-ProjectVersion {
 		else {
 			$revisions = '0'
 		}
-		$version = "$latestTag.$revisions"
+		[string]$version = "$latestTag.$revisions"
 		
 		if (Test-PathIsInGitRepo -Path (Get-Location)) {
 			$branch = iex 'git branch' | ? { $_.StartsWith('* ') } | % { $_.Replace('* ', '') }
