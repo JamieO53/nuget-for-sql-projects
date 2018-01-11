@@ -12,7 +12,7 @@ if (-not (Get-Module NugetShared)) {
 }
 
 [string]$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $projDir
-$version = $version.TrimEnd()
+$version = $version.Trim()
 
 if (Test-Path $projDir\NuGet) {
 	del $projDir\NuGet\* -Recurse -Force
