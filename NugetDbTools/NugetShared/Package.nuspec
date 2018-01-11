@@ -1,1 +1,18 @@
-﻿
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NuGetShared</id>
+    <version>0.1.48</version>
+    <authors>joglethorpe</authors>
+    <owners>Ecentric Payment Systems</owners>
+    <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>NuGetShared shared resources for NuGet utilities</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>NuGetShared Common</tags>
+  </metadata>
+  <files>
+	<file src="content\PowerShell\*" target="PowerShell" />
+  </files>
+</package>

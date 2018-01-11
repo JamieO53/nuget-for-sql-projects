@@ -1,1 +1,24 @@
-﻿
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>NuGetProjectPacker</id>
+    <version>0.1.15</version>
+    <authors>joglethorpe</authors>
+    <owners>joglethorpe</owners>
+    <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>NuGetProjectPacker utility for creating project NuGet packages</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>NuGetProjectPacker 'CI tools'</tags>
+    <dependencies>
+      <dependency id="NuGetSharedPacker" version="0.1.14"/>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\*" target="tools" />
+    <file src="content\PackageTools\*" target="PackageTools" />
+	<file src="content\PowerShell\*" target="PowerShell" />
+  </files>
+</package>
+
