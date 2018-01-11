@@ -25,8 +25,10 @@ cd ..
 copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
 copy "$slnDir\PackageTools\*" "NuGet\content\PackageTools\"
 
-NuGet pack -BasePath NuGet
-nuget push "$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
+if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
+	NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
+	nuget push "$projDir\$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
+}
 
 del NuGet\* -Recurse -Force
 rmdir NuGet

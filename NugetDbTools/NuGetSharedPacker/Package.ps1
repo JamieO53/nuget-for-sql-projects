@@ -12,7 +12,7 @@ if (-not (Get-Module NugetShared)) {
 }
 
 $version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir
-Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetShared'
+Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetSharedPacker'
 
 if (Test-Path $projDir\NuGet) {
 	del $projDir\NuGet\* -Recurse -Force
@@ -24,8 +24,10 @@ md "$projDir\NuGet" | Out-Null
 
 copy "$projDir\bin\Debug\$id\$id.ps*1" "$projDir\NuGet\content\$contentType\"
 
-NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
-nuget push "$projDir\$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
+if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
+	NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
+	nuget push "$projDir\$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
+}
 
 del $projDir\NuGet\* -Recurse -Force
 rmdir $projDir\NuGet

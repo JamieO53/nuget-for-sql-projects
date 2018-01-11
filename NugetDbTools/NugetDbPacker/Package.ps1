@@ -29,8 +29,10 @@ copy "$slnDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\
 "powershell -Command `".\Bootstrap.ps1`" -ProjectType $projectType" |
 	Set-Content "$projDir\NuGet\content\PackageTools\Bootstrap.cmd" -Encoding Ascii
 
-NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
-nuget push "$projDir\$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
+if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
+	NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
+	nuget push "$projDir\$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
+}
 
 del $projDir\NuGet\* -Recurse -Force
 rmdir $projDir\NuGet
