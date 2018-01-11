@@ -17,7 +17,7 @@ function Set-NuspecVersion {
 		[string]$ProjectFolder
 	)
 
-	[xml]$cfg = gc Package.nuspec
+	[xml]$cfg = gc $Path
 	$oldVersion=$cfg.package.metadata.version
 	if (-not $oldVersion) {
 		$oldVersion = '1.0.0'
@@ -26,11 +26,7 @@ function Set-NuspecVersion {
 	$majorVersion = $versionParts[0]
 	$minorVersion = $versionParts[1]
 	$newVersion = Get-ProjectVersion -Path $ProjectFolder -MajorVersion $majorVersion -MinorVersion $minorVersion
-	[xml]$cfg = gc Package.nuspec
-	#$oldText = "<version>$oldVersion</version>"
-	#$newText = "<version>$newVersion</version>"
-	#$cfgText =  $cfgText.Replace($oldText, $newText).TrimEnd()
 	Set-NodeText -parentNode $cfg.package.metadata -id version -text $newVersion
-	$cfgText | Out-File -FilePath .\Package.nuspec -Encoding utf8 -Force
+	Out-FormattedXml -Xml $cfg -FilePath
 	$newVersion
 }
