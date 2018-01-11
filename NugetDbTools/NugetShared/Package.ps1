@@ -8,19 +8,20 @@ pushd $projDir
 $loaded = $false
 if (-not (Get-Module NugetShared)) {
 	$loaded = $true
-	Import-Module ".\bin\Debug\$id\NugetShared.psm1"
+	Import-Module "$projDir\bin\Debug\$id\NugetShared.psm1"
 }
 
-$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $projDir
+[string]$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $projDir
+$version = $version.TrimEnd()
 
-if (Test-Path NuGet) {
-	del NuGet\* -Recurse -Force
-	rmdir NuGet
+if (Test-Path $projDir\NuGet) {
+	del $projDir\NuGet\* -Recurse -Force
+	rmdir $projDir\NuGet
 }
-md NuGet | Out-Null
-cd NuGet
-'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $_ | Out-Null }
-cd ..
+
+md "$projDir\NuGet" | Out-Null
+'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $projDir\NuGet\$_ | Out-Null }
+
 copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
 
 if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
