@@ -27,6 +27,6 @@ function Set-NuspecVersion {
 	$minorVersion = $versionParts[1]
 	$newVersion = Get-ProjectVersion -Path $ProjectFolder -MajorVersion $majorVersion -MinorVersion $minorVersion
 	Set-NodeText -parentNode $cfg.package.metadata -id version -text $newVersion
-	Out-FormattedXml -Xml $cfg -FilePath
+	Out-FormattedXml -Xml $cfg -FilePath $Path
 	$newVersion
 }
