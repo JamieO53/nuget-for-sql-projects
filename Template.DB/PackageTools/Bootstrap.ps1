@@ -27,6 +27,9 @@ ls $BootstrapFolder -Directory | % {
 }
 
 if (Test-Path "$SolutionFolder\PackageTools\Package.nuspec.txt") {
+	if (Test-Path "$SolutionFolder\PackageTools\Package.nuspec") {
+		Remove-Item "$SolutionFolder\PackageTools\Package.nuspec"
+	}
 	Rename-Item "$SolutionFolder\PackageTools\Package.nuspec.txt" 'Package.nuspec'
 }
 
