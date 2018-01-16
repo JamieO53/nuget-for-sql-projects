@@ -1,16 +1,16 @@
 function Set-NodeText ($parentNode, $id, [String]$text){
-	[xml.XmlNode]$childNode
-	$parentNode.SelectSingleNode($id) |
-		where { $_ } |
-		foreach {
-			$childNode = $_
+		[xml.XmlNode]$childNode | Out-Null
+		$parentNode.SelectSingleNode($id) |
+			where { $_ } |
+			foreach {
+				$childNode = $_
+			}
+		if (-not $childNode) {
+			$newNode = Add-Node -parentNode $parentNode -id $id
+			$newNode.InnerText = $text
 		}
-    if (-not $childNode) {
-		[xml]$child = "<$id>$text</$id>"
-		$childNode = $parentNode.AppendChild($parentNode.OwnerDocument.ImportNode($child.FirstChild, $true))
-	}
-	else
-	{
-		$childNode.InnerText = $text
-	}
+		else
+		{
+			$childNode.InnerText = $text
+		}
 }

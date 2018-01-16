@@ -15,14 +15,17 @@ function Set-NuspecDependencyVersion {
 		[string]$Dependency
 	)
 
-	$spec = gc $Path
-	$dep = $spec | ? { $_ -like "*<dependency id=`"$Dependency`" version=`"*`"/>*"  }
-	$oldVersion = ($dep -split '"')[3]
+	[xml]$spec = gc $Path
+	$dependencies = $spec.package.metadata.dependencies
+	[xml.XmlElement]$dependencies = Get-GroupNode -ParentNode $spec.package.metadata -Id 'dependencies'
 	$newVersion = Get-NuGetPackageVersion $Dependency
-	$newDep = $dep.Replace($oldVersion, $newVersion)
-	$specText = $spec | Out-String
-	$oldText = "<dependency id=`"$Dependency`" version=`"$oldVersion`"/>"
-	$newText = "<dependency id=`"$Dependency`" version=`"$newVersion`"/>"
-	$specText =  $specText.Replace($oldText, $newText)
-	$specText | Out-File -FilePath $Path -Encoding utf8 -Force
+	$dep = $dependencies.dependency | ? { $_.id -eq $Dependency }
+	if ($dep) {
+		$dep.SetAttribute('version', $newVersion)
+	} else {
+		$newDep = Add-Node -parentNode $dependencies -id 'dependency'
+		$newDep.SetAttribute('id', $Dependency)
+		$newDep.SetAttribute('version', $newVersion)
+	}
+	Out-FormattedXml -Xml $spec -FilePath $Path
 }

@@ -34,9 +34,11 @@
     <Compile Include="NugetShared.psm1" />
     <Compile Include="Package.ps1" />
     <Compile Include="Scripts\Add-DictionaryNode.ps1" />
+    <Compile Include="Scripts\Add-Node.ps1" />
     <Compile Include="Scripts\Export-NuGetSettings.ps1" />
     <Compile Include="Scripts\Format-XmlIndent.ps1" />
     <Compile Include="Scripts\Get-CSharpProjects.ps1" />
+    <Compile Include="Scripts\Get-GroupNode.ps1" />
     <Compile Include="Scripts\Get-NuGetDbToolsConfig.ps1" />
     <Compile Include="Scripts\Get-NuGetDbToolsConfigPath.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalApiKey.ps1" />
@@ -50,7 +52,9 @@
     <Compile Include="Scripts\Import-NuGetSettings.ps1" />
     <Compile Include="Scripts\New-NuGetSettings.ps1" />
     <Compile Include="Scripts\Out-FormattedXml.ps1" />
+    <Compile Include="Scripts\Publish-NuGetPackage.ps1" />
     <Compile Include="Scripts\Remove-Node.ps1" />
+    <Compile Include="Scripts\Remove-NugetFolder.ps1" />
     <Compile Include="Scripts\Save-CSharpProject.ps1" />
     <Compile Include="Scripts\Set-NodeText.ps1" />
     <Compile Include="Scripts\Set-NuspecDependencyVersion.ps1" />
@@ -59,6 +63,7 @@
     <Compile Include="Scripts\Test-NuGetVersionExists.ps1" />
     <Compile Include="Scripts\Test-PathIsInGitRepo.ps1" />
     <Compile Include="Tests\Export-NuGetSettings.tests.ps1" />
+    <Compile Include="Tests\Get-GroupNode.tests.ps1" />
     <Compile Include="Tests\Get-NuGetDbToolsConfigPath.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalApiKey.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalSource.tests.ps1" />

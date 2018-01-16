@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>NuGetDbPacker</id>
-    <version>0.1.53</version>
+    <version>0.1.60</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -12,13 +12,12 @@
     <copyright>Copyright 2017</copyright>
     <tags>NuGetDbPacker 'CI tools'</tags>
     <dependencies>
-      <dependency id="NuGetSharedPacker" version="0.1.14"/>
+      <dependency id="NuGetSharedPacker" version="0.1.21" />
     </dependencies>
   </metadata>
   <files>
     <file src="tools\*" target="tools" />
     <file src="content\PackageTools\*" target="PackageTools" />
-	<file src="content\PowerShell\*" target="PowerShell" />
+    <file src="content\PowerShell\*" target="PowerShell" />
   </files>
 </package>
-

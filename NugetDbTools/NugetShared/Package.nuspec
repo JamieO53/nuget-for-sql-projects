@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
-<package >
+﻿<?xml version="1.0"?>
+<package>
   <metadata>
     <id>NuGetShared</id>
-    <version>0.1.48</version>
+    <version>0.1.58</version>
     <authors>joglethorpe</authors>
     <owners>Ecentric Payment Systems</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -13,6 +13,6 @@
     <tags>NuGetShared Common</tags>
   </metadata>
   <files>
-	<file src="content\PowerShell\*" target="PowerShell" />
+    <file src="content\PowerShell\*" target="PowerShell" />
   </files>
 </package>

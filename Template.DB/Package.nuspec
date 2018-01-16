@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>NuGetDbPacker.DbTemplate</id>
-    <version>0.1.34</version>
+    <version>1.0.37</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>

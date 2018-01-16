@@ -21,8 +21,9 @@ function Set-ProjectDependencyVersion {
 	if ($ref) {
 		$ref.Version = $newVersion
 	} else {
-		[xml]$new = "<new><PackageReference Include=`"$Dependency`" Version=`"$newVersion`" /></new>"
-		$node = $refs.AppendChild($refs.OwnerDocument.ImportNode($new.new.FirstChild, $true))
+		$newRef = Add-Node -parentNode $refs -id PackageReference
+		$newRef.SetAttribute('Include', $Dependency);
+		$newRef.SetAttribute('Version', $newVersion);
 	}
 	Save-CSharpProject -Project $proj -Path $Path
 }

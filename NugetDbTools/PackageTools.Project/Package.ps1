@@ -35,7 +35,7 @@ Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetB
 
 if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
     NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
-    nuget push "$projDir\$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
+    Publish-NuGetPackage -PackagePath "$projDir\$id.$version.nupkg"
 }
 
 del $projDir\NuGet* -Recurse -Force

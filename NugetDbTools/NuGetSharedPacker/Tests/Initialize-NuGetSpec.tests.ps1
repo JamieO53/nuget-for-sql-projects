@@ -3,7 +3,7 @@
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1"
 if (-not (Get-Module TestUtils)) {
-	Import-Module "$SolutionFolder\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
 }
 
 Describe Initialize-NuGetSpec {

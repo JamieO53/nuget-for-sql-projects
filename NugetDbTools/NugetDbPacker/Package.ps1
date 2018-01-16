@@ -12,8 +12,8 @@ if (-not (Get-Module NugetShared)) {
 	Import-Module "$projDir\bin\Debug\$id\NugetShared.psm1"
 }
 
-[string]$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $projDir
-$version = $version.Trim()
+$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $projDir
+
 Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetSharedPacker'
 
 if (Test-Path $projDir\NuGet) {
@@ -32,10 +32,10 @@ copy "$slnDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\
 
 if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
 	NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
-	nuget push "$projDir\$id.$version.nupkg" (Get-NuGetLocalApiKey) -Source (Get-NuGetLocalSource)
+	Publish-NuGetPackage -PackagePath "$projDir\$id.$version.nupkg"
 }
 
-del $projDir\NuGet* -Recurse -Force
+Remove-NugetFolder $projDir\NuGet
 if (Test-Path "$projDir\$id.$version.nupkg")
 {
 	del "$projDir\$id.$version.nupkg"
