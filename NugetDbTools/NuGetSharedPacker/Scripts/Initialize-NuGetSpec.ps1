@@ -14,12 +14,11 @@ function Initialize-NuGetSpec {
 		[PSObject]$setting
 	)
 	$nuGetSpecPath = "$Path\Package.nuspec"
-	Push-Location -LiteralPath $Path
-	nuget spec -force | Out-Null
-	Pop-Location
 
 	[xml]$specDoc = Get-Content $nuGetSpecPath
     $metadata = $specDoc.package.metadata
+	$version = $specDoc.package.metadata.version
+
 	$nodes = @()
 	$metadata.ChildNodes | where { -not $setting.nugetSettings.Contains($_.Name) } | % { $nodes += $_.Name }
 	$nodes | % {
@@ -34,6 +33,7 @@ function Initialize-NuGetSpec {
 		$value = $setting.nugetSettings[$name]
 		Set-NodeText -parentNode $metadata -id $name -text $value
 	}
+	Set-NodeText -parentNode $metadata -id version -text $version
 	$depsNode = Add-Node -parentNode $metadata -id dependencies
 	$setting.nugetDependencies.Keys | % {
 		$dep = $_
@@ -42,5 +42,5 @@ function Initialize-NuGetSpec {
 		$depNode.SetAttribute('id', $dep)
 		$depNode.SetAttribute('version', $ver)
 	}
-    Out-FormattedXml -Xml $specDoc -FilePath $nuGetSpecPath
+	Out-FormattedXml -Xml $specDoc -FilePath $nuGetSpecPath
 }
