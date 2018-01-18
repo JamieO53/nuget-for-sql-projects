@@ -129,12 +129,6 @@ Describe "New-DbSolution" {
 				It "$($_.Project) NuGet configuration exists" {
 					Test-Path $projectNugetConfigPath | should be $true
 				}
-				It "$($_.Project) NuGet configuration referenced from project file" {
-					$projText.Contains("<None Include=`"$projectName.nuget.config`" />") | should be $true
-				}
-				It "Template.DbProject NuGet configuration should not be referenced from project file" {
-					$projText.Contains("<None Include=`"Template.DbProject.nuget.config`" />") | should be $false
-				}
 				It "Should start witn $name." {
 					$_.Project | should belike "$name.*"
 				}
@@ -164,6 +158,32 @@ Describe "New-DbSolution" {
 						$ref.value | should be $deps[$dep]
 					}
 				
+				}
+			}
+			Context "$projectName project file" {
+				[xml]$proj = $projText
+				$includes = ($proj.Project.ItemGroup.None | % { $_.Include })
+				It "$($_.Project) NuGet configuration referenced from project file" {
+					"$projectName.nuget.config" | should bein $includes
+				}
+				It "Template.DbProject NuGet configuration should not be referenced from project file" {
+					"Template.DbProject.nuget.config" | should not bein $includes
+				}
+				$refs = $proj.Project.ItemGroup.ArtifactReference
+				$deps.Keys + 'NugetDbPackerDb.Root' | % {
+					$dep = $_
+					Context "$dep database reference" {
+						$ref = $refs | ? { $_.Include -eq "..\Databases\$dep.dacpac"}
+						It "Exists" {
+							$ref | should not be $null
+						}
+						It "HintPath" {
+							$ref.HintPath | should be "..\Databases\$dep.dacpac"
+						}
+						It "SuppressMissingDependenciesErrors" {
+							$ref.SuppressMissingDependenciesErrors | should be 'False'
+						}
+					}
 				}
 			}
 		}

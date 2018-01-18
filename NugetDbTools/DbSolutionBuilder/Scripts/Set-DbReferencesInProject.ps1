@@ -26,15 +26,11 @@ function Set-DbReferencesInProject {
 			$ref = [IO.Path]::ChangeExtension($_.Name, '')
 			$exists = ($group.ArtifactReference | ? { $_.Include -eq "..\Databases\$($ref)dacpac" }) -ne $null
 			if (-not $exists) {
-				[xml]$node = @"
-  <node>
-    <ArtifactReference Include="..\Databases\$($ref)dacpac">
-      <HintPath>..\Databases\$($ref)dacpac</HintPath>
-      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
-    </ArtifactReference>
-  </node>
-"@
-				$dummy = $group.AppendChild($group.OwnerDocument.ImportNode($node.node.FirstChild, $true))
+				$refNode = Add-Node -parentNode $group -id ArtifactReference
+				$refNode.SetAttribute('Include', "..\Databases\$($ref)dacpac")
+				$hintNode = Add-Node -parentNode $refNode -id HintPath
+				Set-NodeText -parentNode $refNode -id HintPath -text "..\Databases\$($ref)dacpac"
+				Set-NodeText -parentNode $refNode -id SuppressMissingDependenciesErrors -text False
 			}
 		}
 	}

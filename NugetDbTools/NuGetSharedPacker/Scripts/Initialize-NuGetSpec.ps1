@@ -34,14 +34,13 @@ function Initialize-NuGetSpec {
 		$value = $setting.nugetSettings[$name]
 		Set-NodeText -parentNode $metadata -id $name -text $value
 	}
-	[xml]$parent = '<dependencies></dependencies>'
-	$depsNode = $parent.FirstChild
+	$depsNode = Add-Node -parentNode $metadata -id dependencies
 	$setting.nugetDependencies.Keys | % {
 		$dep = $_
 		$ver = $setting.nugetDependencies[$dep]
-		[xml]$child = "<dependency id=`"$dep`" version=`"$ver`"/>"
-		$childNode = $depsNode.AppendChild($depsNode.OwnerDocument.ImportNode($child.FirstChild, $true))
+		$depNode = Add-Node -parentNode $depsNode -id dependency
+		$depNode.SetAttribute('id', $dep)
+		$depNode.SetAttribute('version', $ver)
 	}
-	$depsNode = $metadata.AppendChild($metadata.OwnerDocument.ImportNode($parent.FirstChild, $true))
     Out-FormattedXml -Xml $specDoc -FilePath $nuGetSpecPath
 }

@@ -36,49 +36,21 @@ $optionItems
 	$parentNode = $xml.configuration
 
 	if ($Settings.nugetSettings.Keys.Count -gt 0) {
-		$Settings.nugetSettings.Keys | select -First 1 | % {
-			$settingKey = $_
-			$settingValue = $Settings.nugetSettings[$_]
-		}
-		$settingText = @"
-<?xml version=`"1.0`"?>
-<configuration>
-	<nugetSettings>
-		<add key=`"$settingKey`" value=`"$settingValue`"/>
-	</nugetSettings>
-</configuration>
-"@
-		[xml]$SettingsXml = $settingText
-		$settingsNode = $SettingsXml.configuration.nugetSettings
-		$Settings.nugetSettings.Keys | select -Skip 1 | % {
+		$settingsNode = Add-Node -parentNode $parentNode -id nugetSettings
+		$Settings.nugetSettings.Keys | % {
 			$settingKey = $_
 			$settingValue = $Settings.nugetSettings[$_]
 			Add-DictionaryNode -parentNode $settingsNode -key $settingKey -value $settingValue
 		}
-		$childNode = $parentNode.AppendChild($parentNode.OwnerDocument.ImportNode($settingsNode, $true))
 	}
 
 	if ($Settings.nugetDependencies.Keys.Count -gt 0) {
-		$Settings.nugetDependencies.Keys | select -First 1 | % {
-			$dependencyKey = $_
-			$dependencyValue = $Settings.nugetDependencies[$_]
-		}
-		$dependencyText = @"
-<?xml version=`"1.0`"?>
-<configuration>
-	<nugetDependencies>
-		<add key=`"$dependencyKey`" value=`"$dependencyValue`"/>
-	</nugetDependencies>
-</configuration>
-"@
-		[xml]$dependencyXml = $dependencyText
-		$dependenciesNode = $dependencyXml.configuration.nugetDependencies
-		$Settings.nugetDependencies.Keys | select -Skip 1 | % {
+		$dependenciesNode = Add-Node -parentNode $parentNode -id nugetDependencies
+		$Settings.nugetDependencies.Keys | % {
 			$dependencyKey = $_
 			$dependencyValue = $Settings.nugetDependencies[$_]
 			Add-DictionaryNode -parentNode $dependenciesNode -key $dependencyKey -value $dependencyValue
 		}
-		$childNode = $parentNode.AppendChild($parentNode.OwnerDocument.ImportNode($dependenciesNode, $true))
 	}
 	Out-FormattedXml -Xml $xml -FilePath $NugetConfigPath
 }
