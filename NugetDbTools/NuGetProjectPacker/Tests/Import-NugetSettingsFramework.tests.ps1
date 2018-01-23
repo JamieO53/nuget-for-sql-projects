@@ -70,7 +70,7 @@ Describe "Import-NugetSettingsFramework" {
 		$projText | Set-Content $projPath
 		$pkgCfgText | Set-Content $pkgCfgPath
 		$pkgNspText | Set-Content $pkgNspPath
-		$nugetSettings = Import-NugetSettingsFramework -ProjectPath $projPath
+		$nugetSettings = Import-NugetSettingsFramework -NuspecPath $pkgNspPath -PackagesConfigPath $pkgCfgPath
 		$nugetSettings
 	}
 }

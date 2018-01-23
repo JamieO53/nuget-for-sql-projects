@@ -69,7 +69,7 @@ Describe "Import-NuGetProject" {
 		$pkgNspText | Set-Content $pkgNspPath
 		'lib' | Set-Content "$projBinFolder\ProjLib.dll"
 		'pdb' | Set-Content "$projBinFolder\ProjLib.pdb"
-		$nugetSettings = Import-NugetSettingsFramework -ProjectPath $projPath
+		$nugetSettings = Import-NugetSettingsFramework -NuspecPath $pkgNspPath -PackagesConfigPath $pkgCfgPath
 		Initialize-NuGetFolders -Path $nugetFolder
 		Initialize-NuGetSpec -Path $nugetFolder -setting $nugetSettings
 		[xml]$spec = gc "$nugetFolder\Package.nuspec"
@@ -83,7 +83,7 @@ Describe "Import-NuGetProject" {
 		$pkgNspText | Set-Content $pkgNspPath
 		'lib' | Set-Content "$projBinFolder\ProjLib.dll"
 		'pdb' | Set-Content "$projBinFolder\ProjLib.pdb"
-		$nugetSettings = Import-NugetSettingsFramework -ProjectPath $projPath
+		$nugetSettings = Import-NugetSettingsFramework -NuspecPath $pkgNspPath -PackagesConfigPath $pkgCfgPath
 		Initialize-NuGetFolders -Path $nugetFolder
 		Initialize-NuGetSpec -Path $projFolder -setting $nugetSettings
 		Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $projDir\$id.nuspec

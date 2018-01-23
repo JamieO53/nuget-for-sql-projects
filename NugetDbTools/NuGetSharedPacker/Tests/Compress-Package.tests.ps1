@@ -36,7 +36,7 @@ Context "Exists" {
 		'dacpac' | Set-Content "$projDbFolder\ProjDb.dacpac"
 		'lib' | Set-Content "$projDbFolder\ProjLib.dll"
 		'pdb' | Set-Content "$projDbFolder\ProjLib.pdb"
-		Initialize-DbPackage -ProjectPath $projPath
+		Initialize-Package -ProjectPath $projPath
 		Compress-Package -NugetPath $nugetFolder
 
 		$id = $nugetSettings.nugetSettings.id

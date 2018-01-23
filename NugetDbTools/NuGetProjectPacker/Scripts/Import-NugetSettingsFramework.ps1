@@ -4,22 +4,22 @@ function Import-NugetSettingsFramework {
 	.DESCRIPTION
 	Import the NuGet spec settings from the project the project's packages configuration file (packages.config)
 	.EXAMPLE
-	Import-NugetSettingsFramework -ProjectPath '.\Triton.Triton.csproj'
+	Import-NugetSettingsFramework -NuspecPath '.\Package.nuspec'
+	.EXAMPLE
+	Import-NugetSettingsFramework -NuspecPath '.\Package.nuspec' -PackagesConfigPath '.\AtlasCore\packages.config'
 	#>
     [CmdletBinding()]
     [OutputType([Collections.Hashtable])]
     param
     (
-        # The location of .csproj file of the project being packaged
-        [string]$ProjectPath
+        # The location of the .nuspec file of the package
+        [string]$NuspecPath,
+		# The location of the Packages.config file of the solution
+		[string]$PackagesConfigPath = $null
 	)
 	$nugetSettings = New-NuGetSettings
-	$projectFolder = Split-Path -Path $ProjectPath
-	$projectName = (Split-Path -Path $ProjectPath -Leaf).Split('.')[0];
-	$specPath = Join-Path -Path $projectFolder -ChildPath Package.nuspec
-	$pkgPath = Join-Path -Path $projectFolder -ChildPath packages.config
-	if (Test-Path $specPath) {
-		[xml]$spec = gc $specPath
+	if (Test-Path $NuspecPath) {
+		[xml]$spec = gc $NuspecPath
 		$spec.package.metadata |
 			Get-Member |
 			where { ($_.MemberType -eq 'Property') -and ($_.Name -ne 'dependencies') } | % {
@@ -33,11 +33,18 @@ function Import-NugetSettingsFramework {
 					$nugetSettings.nugetSettings[$name] = Get-NuspecProperty -Spec $spec -Property $name
 				}
 			}
+		if ($spec.package.metadata.dependencies) {
+			$spec.package.metadata.dependencies.dependency | % {
+				$nugetSettings.nugetDependencies[$_.id] = $_.version
+			}
+		}
 	}
-	if (Test-Path $pkgPath) {
-		[xml]$pkg = gc $pkgPath
+	if (Test-Path $PackagesConfigPath) {
+		[xml]$pkg = gc $PackagesConfigPath
 		$pkg.packages.package | % {
-			$nugetSettings.nugetDependencies[$_.id] = $_.version
+			if ($nugetSettings.nugetDependencies.ContainsKey($_.id)) {
+				$nugetSettings.nugetDependencies[$_.id] = $_.version
+			}
 		}
 	}
 	$nugetSettings

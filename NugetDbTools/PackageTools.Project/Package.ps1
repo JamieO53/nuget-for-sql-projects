@@ -2,7 +2,8 @@ $id='Triton'
 $contentType='lib'
 $projDir = Split-Path $MyInvocation.MyCommand.Path
 $projPath = "$projDir\$id.csproj"
-$nuspecPath = "$projDir\$id.nuspec"
+$nuspecPath = "$projDir\Package.nuspec"
+$pkgCfgPath = "$projDir\packages.config"
 $nugetFolder = "$projDir\NuGet"
 $slnDir = (Get-Item "$projDir\..").FullName
 $projBinFolder = "$projDir\bin\Debug"
@@ -17,7 +18,7 @@ if (-not (Get-Module NuGetProjectPacker)) {
 }
 
 Initialize-NuGetFolders -Path $nugetFolder
-$spec = Import-NugetSettingsFramework -ProjectPath $projPath
+$spec = Import-NugetSettingsFramework -NupecPath $NuspecPath -PackagesConfigPath $pkgCfgPath
 $version = Set-NuspecVersion -Path $nuspecPath -ProjectFolder $projDir
 
 if (Test-Path $projDir\NuGet) {

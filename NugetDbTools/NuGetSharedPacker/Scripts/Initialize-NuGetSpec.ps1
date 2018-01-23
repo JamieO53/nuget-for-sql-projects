@@ -15,9 +15,15 @@ function Initialize-NuGetSpec {
 	)
 	$nuGetSpecPath = "$Path\Package.nuspec"
 
+	if (-not (Test-Path $nuGetSpecPath)) {
+		$id = $setting.nugetSettings['id']
+		pushd $Path
+		nuget spec $id
+		Rename-Item "$Path\$id.nuspec" 'Package.nuspec'
+		popd
+	}
 	[xml]$specDoc = Get-Content $nuGetSpecPath
     $metadata = $specDoc.package.metadata
-	$version = $specDoc.package.metadata.version
 
 	$nodes = @()
 	$metadata.ChildNodes | where { -not $setting.nugetSettings.Contains($_.Name) } | % { $nodes += $_.Name }
@@ -33,7 +39,6 @@ function Initialize-NuGetSpec {
 		$value = $setting.nugetSettings[$name]
 		Set-NodeText -parentNode $metadata -id $name -text $value
 	}
-	Set-NodeText -parentNode $metadata -id version -text $version
 	$depsNode = Add-Node -parentNode $metadata -id dependencies
 	$setting.nugetDependencies.Keys | % {
 		$dep = $_
