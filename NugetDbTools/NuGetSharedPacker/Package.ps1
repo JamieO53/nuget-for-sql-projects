@@ -1,7 +1,7 @@
 $id='NuGetSharedPacker'
 $contentType='PowerShell'
-$projDir = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)").Path
-$slnDir = "$projDir\.."
+$projDir = (Get-Item "$(Split-Path -Path $MyInvocation.MyCommand.Path)").FullName
+$slnDir = (Get-Item "$projDir\..").FullName
 pushd $projDir
 try {
 
@@ -13,7 +13,7 @@ try {
 
 	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir
 	if ($version -like '*.0'){
-		Write-Error "Invalid version $version" -ErrorAction Stop
+		throw "Invalid version $version"
 	}
 
 	Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetShared'
@@ -42,7 +42,7 @@ try {
 		Remove-Module NugetShared -ErrorAction Ignore
 	}
 } catch {
-	Write-Host "$id packaging failed: $($_.Message)" -ForegroundColor Red
+	Write-Host "$id packaging failed: $($_.Exception.Message)" -ForegroundColor Red
 	Exit 1
 } finally {
 	popd
