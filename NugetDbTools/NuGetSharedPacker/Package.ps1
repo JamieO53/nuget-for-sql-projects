@@ -13,7 +13,7 @@ try {
 
 	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir
 	if ($version -like '*.0'){
-		throw "Invalid version $version"
+		Write-Error "Invalid version $version" -ErrorAction Stop
 	}
 
 	Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetShared'
@@ -42,7 +42,7 @@ try {
 		Remove-Module NugetShared -ErrorAction Ignore
 	}
 } catch {
-	Write-Error "$id packaging failed: $($_.Message)" -ErrorAction SilentlyContinue
+	Write-Host "$id packaging failed: $($_.Message)" -ForegroundColor Red
 	Exit 1
 } finally {
 	popd
