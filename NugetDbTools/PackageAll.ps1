@@ -14,7 +14,7 @@ else {
 		powershell.exe -command '.\Package.ps1'
 		popd
 		if ($LASTEXITCODE) {
-			throw "Package of NugetSharedPacker failed"
+			Write-Error "Package of NugetSharedPacker failed" -ErrorAction Stop
 		}
 		pushd '.\NugetDbPacker'
 		powershell.exe -command '.\Package.ps1'
