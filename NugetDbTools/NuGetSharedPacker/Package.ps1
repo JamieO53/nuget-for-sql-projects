@@ -42,7 +42,7 @@ try {
 		Remove-Module NugetShared -ErrorAction Ignore
 	}
 } catch {
-	Write-Error "$id packaging failed: $($_.Message)"
+	Write-Error "$id packaging failed: $($_.Message)" -ErrorAction Ignore
 	Exit 1
 } finally {
 	popd
