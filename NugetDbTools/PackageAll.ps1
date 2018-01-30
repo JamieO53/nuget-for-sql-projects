@@ -35,7 +35,7 @@ else {
 			throw "Package of DbSolutionBuilder failed"
 		}
 	} catch {
-		Write-Host $_.Exception.Message
+		Write-Host $_.Exception.Message -ForegroundColor Red
 		exit 1
 	} finally {
 		popd
