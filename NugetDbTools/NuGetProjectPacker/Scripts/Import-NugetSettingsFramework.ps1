@@ -29,9 +29,8 @@ function Import-NugetSettingsFramework {
 					$verParts = $version.Split('.')
 					$nugetSettings.nugetOptions.MajorVersion = $verParts[0]
 					$nugetSettings.nugetOptions.MinorVersion = $verParts[1]
-				} else {
-					$nugetSettings.nugetSettings[$name] = Get-NuspecProperty -Spec $spec -Property $name
 				}
+				$nugetSettings.nugetSettings[$name] = Get-NuspecProperty -Spec $spec -Property $name
 			}
 		if ($spec.package.metadata.dependencies) {
 			$spec.package.metadata.dependencies.dependency | % {

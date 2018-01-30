@@ -24,8 +24,8 @@ if (Test-Path $nugetFolder) {
 
 md $nugetFolder | Out-Null
 'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $nugetFolder\$_ | Out-Null }
-$nugetSettings = Import-NugetSettingsFramework -NuspecPath $nuspecPath -PackagesConfigPath $pkgCfgPath
 $version = Set-NuspecVersion -Path $nuspecPath -ProjectFolder $slnDir
+$nugetSettings = Import-NugetSettingsFramework -NuspecPath $nuspecPath -PackagesConfigPath $pkgCfgPath
 Initialize-NuGetFolders -Path $nugetFolder
 Initialize-NuGetSpec -Path $slnDir -setting $nugetSettings
 
