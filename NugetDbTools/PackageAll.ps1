@@ -10,11 +10,11 @@ else {
 		if ($LASTEXITCODE) {
 			throw "Package of NugetShared failed"
 		}
-		pushd '.\NugetSharedPacker'
+		pushd '.\NuGetSharedPacker'
 		powershell.exe -OutputFormat Text -command '.\Package.ps1'
 		popd
 		if ($LASTEXITCODE) {
-			Write-Error "Package of NugetSharedPacker failed" -ErrorAction Stop
+			Write-Error "Package of NuGetSharedPacker failed" -ErrorAction Stop
 		}
 		pushd '.\NugetDbPacker'
 		powershell.exe -command '.\Package.ps1'
@@ -22,11 +22,11 @@ else {
 		if ($LASTEXITCODE) {
 			throw "Package of NugetDbPacker failed"
 		}
-		pushd '.\NugetProjectPacker'
+		pushd '.\NuGetProjectPacker'
 		powershell.exe -command '.\Package.ps1'
 		popd
 		if ($LASTEXITCODE) {
-			throw "Package of NugetProjectPacker failed"
+			throw "Package of NuGetProjectPacker failed"
 		}
 		pushd '.\DbSolutionBuilder'
 		powershell.exe -command '.\Package.ps1'
