@@ -36,5 +36,7 @@ else {
 		}
 	} catch {
 		Write-Host $_.Message
+	} finally {
+		popd
 	}
 }
