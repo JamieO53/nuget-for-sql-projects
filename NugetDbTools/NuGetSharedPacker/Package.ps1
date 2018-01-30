@@ -44,7 +44,6 @@ try {
 } catch {
 	Write-Error "$id packaging failed: $($_.Message)"
 	Exit 1
-}
 } finally {
 	popd
 }
