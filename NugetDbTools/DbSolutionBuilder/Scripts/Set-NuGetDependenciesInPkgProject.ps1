@@ -19,9 +19,11 @@ function Set-NuGetDependenciesInPkgProject {
 	)
 	$cfgPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
 	$cfg = Import-NuGetSettings -NugetConfigPath $cfgPath
-	$Parameters.dbSolution.dependencies.dependency | % {
-		$version = Get-NugetPackageVersion $_.id
-		$cfg.nugetDependencies[$_.id] = $version
+	if ($Parameters.dbSolution.dependencies.dependency) {
+		$Parameters.dbSolution.dependencies.dependency | % {
+			$version = Get-NugetPackageVersion $_.id
+			$cfg.nugetDependencies[$_.id] = $version
+		}
 	}
 	Export-NuGetSettings -NugetConfigPath $cfgPath -Settings $cfg
 }

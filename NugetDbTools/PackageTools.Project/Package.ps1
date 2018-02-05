@@ -1,51 +1,58 @@
-$id='Triton'
+$id='Ecentric.Triton'
+$projName='Triton'
 $contentType='lib'
 $projDir = Split-Path $MyInvocation.MyCommand.Path
-$projPath = "$projDir\$id.csproj"
+$projPath = "$projDir\$projName.csproj"
 $nuspecPath = "$projDir\Package.nuspec"
 $pkgCfgPath = "$projDir\packages.config"
 $nugetFolder = "$projDir\NuGet"
 $slnDir = (Get-Item "$projDir\..").FullName
 $projBinFolder = "$projDir\bin\Debug"
 $nugetBinFolder = "$nugetFolder\Lib"
+$pkgPath = "$projDir\$id.$version.nupkg"
 pushd $projDir
 
 
 $loaded = $false
 if (-not (Get-Module NuGetProjectPacker)) {
 	$loaded = $true
+	Import-Module "$slnDir\PowerShell\NuGetShared.psd1"
+	Import-Module "$slnDir\PowerShell\NuGetSharedPacker.psd1"
 	Import-Module "$slnDir\PowerShell\NuGetProjectPacker.psd1"
 }
 
-Initialize-NuGetFolders -Path $nugetFolder
-$spec = Import-NugetSettingsFramework -NupecPath $NuspecPath -PackagesConfigPath $pkgCfgPath
-$version = Set-NuspecVersion -Path $nuspecPath -ProjectFolder $projDir
-
-if (Test-Path $projDir\NuGet) {
-	del $projDir\NuGet\* -Recurse -Force
-	rmdir $projDir\NuGet
+if (Test-Path $nugetFolder) {
+	del $nugetFolder\* -Recurse -Force
+	rmdir $nugetFolder
 }
 
-md "$projDir\NuGet" | Out-Null
-'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $projDir\NuGet\$_ | Out-Null }
-$nugetSettings = Import-NugetSettingsFramework -ProjectPath $projPath
+md $nugetFolder | Out-Null
+'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $nugetFolder\$_ | Out-Null }
+$nugetSettings = Import-NugetSettingsFramework -NuspecPath $nuspecPath -PackagesConfigPath $pkgCfgPath
+$version = Set-NuspecVersion -Path $nuspecPath -ProjectFolder $projDir
 Initialize-NuGetFolders -Path $nugetFolder
 Initialize-NuGetSpec -Path $projDir -setting $nugetSettings
 
-Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $projDir\Package.nuspec
+Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $nuspecPath
+ls $nugetFolder\lib\net* | %{
+	copy $projDir\Config\Ecentric.Triton.Configuration.xsd $_.FullName
+}
 
 if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
-    NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
-    Publish-NuGetPackage -PackagePath "$projDir\$id.$version.nupkg"
+    NuGet pack $nuspecPath -BasePath $nugetFolder -OutputDirectory $projDir
+    Publish-NuGetPackage -PackagePath $pkgPath
 }
 
-del $projDir\NuGet* -Recurse -Force
-if (Test-Path "$projDir\$id.$version.nupkg")
+del $nugetFolder\* -Recurse -Force
+rmdir $nugetFolder
+if (Test-Path $pkgPath)
 {
-	del "$projDir\$id.$version.nupkg"
+	del $pkgPath
 }
+
 if ($loaded) {
 	Remove-Module NuGetProjectPacker -ErrorAction Ignore
+	Remove-Module NugetSharedPacker -ErrorAction Ignore
 	Remove-Module NugetShared -ErrorAction Ignore
 }
 popd

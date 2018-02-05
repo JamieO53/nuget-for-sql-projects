@@ -1,8 +1,8 @@
-$id='Ecentric.Atlas'
+$id='Ecentric.Ethel'
 $contentType='lib'
 $slnDir = Split-Path $MyInvocation.MyCommand.Path
 $nuspecPath = "$slnDir\Package.nuspec"
-$pkgCfgPath = "$slnDir\AtlasCore\packages.config"
+$pkgCfgPath = "$slnDir\EthelCore\packages.config"
 $nugetFolder = "$slnDir\NuGet"
 $nugetPackagePath = "$slnDir\$id.$version.nupkg"
 $nugetBinFolder = "$nugetFolder\Lib"
@@ -12,8 +12,6 @@ pushd $slnDir
 $loaded = $false
 if (-not (Get-Module NuGetProjectPacker)) {
 	$loaded = $true
-	Import-Module "$slnDir\PowerShell\NuGetShared.psd1"
-	Import-Module "$slnDir\PowerShell\NuGetSharedPacker.psd1"
 	Import-Module "$slnDir\PowerShell\NuGetProjectPacker.psd1"
 }
 
@@ -26,13 +24,9 @@ md $nugetFolder | Out-Null
 'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $nugetFolder\$_ | Out-Null }
 $version = Set-NuspecVersion -Path $nuspecPath -ProjectFolder $slnDir
 $nugetSettings = Import-NugetSettingsFramework -NuspecPath $nuspecPath -PackagesConfigPath $pkgCfgPath
-Initialize-NuGetFolders -Path $nugetFolder
 Initialize-NuGetSpec -Path $slnDir -setting $nugetSettings
 
-('AtlasConsoleService','AtlasCore','AtlasDashboardApp','AtlasDashboardLib','AtlasGenericNetworkHandler') +
-('AtlasGenericTritonProcess','AtlasGenericWorkerProcess','AtlasMessageHandlerSkeleton','AtlasMQInterface') +
-('AtlasPerformanceCounterReset','AtlasSecurityModuleSoftwareImplementation','AtlasSecurityModuleTSM410Implementation') +
-('AtlasService','AtlasServiceTest','PingPongTesterLibrary','TestWorkerLibrary') | % {
+('Ethel','ETLCore','ETLCmd','ETLCmdEditor', 'FilePager') | % {
 	$projName = $_
 	$projDir = "$slnDir\$projName"
 	$projPath = "$projDir\$projName.csproj"
@@ -53,8 +47,8 @@ if (Test-Path $nugetPackagePath)
 	del $nugetPackagePath
 }
 if ($loaded) {
-	Remove-Module NuGetProjectPacker -ErrorAction Ignore
-	Remove-Module NugetSharedPacker -ErrorAction Ignore
-	Remove-Module NugetShared -ErrorAction Ignore
+	Remove-Module NuGetProjectPacker -ErrorAction SilentlyContinue
+	Remove-Module NugetSharedPacker -ErrorAction SilentlyContinue
+	Remove-Module NugetShared -ErrorAction SilentlyContinue
 }
 popd

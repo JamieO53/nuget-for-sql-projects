@@ -1,3 +1,4 @@
+$projectType = 'Builder.Db'
 $id='DbSolutionBuilder'
 $contentType='PowerShell'
 $projDir = (Get-Item "$(Split-Path -Path $MyInvocation.MyCommand.Path)").FullName
@@ -11,9 +12,12 @@ try {
 		Import-Module "$projDir\bin\Debug\$id\NugetShared.psm1"
 	}
 
-	$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $projDir
+	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir
+	if ($version -like '*.0'){
+		throw "Invalid version $version"
+	}
 
-	Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetDbPacker'
+	Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetShared'
 
 	if (Test-Path $projDir\NuGet) {
 		del $projDir\NuGet\* -Recurse -Force
@@ -23,7 +27,11 @@ try {
 	md "$projDir\NuGet" | Out-Null
 	'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $projDir\NuGet\$_ | Out-Null }
 
-	copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
+	copy "$projDir\bin\Debug\$id\$id.ps*1" "$projDir\NuGet\content\$contentType\"
+	copy "$slnDir\PackageTools\*" "$projDir\NuGet\content\PackageTools\"
+	copy "$slnDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\"
+	"powershell -Command `".\Bootstrap.ps1`" -ProjectType $projectType" |
+		Set-Content "$projDir\NuGet\content\PackageTools\Bootstrap.cmd" -Encoding Ascii
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
 		NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir

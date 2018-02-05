@@ -36,8 +36,10 @@ function New-DbSolution {
 	copy "$templatePath\Template.DB.sln" $slnPath
 	copy "$toolsPath\*" "$slnFolder\PackageTools"
 	Set-ProjectDependencyVersion -Path $pkgProjectPath -Dependency NuGetDbPacker
-	$Parameters.dbSolution.dependencies.dependency | % {
-		Set-ProjectDependencyVersion -Path $pkgProjectPath -Dependency $_.Id
+	if ($Parameters.dbSolution.dependencies.dependency) {
+		$Parameters.dbSolution.dependencies.dependency | % {
+			Set-ProjectDependencyVersion -Path $pkgProjectPath -Dependency $_.Id
+		}
 	}
 
 	iex "$slnFolder\PackageTools\Bootstrap.ps1"
