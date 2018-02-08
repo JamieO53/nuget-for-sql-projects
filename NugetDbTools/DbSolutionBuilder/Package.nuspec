@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DbSolutionBuilder</id>
-    <version>0.1.63</version>
+    <version>0.1.64</version>
     <authors>joglethorpe</authors>
     <owners>Ecentric Payment Systems</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -16,6 +16,7 @@
     </dependencies>
   </metadata>
   <files>
+    <file src="content\PackageTools\*" target="PackageTools" />
     <file src="content\PowerShell\*" target="PowerShell" />
   </files>
 </package>

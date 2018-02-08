@@ -3,7 +3,7 @@ param (
 )
 $SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..").Path
 $BootstrapFolder = "$SolutionFolder\Bootstrap"
-$package = "NuGet$($ProjectType)Packer"
+$package = 'DbSolutionBuilder'
 
 if (Test-Path $BootstrapFolder) {
     del $BootstrapFolder\* -Recurse -Force
