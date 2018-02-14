@@ -54,9 +54,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Builder.Db", "PackageTools.Builder.Db", "{4DE504AA-C602-457A-9875-2546CD0969DA}"
 	ProjectSection(SolutionItems) = preProject
 		PackageTools.Builder.Db\Bootstrap.ps1 = PackageTools.Builder.Db\Bootstrap.ps1
-		PackageTools.Builder.Db\DbTemplate.xml = PackageTools.Builder.Db\DbTemplate.xml
 		PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1 = PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1
 		PackageTools.Builder.Db\New-CiDbProject.ps1 = PackageTools.Builder.Db\New-CiDbProject.ps1
+		PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1 = PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Db", "PackageTools.Db", "{890F4222-B59A-4295-86FB-825D037326E1}"
