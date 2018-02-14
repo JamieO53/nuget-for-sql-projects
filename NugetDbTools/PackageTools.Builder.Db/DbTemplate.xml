@@ -1,6 +1,6 @@
 <dbSolution>
 	<parameters>
-		<location>C:\VSTS\Backoffice</location>
+		<location>C:\VSTS\SharedServices</location>
 		<name>Batch</name>
 	</parameters>
 	<databases>
