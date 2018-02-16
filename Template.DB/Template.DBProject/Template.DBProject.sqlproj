@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Template.DBProject.nuget.config" />
+    <None Include="Template.DBProject.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <ArtifactReference Include="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\Extensions\Microsoft\SQLDB\Extensions\SqlServer\110\SqlSchemas\master.dacpac">
