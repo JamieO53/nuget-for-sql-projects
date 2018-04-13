@@ -1,7 +1,7 @@
 ﻿CREATE FUNCTION [dbo].[MapNdpChangeLog]
 (
 	@ndpChangeProject VARCHAR(50),
-	@ndpChangelog VARCHAR(50)
+	@ndpChangeLog VARCHAR(50)
 )
 RETURNS INT
 AS
@@ -11,7 +11,7 @@ BEGIN
 	SELECT	@id = ndpChangeLogID
 	FROM	dbo.NdpChangeLog
 	WHERE	ndpChangeProject = @ndpChangeProject
-		AND	ndpChangeLog = @ndpChangelog
+		AND	ndpChangeLog = @ndpChangeLog
 
 	RETURN @id
 END
