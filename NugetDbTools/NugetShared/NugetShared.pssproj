@@ -37,8 +37,10 @@
     <Compile Include="Scripts\Add-Node.ps1" />
     <Compile Include="Scripts\Export-NuGetSettings.ps1" />
     <Compile Include="Scripts\Format-XmlIndent.ps1" />
+    <Compile Include="Scripts\Get-Branch.ps1" />
     <Compile Include="Scripts\Get-CSharpProjects.ps1" />
     <Compile Include="Scripts\Get-GroupNode.ps1" />
+    <Compile Include="Scripts\Get-LogPath.ps1" />
     <Compile Include="Scripts\Get-NuGetDbToolsConfig.ps1" />
     <Compile Include="Scripts\Get-NuGetDbToolsConfigPath.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalApiKey.ps1" />
@@ -48,11 +50,14 @@
     <Compile Include="Scripts\Get-PowerShellProjects.ps1" />
     <Compile Include="Scripts\Get-ProjectsByType.ps1" />
     <Compile Include="Scripts\Get-ProjectVersion.ps1" />
+    <Compile Include="Scripts\Get-RevisionCount.ps1" />
     <Compile Include="Scripts\Get-SqlProjects.ps1" />
     <Compile Include="Scripts\Import-NuGetSettings.ps1" />
+    <Compile Include="Scripts\Log.ps1" />
     <Compile Include="Scripts\New-NuGetSettings.ps1" />
     <Compile Include="Scripts\Out-FormattedXml.ps1" />
     <Compile Include="Scripts\Publish-NuGetPackage.ps1" />
+    <Compile Include="Scripts\Remove-GitRepository.ps1" />
     <Compile Include="Scripts\Remove-Node.ps1" />
     <Compile Include="Scripts\Remove-NugetFolder.ps1" />
     <Compile Include="Scripts\Save-CSharpProject.ps1" />

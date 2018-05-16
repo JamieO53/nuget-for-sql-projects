@@ -16,6 +16,7 @@ function Get-SolutionPackages {
 	)
 	$slnFolder = Split-Path $SolutionPath
 	$localSource = Get-NuGetLocalSource
+	iex "nuget restore $SolutionPath"
 
 	Get-CSharpProjects -SolutionPath $SolutionPath | ? { $_.Project.EndsWith('Pkg') } | % {
 		$projPath = "$slnFolder\$($_.ProjectPath)"

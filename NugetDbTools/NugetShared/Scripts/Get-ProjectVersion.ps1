@@ -18,31 +18,18 @@ function Get-ProjectVersion {
 		[string]$MinorVersion = '0'
 
 	)
-	# Note: use Invoke-Expression (iex) so that git calls can be mocked in tests
-	try {
-		Push-Location $Path
-		$majorVer = if ([string]::IsNullOrEmpty($MajorVersion)) { '0'} else { $MajorVersion }
-		$minorVer = if ([string]::IsNullOrEmpty($MinorVersion)) { '0'} else { $MinorVersion }
-		$latestTag = "$majorVer.$minorVer"
-		if (Test-PathIsInGitRepo -Path (Get-Location)) {
-			$revisions = (iex "git rev-list HEAD -- $Path").Count
-		}
-		else {
-			$revisions = '0'
-		}
-		[string]$version = "$latestTag.$revisions"
+	$majorVer = if ([string]::IsNullOrEmpty($MajorVersion)) { '0'} else { $MajorVersion }
+	$minorVer = if ([string]::IsNullOrEmpty($MinorVersion)) { '0'} else { $MinorVersion }
+	$latestTag = "$majorVer.$minorVer"
+	$revisions = Get-RevisionCount -Path $Path
 		
-		if (Test-PathIsInGitRepo -Path (Get-Location)) {
-			$branch = iex 'git branch' | ? { $_.StartsWith('* ') } | % { $_.Replace('* ', '') }
-			if ($branch -and ($branch -ne 'master')) {
-				$version += "-$branch"
-			}
-		}
+	[string]$version = "$latestTag.$revisions"
 		
-		return $version
+	$branch = Get-Branch -Path $Path
+	if ($branch -and ($branch -ne 'master')) {
+		$version += "-$branch"
 	}
-	finally {
-		Pop-Location
-	}
+		
+	return $version
 }
 
