@@ -9,10 +9,10 @@ function Log {
 		[switch]$Warn, [switch]$Error, [switch]$hilite, [switch]$stdoutOnly
 	)
 	if ([string]::IsNullOrEmpty($task)) {
-		$task = [IO.Path]::GetFileNameWithoutExtension($MyInvocation.PSCommandPath)
+		$task = [IO.Path]::GetFileNameWithoutExtension((Get-PSCallStack | Select-Object -Last 1).ScriptName)
 	}
 	if ([string]::IsNullOrEmpty($taskStep)) {
-		$taskStep = (Get-PSCallStack | Select-Object -First 2 | Select-Object -Last 1).Command
+		$taskStep = Get-Caller
 	}
 
 	$level='I'

@@ -12,7 +12,7 @@ function Publish-NuGetPackage {
         # The location of the package being published
         [string]$PackagePath
 	)
-	$localSource = Get-NuGetLocalSource
+	$localSource = Get-NuGetLocalPushSource
 	if (Test-Path $localSource) {
 		nuget add $PackagePath -Source $localSource -NonInteractive
 	} else {

@@ -5,7 +5,7 @@ function Get-LogPath {
 	)
 	$logFolder = "$(Split-Path $MyInvocation.PSScriptRoot)\Logs"
 	if (-not (Test-Path $logFolder)) {
-		md $logFolder
+		md $logFolder | Out-Null
 	}
 	"$logFolder\$Name-$((Get-Date).ToString('yyyy-MM-dd-HH-mm-ss-fff')).log"
 }
