@@ -30,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build.ps1" />
+    <Compile Include="Get-NuGetLocalSource.ps1" />
     <Compile Include="NugetShared.psd1" />
     <Compile Include="NugetShared.psm1" />
     <Compile Include="Package.ps1" />
@@ -38,12 +39,14 @@
     <Compile Include="Scripts\Export-NuGetSettings.ps1" />
     <Compile Include="Scripts\Format-XmlIndent.ps1" />
     <Compile Include="Scripts\Get-Branch.ps1" />
+    <Compile Include="Scripts\Get-Caller.ps1" />
     <Compile Include="Scripts\Get-CSharpProjects.ps1" />
     <Compile Include="Scripts\Get-GroupNode.ps1" />
     <Compile Include="Scripts\Get-LogPath.ps1" />
     <Compile Include="Scripts\Get-NuGetDbToolsConfig.ps1" />
     <Compile Include="Scripts\Get-NuGetDbToolsConfigPath.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalApiKey.ps1" />
+    <Compile Include="Scripts\Get-NuGetLocalPushSource.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalSource.ps1" />
     <Compile Include="Scripts\Get-NuGetPackageVersion.ps1" />
     <Compile Include="Scripts\Get-ParentSubfolder.ps1" />
@@ -53,6 +56,7 @@
     <Compile Include="Scripts\Get-RevisionCount.ps1" />
     <Compile Include="Scripts\Get-SqlProjects.ps1" />
     <Compile Include="Scripts\Import-NuGetSettings.ps1" />
+    <Compile Include="Scripts\Invoke-Trap.ps1" />
     <Compile Include="Scripts\Log.ps1" />
     <Compile Include="Scripts\New-NuGetSettings.ps1" />
     <Compile Include="Scripts\Out-FormattedXml.ps1" />
@@ -71,6 +75,7 @@
     <Compile Include="Tests\Get-GroupNode.tests.ps1" />
     <Compile Include="Tests\Get-NuGetDbToolsConfigPath.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalApiKey.tests.ps1" />
+    <Compile Include="Tests\Get-NuGetLocalPushSource.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalSource.tests.ps1" />
     <Compile Include="Tests\Get-NuGetPackageVersion.tests.ps1" />
     <Compile Include="Tests\Get-ProjectVersion.tests.ps1" />

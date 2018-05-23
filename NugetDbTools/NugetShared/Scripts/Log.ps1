@@ -6,7 +6,7 @@ function Log {
 		[string]$task=$null,
 		[string]$taskStep=$null,
 		[string]$fg=$null,
-		[switch]$Warn, [switch]$Error, [switch]$hilite, [switch]$stdoutOnly
+		[switch]$Warn, [switch]$Error, [switch]$hilite, [switch]$stdoutOnly, [switch]$allowLayout
 	)
 	if ([string]::IsNullOrEmpty($task)) {
 		$task = [IO.Path]::GetFileNameWithoutExtension((Get-PSCallStack | Select-Object -Last 1).ScriptName)
@@ -21,7 +21,7 @@ function Log {
 		$level+='!'
 	}
 
-	if ([string]::IsNullOrEmpty($logMsg))
+	if (-not $allowLayout -and [string]::IsNullOrEmpty($logMsg))
 	{
 		$logMsg="Log message argument expected!"
 		if (-not $Error)

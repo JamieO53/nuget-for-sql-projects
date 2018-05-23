@@ -6,7 +6,6 @@ Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.ps
 if ( Get-Module NugetDbPacker) {
 	Remove-Module NugetDbPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\NugetDbPacker.psm1"
 
 $global:testing = $true
 $location = "TestDrive:\Solutions"
