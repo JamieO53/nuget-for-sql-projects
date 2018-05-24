@@ -1,4 +1,4 @@
-$id='Ecentric.Triton'
+$id='Dummy.Triton'
 $projName='Triton'
 $contentType='lib'
 $projDir = Split-Path $MyInvocation.MyCommand.Path
@@ -34,9 +34,6 @@ Initialize-NuGetFolders -Path $nugetFolder
 Initialize-NuGetSpec -Path $projDir -setting $nugetSettings
 
 Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $nuspecPath
-ls $nugetFolder\lib\net* | %{
-	copy $projDir\Config\Ecentric.Triton.Configuration.xsd $_.FullName
-}
 
 if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
     NuGet pack $nuspecPath -BasePath $nugetFolder -OutputDirectory $projDir

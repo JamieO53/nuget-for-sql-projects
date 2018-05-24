@@ -52,7 +52,7 @@ Describe "Import-NuGetProject" {
     <id>ProjLib</id>
     <version>1.0.2</version>
     <authors>joglethorpe</authors>
-    <owners>Ecentric Payment Systems</owners>
+    <owners>Jamie Oglethorpe</owners>
     <projectUrl>https://somewhere.com</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>ProjLib</description>

@@ -1,4 +1,4 @@
-$id='Ecentric.Ethel'
+$id='Dummy.Ethel'
 $contentType='lib'
 $slnDir = Split-Path $MyInvocation.MyCommand.Path
 $nuspecPath = "$slnDir\Package.nuspec"

@@ -14,7 +14,7 @@ Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.ps
     <ProjectGuid>{A149354A-9827-4FE1-BE45-1DCA6030625F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>eCentric.Atlas</RootNamespace>
+    <RootNamespace>Dummy.Atlas</RootNamespace>
     <AssemblyName>AtlasCore</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

@@ -21,7 +21,7 @@ Describe "Import-NuGetSettings" {
 	<nugetSettings>
 		<add key="id" value="TestPackage"/>
 		<add key="authors" value="joglethorpe"/>
-		<add key="owners" value="Ecentric Payment Systems"/>
+		<add key="owners" value="Jamie Oglethorpe"/>
 		<add key="projectUrl" value="https://epsdev.visualstudio.com/Sandbox"/>
 		<add key="description" value="This package is for testing NuGet creation functionality"/>
 		<add key="releaseNotes" value="Some stuff to say about the release"/>

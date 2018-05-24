@@ -2,6 +2,7 @@ param (
     [string]$path='.'
 )
 $nugetSource = '<<<<URI of local NuGet server>>>>'
+$nugetPushSource = '<<<<URI of local NuGet server for pushed packages (optional)>>>>'
 $nugetApiKey = '<<<<ApiKey of local NuGet server>>>>'
 $defaultLocation = '<<<<Default solution location on developer PC>>>>'
 $sampleSolutionName = '<<<<An example solution name>>>>'
@@ -17,6 +18,7 @@ function Set-NuGetConfig {
     <nugetLocalServer>
         <add key=`"ApiKey`" value=`"$nugetApiKey`"/>
         <add key=`"Source`" value=`"$nugetSource`"/>
+        <add key=`"PushSource`" value=`"$nugetPushSource`"/>
     </nugetLocalServer>
 </configuration>
 "@

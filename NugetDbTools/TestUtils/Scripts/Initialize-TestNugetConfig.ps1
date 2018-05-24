@@ -12,11 +12,11 @@ function Initialize-TestNugetConfig {
 		id = 'TestPackage';
 		version = '1.0.123';
 		authors = 'joglethorpe';
-		owners = 'Ecentric Payment Systems';
-		projectUrl = 'https://epsdev.visualstudio.com/Sandbox';
+		owners = 'Dummy Company';
+		projectUrl = 'https://dummy.visualstudio.com/Sandbox';
 		description = 'This package is for testing NuGet creation functionality';
 		releaseNotes = 'Some stuff to say about the release';
-		copyright = 'Copyright 2017'
+		copyright = 'Copyright 2018'
 	}
 	$nugetDependencies = @{
 		'EcsShared.SharedBase' = '[1.0)';

@@ -4,7 +4,7 @@
     <id>NuGetShared</id>
     <version>0.1.76</version>
     <authors>joglethorpe</authors>
-    <owners>Ecentric Payment Systems</owners>
+    <owners>Jamie Oglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>NuGetShared shared resources for NuGet utilities</description>
