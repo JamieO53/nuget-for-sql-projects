@@ -18,6 +18,8 @@ function New-SqlProject {
 		[string]$SolutionFolder,
 		# The DB Project name
 		[string]$ProjectName,
+		# The DB name
+		[string]$DbName,
 		# The DB Solution template folder
 		[string]$TemplateFolder,
 		# The location of the solution's Pkg project
@@ -32,6 +34,7 @@ function New-SqlProject {
 		copy $templateFile.FullName "$projectFolder\$projectFile"
 		$text = gc "$projectFolder\$projectFile" | Out-String
 		$text = $text.Replace('Template.DBProject', $ProjectName)
+		$text = $text.Replace('DBProject', $DbName)
 		$text | sc "$projectFolder\$projectFile" -Encoding UTF8
 	}
 	$cfgPath = [IO.Path]::ChangeExtension($projectPath, '.nuget.config')

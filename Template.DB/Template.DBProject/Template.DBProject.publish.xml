@@ -2,12 +2,12 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
-    <TargetDatabaseName>$targetDatabase</TargetDatabaseName>
-    <DeployScriptFileName>$targetDatabase.sql</DeployScriptFileName>
-    <TargetConnectionString>Data Source=$dataSource;$credentials;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True</TargetConnectionString>
+    <TargetDatabaseName>DBProject</TargetDatabaseName>
+    <DeployScriptFileName>DBProject.Deploy.sql</DeployScriptFileName>
+    <TargetConnectionString>Data Source=.;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True</TargetConnectionString>
     <ScriptDatabaseOptions>True</ScriptDatabaseOptions>
     <BlockOnPossibleDataLoss>True</BlockOnPossibleDataLoss>
-    <CreateNewDatabase>$createNewDatabase</CreateNewDatabase>
+    <CreateNewDatabase>False</CreateNewDatabase>
     <ProfileVersionNumber>1</ProfileVersionNumber>
     <GenerateSmartDefaults>True</GenerateSmartDefaults>
     <IncludeTransactionalScripts>True</IncludeTransactionalScripts>
