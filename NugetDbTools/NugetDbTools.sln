@@ -61,6 +61,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Builder.Db", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Db", "PackageTools.Db", "{890F4222-B59A-4295-86FB-825D037326E1}"
 	ProjectSection(SolutionItems) = preProject
+		PackageTools.Db\Deploy-SolutionDatabases.ps1 = PackageTools.Db\Deploy-SolutionDatabases.ps1
 		PackageTools.Db\Invoke-PostBuildEvent.ps1 = PackageTools.Db\Invoke-PostBuildEvent.ps1
 		PackageTools.Db\Invoke-PreBuildEvent.ps1 = PackageTools.Db\Invoke-PreBuildEvent.ps1
 		PackageTools.Db\Publish-DbProjects.ps1 = PackageTools.Db\Publish-DbProjects.ps1
