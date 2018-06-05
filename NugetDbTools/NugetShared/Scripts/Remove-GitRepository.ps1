@@ -3,12 +3,12 @@ function Remove-GitRepository {
     param
     (
         # The repository folder
-		[string]$Path
+		[string]$Folder
 	)
-	if (Test-path $Path) {
-		Log "Removing repository $Path"
-		if (Test-Path "$Path\.git") {
-			ls $Path\.git | % {
+	if (Test-Folder $Folder) {
+		Log "Removing repository $Folder"
+		if (Test-Folder "$Folder\.git") {
+			ls $Folder\.git | % {
 				if ($_.Mode.StartsWith('d')) {
 					Remove-Item $_.FullName -Recurse -Force
 				} else {
@@ -17,7 +17,7 @@ function Remove-GitRepository {
 			}
 		}
 		Start-Sleep -Seconds 1
-		Remove-Item $Path\ -Recurse -Force
+		Remove-Item $Folder\ -Recurse -Force
 	}
 	Start-Sleep -Milliseconds 500
 }
