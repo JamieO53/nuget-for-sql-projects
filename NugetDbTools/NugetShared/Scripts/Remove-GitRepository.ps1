@@ -5,9 +5,9 @@ function Remove-GitRepository {
         # The repository folder
 		[string]$Folder
 	)
-	if (Test-Folder $Folder) {
+	if (Test-Path $Folder) {
 		Log "Removing repository $Folder"
-		if (Test-Folder "$Folder\.git") {
+		if (Test-Path "$Folder\.git") {
 			ls $Folder\.git | % {
 				if ($_.Mode.StartsWith('d')) {
 					Remove-Item $_.FullName -Recurse -Force
