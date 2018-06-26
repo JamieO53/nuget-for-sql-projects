@@ -47,7 +47,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools", "PackageTools", "{E0AD2663-37D5-421B-A3E1-0BE0401BC41E}"
 	ProjectSection(SolutionItems) = preProject
 		PackageTools\Bootstrap.ps1 = PackageTools\Bootstrap.ps1
-		PackageTools\Get-PackageContent.ps1 = PackageTools\Get-PackageContent.ps1
 		PackageTools\GetPackageContent.cmd = PackageTools\GetPackageContent.cmd
 	EndProjectSection
 EndProject
