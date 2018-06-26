@@ -6,7 +6,6 @@ $pkgCfgPath = "$slnDir\EthelCore\packages.config"
 $nugetFolder = "$slnDir\NuGet"
 $nugetPackagePath = "$slnDir\$id.$version.nupkg"
 $nugetBinFolder = "$nugetFolder\Lib"
-$pkgPath = "$slnDir\$id.$version.nupkg"
 pushd $slnDir
 
 $loaded = $false
@@ -23,6 +22,7 @@ if (Test-Path $nugetFolder) {
 md $nugetFolder | Out-Null
 'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $nugetFolder\$_ | Out-Null }
 $version = Set-NuspecVersion -Path $nuspecPath -ProjectFolder $slnDir
+$pkgPath = "$slnDir\$id.$version.nupkg"
 $nugetSettings = Import-NugetSettingsFramework -NuspecPath $nuspecPath -PackagesConfigPath $pkgCfgPath
 Initialize-NuGetSpec -Path $slnDir -setting $nugetSettings
 

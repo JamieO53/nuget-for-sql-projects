@@ -9,7 +9,6 @@ $nugetFolder = "$projDir\NuGet"
 $slnDir = (Get-Item "$projDir\..").FullName
 $projBinFolder = "$projDir\bin\Debug"
 $nugetBinFolder = "$nugetFolder\Lib"
-$pkgPath = "$projDir\$id.$version.nupkg"
 pushd $projDir
 
 
@@ -30,6 +29,7 @@ md $nugetFolder | Out-Null
 'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $nugetFolder\$_ | Out-Null }
 $nugetSettings = Import-NugetSettingsFramework -NuspecPath $nuspecPath -PackagesConfigPath $pkgCfgPath
 $version = Set-NuspecVersion -Path $nuspecPath -ProjectFolder $projDir
+$pkgPath = "$projDir\$id.$version.nupkg"
 Initialize-NuGetFolders -Path $nugetFolder
 Initialize-NuGetSpec -Path $projDir -setting $nugetSettings
 
