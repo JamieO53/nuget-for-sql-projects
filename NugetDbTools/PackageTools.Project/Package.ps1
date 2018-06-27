@@ -24,7 +24,6 @@ try {
 		throw "Invalid version $version"
 	}
 
-	Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetSharedPacker'
 	$nugetPackagePath = "$projDir\$id.$version.nupkg"
 
 	if (Test-Path $projDir\NuGet) {
