@@ -42,6 +42,7 @@
     <Compile Include="Scripts\Initialize-NuGetSpec.ps1" />
     <Compile Include="Scripts\Initialize-Package.ps1" />
     <Compile Include="Scripts\Publish-Package.ps1" />
+    <Compile Include="Scripts\Set-NuGetDependencyVersion.ps1" />
     <Compile Include="Tests\Compress-Package.tests.ps1" />
     <Compile Include="Tests\Get-ProjectProperty.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />

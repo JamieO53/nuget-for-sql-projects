@@ -46,7 +46,6 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Scripts\Publish-DbPackage.ps1" />
     <Compile Include="Scripts\Publish-ProjectDatabase.ps1" />
     <Compile Include="Scripts\Publish-SolutionDbPackages.ps1" />
-    <Compile Include="Scripts\Set-NuGetDependencyVersion.ps1" />
     <Compile Include="Scripts\Set-NuGetProjectDependencyVersion.ps1" />
     <Compile Include="Tests\Import-NuGetDb.tests.ps1" />
     <Compile Include="Scripts\Initialize-DbPackage.ps1" />
