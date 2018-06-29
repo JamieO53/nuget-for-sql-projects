@@ -1,54 +1,61 @@
-$id='Dummy.Ethel'
+$projectType = 'Project'
+$projName='ProjectName'
+$id="Prefix.$projName"
 $contentType='lib'
-$slnDir = Split-Path $MyInvocation.MyCommand.Path
-$nuspecPath = "$slnDir\Package.nuspec"
-$pkgCfgPath = "$slnDir\EthelCore\packages.config"
-$nugetFolder = "$slnDir\NuGet"
-$nugetPackagePath = "$slnDir\$id.$version.nupkg"
-$nugetBinFolder = "$nugetFolder\Lib"
-pushd $slnDir
 
-$loaded = $false
-if (-not (Get-Module NuGetProjectPacker)) {
+try {
+	$slnDir = (Get-Item "$PSScriptRoot").FullName
+	$nugetFolder = "$slnDir\NuGet"
+	$nuspecPath = "$slnDir\Package.nuspec"
+	$nugetBinFolder = "$nugetFolder\$contentType"
+	pushd $slnDir
+
+	$loaded = $false
+	if (-not (Get-Module NuGetProjectPacker)) {
 	$loaded = $true
-	Import-Module "$slnDir\PowerShell\NuGetProjectPacker.psd1"
+		Import-Module "$slnDir\PowerShell\NuGetProjectPacker.psm1"
 }
 
-if (Test-Path $nugetFolder) {
-	del $nugetFolder\* -Recurse -Force
-	rmdir $nugetFolder
+	$version = Set-NuspecVersion -Path $slnDir\Package.nuspec -ProjectFolder $slnDir
+	if ($version -like '*.0'){
+		throw "Invalid version $version"
+	}
+
+	$nugetPackagePath = "$slnDir\$id.$version.nupkg"
+
+	if (Test-Path $slnDir\NuGet) {
+		del $slnDir\NuGet\* -Recurse -Force
+		rmdir $slnDir\NuGet
 }
 
-md $nugetFolder | Out-Null
-'tools','lib',"content\$contentType","content\PackageTools",'build' | % { md $nugetFolder\$_ | Out-Null }
-$version = Set-NuspecVersion -Path $nuspecPath -ProjectFolder $slnDir
-$pkgPath = "$slnDir\$id.$version.nupkg"
-$nugetSettings = Import-NugetSettingsFramework -NuspecPath $nuspecPath -PackagesConfigPath $pkgCfgPath
-Initialize-NuGetSpec -Path $slnDir -setting $nugetSettings
+	md "$slnDir\NuGet" | Out-Null
+	'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $slnDir\NuGet\$_ | Out-Null }
 
-('Ethel','ETLCore','ETLCmd','ETLCmdEditor', 'FilePager') | % {
-	$projName = $_
-	$projDir = "$slnDir\$projName"
-	$projPath = "$projDir\$projName.csproj"
-	$projBinFolder = "$slnDir\$projName\bin\Debug"
+	('Project1','Project2','Project3','Project4', 'Project5') | % {
+		$projName = $_
+		$projDir = "$slnDir\$projName"
+		$projPath = "$projDir\$projName.csproj"
+		$projBinFolder = "$projDir\bin\Debug"
 	
-	Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $nuspecPath
-}
+		Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $nuspecPath
+	}
 
-if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
-    NuGet pack $nuspecPath -BasePath "$nugetFolder" -OutputDirectory $slnDir
-    Publish-NuGetPackage -PackagePath $nugetPackagePath
-}
+	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
+		NuGet pack $slnDir\Package.nuspec -BasePath "$slnDir\NuGet" -OutputDirectory $slnDir
+	    Publish-NuGetPackage -PackagePath $nugetPackagePath
+	}
 
-del $nugetFolder\* -Recurse -Force
-rmdir $nugetFolder
-if (Test-Path $nugetPackagePath)
-{
-	del $nugetPackagePath
+	Remove-NugetFolder $slnDir\NuGet
+	if (Test-Path $nugetPackagePath)
+	{
+		del $nugetPackagePath
+	}
+	if ($loaded) {
+		Remove-Module NuGetProjectPacker -ErrorAction Ignore
+	}
+} catch {
+	Write-Host "$id packaging failed: $($_.Exception.Message)" -ForegroundColor Red
+	Exit 1
+} finally {
+	popd
 }
-if ($loaded) {
-	Remove-Module NuGetProjectPacker -ErrorAction SilentlyContinue
-	Remove-Module NugetSharedPacker -ErrorAction SilentlyContinue
-	Remove-Module NugetShared -ErrorAction SilentlyContinue
-}
-popd

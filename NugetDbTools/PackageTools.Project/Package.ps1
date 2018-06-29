@@ -1,6 +1,6 @@
 $projectType = 'Project'
 $projName='ProjectName'
-$id="Ecentric.$projName"
+$id="Prefix.$projName"
 $contentType='lib'
 
 try {
