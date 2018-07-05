@@ -12,12 +12,10 @@ Get-SqlProjects -SolutionPath $slnPath | % {
 	$projPath = "$slnFolder\$($_.ProjectPath)"
 	$dacpacName = "$projName.dacpac"
 	$dacpacPath = "$slnFolder\Databases\$dacpacName"
-	$profilePath = [IO.Path]::ChangeExtension($projPath, ".$branch.publish.xml")
-	if (-not (Test-Path $profilePath)) {
-		$profilePath = [IO.Path]::ChangeExtension($projPath, ".publish.xml")
-	}
+	$profilePath = Find-PublishProfilePath -ProjectPath $projPath
 	if (Test-Path $profilePath) {
 		if (Test-Path $dacpacPath) {
+			Log "Deploying $projName database"
 			Publish-ProjectDatabase -DacpacPath $dacpacPath -ProfilePath $profilePath
 		}
 	} else {

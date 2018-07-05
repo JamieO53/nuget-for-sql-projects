@@ -43,10 +43,12 @@
     <Compile Include="Scripts\Initialize-Package.ps1" />
     <Compile Include="Scripts\Publish-Package.ps1" />
     <Compile Include="Scripts\Set-NuGetDependencyVersion.ps1" />
+    <Compile Include="Scripts\Test-IsRunningBuildAgent.ps1" />
     <Compile Include="Tests\Compress-Package.tests.ps1" />
     <Compile Include="Tests\Get-ProjectProperty.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetSpec.tests.ps1" />
+    <Compile Include="Tests\Test-IsRunningBuildAgent.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\" />

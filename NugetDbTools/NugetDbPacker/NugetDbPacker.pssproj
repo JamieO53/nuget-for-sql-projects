@@ -41,6 +41,7 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="NugetDbPacker.psm1" />
     <Compile Include="Package.ps1" />
     <Compile Include="Scripts\Add-DbFileNode.ps1" />
+    <Compile Include="Scripts\Find-PublishProfilePath.ps1" />
     <Compile Include="Scripts\Find-SqlPackagePath.ps1" />
     <Compile Include="Scripts\Import-NuGetDb.ps1" />
     <Compile Include="Scripts\Publish-DbPackage.ps1" />
