@@ -7,14 +7,17 @@ function Get-Branch {
 	# Note: use Invoke-Expression (iex) so that git calls can be mocked in tests
 	try {
 		Push-Location $Path
-		# Check VSTS build agent branch
-		if (Test-IsRunningBuildAgent) {
-			$branch = $env:BUILD_SOURCEBRANCHNAME
-		}
-		elseif (Test-PathIsInGitRepo -Path (Get-Location)) {
+		if (Test-PathIsInGitRepo -Path (Get-Location)) {
 			$branch = iex 'git branch' | ? { $_.StartsWith('* ') } | % { $_.Replace('* ', '') }
-		}
-		else {
+			# Check VSTS build agent branch
+			if ($branch -like '(HEAD detached at *)') {
+				if (Test-IsRunningBuildAgent) {
+					$branch = $env:BUILD_SOURCEBRANCHNAME
+				} else {
+					$branch = ''
+				}
+			}
+		} else {
 			$branch = ''
 		}
 	}
