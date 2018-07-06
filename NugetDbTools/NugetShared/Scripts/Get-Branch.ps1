@@ -8,7 +8,7 @@ function Get-Branch {
 	try {
 		Push-Location $Path
 		# Check VSTS build agent branch
-		if ((Test-Path env:BUILD_SOURCEBRANCHNAME)) {
+		if (Test-IsRunningBuildAgent) {
 			$branch = $env:BUILD_SOURCEBRANCHNAME
 		}
 		elseif (Test-PathIsInGitRepo -Path (Get-Location)) {

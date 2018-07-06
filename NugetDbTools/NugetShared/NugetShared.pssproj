@@ -69,6 +69,7 @@
     <Compile Include="Scripts\Set-NuspecDependencyVersion.ps1" />
     <Compile Include="Scripts\Set-NuspecVersion.ps1" />
     <Compile Include="Scripts\Set-ProjectDependencyVersion.ps1" />
+    <Compile Include="Scripts\Test-IsRunningBuildAgent.ps1" />
     <Compile Include="Scripts\Test-NuGetVersionExists.ps1" />
     <Compile Include="Scripts\Test-PathIsInGitRepo.ps1" />
     <Compile Include="Tests\Export-NuGetSettings.tests.ps1" />
@@ -82,6 +83,7 @@
     <Compile Include="Tests\Get-SqlProjects.tests.ps1" />
     <Compile Include="Tests\Import-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Initialize-TestNugetConfig.ps1" />
+    <Compile Include="Tests\Test-IsRunningBuildAgent.tests.ps1" />
     <Compile Include="Tests\Test-NuGetVersionExists.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
