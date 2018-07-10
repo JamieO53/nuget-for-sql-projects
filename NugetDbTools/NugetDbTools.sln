@@ -64,6 +64,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Db", "PackageT
 		PackageTools.Db\Get-PackageContent.ps1 = PackageTools.Db\Get-PackageContent.ps1
 		PackageTools.Db\Invoke-PostBuildEvent.ps1 = PackageTools.Db\Invoke-PostBuildEvent.ps1
 		PackageTools.Db\Invoke-PreBuildEvent.ps1 = PackageTools.Db\Invoke-PreBuildEvent.ps1
+		PackageTools.Db\Invoke-RegressionTests.ps1 = PackageTools.Db\Invoke-RegressionTests.ps1
 		PackageTools.Db\Publish-DbProjects.ps1 = PackageTools.Db\Publish-DbProjects.ps1
 		PackageTools.Db\PublishDbProjects.cmd = PackageTools.Db\PublishDbProjects.cmd
 	EndProjectSection
