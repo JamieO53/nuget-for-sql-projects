@@ -26,14 +26,17 @@ Describe "Get-ProjectVersion" {
 		mock Invoke-Expression { return 1..7 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NugetShared
 		mkdir $projFolder
 		Push-Location 'TestDrive:\'
-		git init
-		'Dummy' | sc "$projFolder\Dummy.txt" -Encoding UTF8
-		git add .\proj\Dummy.txt
-		git commit -a -m Initial
-		git branch TestBranch
-		git checkout TestBranch 2> $null
-		It "version" { Get-ProjectVersion -Path $projFolder -MajorVersion 1 -MinorVersion 0 | should be '1.0.7-TestBranch' }
-		Pop-Location
-		rmdir TestDrive:* -Recurse -Force
+		try {
+			git init
+			'Dummy' | sc "$projFolder\Dummy.txt" -Encoding UTF8
+			git add .\proj\Dummy.txt
+			git commit -a -m Initial
+			git branch TestBranch
+			git checkout TestBranch 2> $null
+			It "version" { Get-ProjectVersion -Path $projFolder -MajorVersion 1 -MinorVersion 0 | should be '1.0.7-TestBranch' }
+		} finally {
+			Pop-Location
+			rmdir TestDrive:* -Recurse -Force
+		}
 	}
 }
