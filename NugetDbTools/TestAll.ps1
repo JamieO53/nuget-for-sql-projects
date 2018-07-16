@@ -57,7 +57,9 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 			TimeTicks=$testResult.Time.Ticks
 		}
 		$statistics += $statistic
-		& NUnitHTMLReportGenerator.exe "$SolutionFolder\TestResults\$($_.Project).xml" "$SolutionFolder\TestResults\HTML\$($_.Project).html"
+		try {
+			& NUnitHTMLReportGenerator.exe "$SolutionFolder\TestResults\$($_.Project).xml" "$SolutionFolder\TestResults\HTML\$($_.Project).html"
+		} catch {}
 		if (Test-Path "$SolutionFolder\TestResults\HTML\$($_.Project).html") {
 			$links += @"
 		<tr>
