@@ -1,4 +1,5 @@
-if (git status --porcelain) {
+. .\NugetShared\Scripts\Test-IsRunningBuildAgent.ps1
+if (-not (Test-IsRunningBuildAgent) -and (git status --porcelain)) {
 	Write-Error 'Commit changes before publishing the projects to NuGet'
 }
 else {
