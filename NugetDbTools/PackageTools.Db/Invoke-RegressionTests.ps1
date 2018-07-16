@@ -55,6 +55,8 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 		Log "`"$sqlPackageCmd`" `/a:Publish `/sf:`"$dacpacPath`" $db"
 		Invoke-Trap -Command "& `"$sqlPackageCmd`" `/a:Publish `/sf:`"$dacpacPath`" $db" -Message "Deploying TSQLUnit failed to $dbName" -Fatal
     }
+
+	rd "$SolutionFolder\PackageContent"
 	
 	@('Setup', 'Execute', 'Teardown') | % {
 		ls "$rtFolder\$($_)_*_RegressionTests.cmd" | % {
