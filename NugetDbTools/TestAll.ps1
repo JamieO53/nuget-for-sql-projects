@@ -44,7 +44,7 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 		Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1" 
 		pushd "$projectFolder\Tests"
 		$testResult = Invoke-Pester "$projectFolder\Tests" -OutputFile "$SolutionFolder\TestResults\$($_.Project).xml" -OutputFormat NUnitXml -PassThru -EnableExit
-		$failCount += $testResult.FailedCount
+		$failCount = $failCount + $testResult.FailedCount
 		popd
 		$statistic = New-Object -TypeName PSObject -Property @{
 			Name=$testName;
@@ -137,4 +137,5 @@ if ($renderHtml) {
 	iex "$SolutionFolder\TestResults\HTML\TestResults.html"
 }
 $statistics | Format-Table -Property Name,TotalCount,PassedCount,FailedCount,SkippedCount,PendingCount,InconclusiveCount,Time
+Write-Host "Fail count: $failCount"
 exit $failCount
