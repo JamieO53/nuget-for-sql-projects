@@ -1,7 +1,7 @@
-﻿if ( Get-Module NugetShared) {
-	Remove-Module NugetShared
+﻿if ( Get-Module NuGetSharedPacker) {
+	Remove-Module NuGetSharedPacker
 }
-Import-Module $PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
 
 . $PSScriptRoot\Initialize-TestNugetConfig.ps1
 
@@ -13,9 +13,9 @@ Describe "Export-NuGetSettings" {
 	Context "Content" {
 		$expectedSettings = Initialize-TestNugetConfig
 		$expectedOptions = $expectedSettings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
-		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NugetShared
-		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NugetShared
-		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName NugetShared
+		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
+		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NuGetSharedPacker
+		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName NuGetSharedPacker
 		Context "Dependencies exist" {
 			Export-NuGetSettings -NugetConfigPath $configPath -Settings $expectedSettings
 			It "Exported nuGet config exists" { Test-Path $configPath | should be $true }

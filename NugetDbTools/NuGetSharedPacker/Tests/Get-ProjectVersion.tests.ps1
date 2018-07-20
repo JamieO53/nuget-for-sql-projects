@@ -1,7 +1,7 @@
-﻿if (Get-Module NugetShared) {
-	Remove-Module NugetShared
+﻿if ( Get-Module NuGetSharedPacker) {
+	Remove-Module NuGetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
 
 Describe "Get-ProjectVersion" {
 	$projFolder = "TestDrive:\proj"
@@ -14,7 +14,7 @@ Describe "Get-ProjectVersion" {
 		rmdir TestDrive:* -Recurse -Force
 	}
 	Context "In git without" {
-		mock Invoke-Expression { return 1..7 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NugetShared
+		mock Invoke-Expression { return 1..7 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NuGetSharedPacker
 		mkdir $projFolder
 		Push-Location 'TestDrive:\'
 		git init
@@ -23,7 +23,7 @@ Describe "Get-ProjectVersion" {
 		rmdir TestDrive:* -Recurse -Force
 	}
 	Context "In git branch" {
-		mock Invoke-Expression { return 1..7 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NugetShared
+		mock Invoke-Expression { return 1..7 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NuGetSharedPacker
 		mkdir $projFolder
 		Push-Location 'TestDrive:\'
 		try {
