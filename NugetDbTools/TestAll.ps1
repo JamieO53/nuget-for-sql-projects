@@ -24,10 +24,11 @@ $links = ''
 $results = @{}
 $statistics = @()
 $failCount = 0
+$renderHtml = $true
 
 Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 	$projectFolder = Split-Path "$SolutionFolder\$($_.ProjectPath)"
-	$testName = [IO.Path]::GetFileNameWithoutExtension($_.ProjectPath)
+	$testName = $_.Project
 	if (Test-Path "$projectFolder\Tests")
 	{
 		if (Get-Module TestUtils) {
@@ -43,7 +44,7 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 		Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1" 
 		pushd "$projectFolder\Tests"
 		$testResult = Invoke-Pester "$projectFolder\Tests" -OutputFile "$SolutionFolder\TestResults\$($_.Project).xml" -OutputFormat NUnitXml -PassThru -EnableExit
-		$failCount += $LASTEXITCODE
+		$failCount = $failCount + $testResult.FailedCount
 		popd
 		$statistic = New-Object -TypeName PSObject -Property @{
 			Name=$testName;
@@ -57,7 +58,11 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 			TimeTicks=$testResult.Time.Ticks
 		}
 		$statistics += $statistic
+		try {
 		& NUnitHTMLReportGenerator.exe "$SolutionFolder\TestResults\$($_.Project).xml" "$SolutionFolder\TestResults\HTML\$($_.Project).html"
+		} catch {
+			$renderHtml = $false
+		}
 		if (Test-Path "$SolutionFolder\TestResults\HTML\$($_.Project).html") {
 			$links += @"
 		<tr>
@@ -128,6 +133,9 @@ $links
 </html>
 "@
 $allTests | Out-File "$SolutionFolder\TestResults\HTML\TestResults.html" -Force
-iex "$SolutionFolder\TestResults\HTML\TestResults.html"
+if ($renderHtml) {
+	iex "$SolutionFolder\TestResults\HTML\TestResults.html"
+}
 $statistics | Format-Table -Property Name,TotalCount,PassedCount,FailedCount,SkippedCount,PendingCount,InconclusiveCount,Time
+Write-Host "Fail count: $failCount"
 exit $failCount
