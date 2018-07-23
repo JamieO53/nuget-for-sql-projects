@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>VSTSExtension</id>
-    <version>0.1.4-Ecentric</version>
+    <version>0.1.5</version>
     <authors>joglethorpe</authors>
     <owners>Jamie Oglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
