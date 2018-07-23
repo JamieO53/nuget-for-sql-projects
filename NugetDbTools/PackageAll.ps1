@@ -1,5 +1,5 @@
 if (-not (Get-Module NuGetSharedPacker)) {
-	Import-Module .\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1
+	Import-Module .\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1
 }
 if (-not (Test-IsRunningBuildAgent) -and (Test-PathIsCommitted)) {
 	Write-Error 'Commit changes before publishing the projects to NuGet'
