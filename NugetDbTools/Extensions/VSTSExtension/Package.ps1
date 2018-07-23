@@ -1,7 +1,7 @@
-$id='NuGetSharedPacker'
+$id='VSTSExtension'
 $contentType='PowerShell'
 $projDir = (Get-Item "$(Split-Path -Path $MyInvocation.MyCommand.Path)").FullName
-$slnDir = (Get-Item "$projDir\..").FullName
+$slnDir = (Get-Item "$projDir\..\..").FullName
 pushd $projDir
 try {
 
@@ -11,12 +11,10 @@ try {
 		Import-Module "$projDir\bin\Debug\$id\NugetShared.psm1"
 	}
 
-	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir
+	$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $projDir
 	if ($version -like '*.0'){
 		throw "Invalid version $version"
 	}
-
-	Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetShared'
 
 	if (Test-Path $projDir\NuGet) {
 		del $projDir\NuGet\* -Recurse -Force
@@ -27,7 +25,6 @@ try {
 	'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $projDir\NuGet\$_ | Out-Null }
 
 	copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
-	copy "bin\Debug\$id\VSTSExtension.ps*1" "NuGet\content\$contentType\"
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
 		NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir

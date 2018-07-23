@@ -52,6 +52,7 @@
     <Compile Include="Scripts\Set-NuGetDependencyVersion.ps1" />
     <Compile Include="Scripts\Set-NuspecDependencyVersion.ps1" />
     <Compile Include="Scripts\Set-NuspecVersion.ps1" />
+    <Compile Include="Scripts\Test-PathIsCommitted.ps1" />
     <Compile Include="Scripts\Test-PathIsInGitRepo.ps1" />
     <Compile Include="Tests\Compress-Package.tests.ps1" />
     <Compile Include="Tests\Export-NuGetSettings.tests.ps1" />
@@ -62,7 +63,6 @@
     <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetSpec.tests.ps1" />
     <Compile Include="Tests\Initialize-TestNugetConfig.ps1" />
-    <Compile Include="Tests\Test-IsRunningBuildAgent.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\" />

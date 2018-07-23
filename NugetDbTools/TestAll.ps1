@@ -28,7 +28,7 @@ $renderHtml = $true
 
 Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 	$projectFolder = Split-Path "$SolutionFolder\$($_.ProjectPath)"
-	$testName = [IO.Path]::GetFileNameWithoutExtension($_.ProjectPath)
+	$testName = $_.Project
 	if (Test-Path "$projectFolder\Tests")
 	{
 		if (Get-Module TestUtils) {

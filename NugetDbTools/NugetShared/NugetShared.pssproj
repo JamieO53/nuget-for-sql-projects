@@ -60,7 +60,6 @@
     <Compile Include="Scripts\Save-CSharpProject.ps1" />
     <Compile Include="Scripts\Set-NodeText.ps1" />
     <Compile Include="Scripts\Set-ProjectDependencyVersion.ps1" />
-    <Compile Include="Scripts\Test-IsRunningBuildAgent.ps1" />
     <Compile Include="Scripts\Test-NuGetVersionExists.ps1" />
     <Compile Include="Tests\Get-GroupNode.tests.ps1" />
     <Compile Include="Tests\Get-NuGetDbToolsConfigPath.tests.ps1" />
