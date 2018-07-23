@@ -34,19 +34,35 @@
     <Compile Include="NuGetSharedPacker.psm1" />
     <Compile Include="Package.ps1" />
     <Compile Include="Scripts\Compress-Package.ps1" />
+    <Compile Include="Scripts\Export-NuGetSettings.ps1" />
+    <Compile Include="Scripts\Get-Branch.ps1" />
     <Compile Include="Scripts\Get-NuspecProperty.ps1" />
     <Compile Include="Scripts\Get-ProjectProperty.ps1" />
+    <Compile Include="Scripts\Get-ProjectVersion.ps1" />
+    <Compile Include="Scripts\Get-RevisionCount.ps1" />
     <Compile Include="Scripts\Get-SolutionContent.ps1" />
     <Compile Include="Scripts\Get-SolutionPackages.ps1" />
+    <Compile Include="Scripts\Import-NuGetSettings.ps1" />
     <Compile Include="Scripts\Initialize-NuGetFolders.ps1" />
     <Compile Include="Scripts\Initialize-NuGetSpec.ps1" />
     <Compile Include="Scripts\Initialize-Package.ps1" />
+    <Compile Include="Scripts\New-NuGetSettings.ps1" />
     <Compile Include="Scripts\Publish-Package.ps1" />
+    <Compile Include="Scripts\Remove-GitRepository.ps1" />
     <Compile Include="Scripts\Set-NuGetDependencyVersion.ps1" />
+    <Compile Include="Scripts\Set-NuspecDependencyVersion.ps1" />
+    <Compile Include="Scripts\Set-NuspecVersion.ps1" />
+    <Compile Include="Scripts\Test-PathIsCommitted.ps1" />
+    <Compile Include="Scripts\Test-PathIsInGitRepo.ps1" />
     <Compile Include="Tests\Compress-Package.tests.ps1" />
+    <Compile Include="Tests\Export-NuGetSettings.tests.ps1" />
+    <Compile Include="Tests\Get-NuGetPackageVersion.tests.ps1" />
     <Compile Include="Tests\Get-ProjectProperty.tests.ps1" />
+    <Compile Include="Tests\Get-ProjectVersion.tests.ps1" />
+    <Compile Include="Tests\Import-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetSpec.tests.ps1" />
+    <Compile Include="Tests\Initialize-TestNugetConfig.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\" />

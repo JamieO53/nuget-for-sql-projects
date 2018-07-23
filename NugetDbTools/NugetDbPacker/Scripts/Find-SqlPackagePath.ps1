@@ -20,7 +20,7 @@
 		}
 	}
     if ($info) {
-		return $info.FullName
+		return $info.FullName.Trim()
 	} else {
 		return $null
 	}

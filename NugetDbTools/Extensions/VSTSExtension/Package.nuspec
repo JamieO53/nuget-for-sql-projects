@@ -1,22 +1,18 @@
 ﻿<?xml version="1.0"?>
 <package>
   <metadata>
-    <id>DbSolutionBuilder</id>
-    <version>0.1.83</version>
+    <id>VSTSExtension</id>
+    <version>0.1.4-Ecentric</version>
     <authors>joglethorpe</authors>
     <owners>Jamie Oglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Migration utility creating a SQL project</description>
+    <description>VSTS extension for NuGet utilities</description>
     <releaseNotes>Initial release</releaseNotes>
-    <copyright>Copyright 2017</copyright>
-    <tags>DbSolutionBuilder CI Migration</tags>
-    <dependencies>
-      <dependency id="NuGetShared" version="0.1.94" />
-    </dependencies>
+    <copyright>Copyright 2018</copyright>
+    <tags>VSTS Extension</tags>
   </metadata>
   <files>
-    <file src="content\PackageTools\*" target="PackageTools" />
     <file src="content\PowerShell\*" target="PowerShell" />
   </files>
 </package>

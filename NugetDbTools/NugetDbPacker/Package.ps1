@@ -7,9 +7,9 @@ pushd $projDir
 try {
 
 	$loaded = $false
-	if (-not (Get-Module NugetShared)) {
+	if (-not (Get-Module NugetSharedPacker)) {
 		$loaded = $true
-		Import-Module "$projDir\bin\Debug\$id\NugetShared.psm1"
+		Import-Module "$slnDir\NugetSharedPacker\bin\Debug\NugetSharedPacker\NugetSharedPacker.psd1"
 	}
 
 	$version = Set-NuspecVersion -Path Package.nuspec -ProjectFolder $projDir

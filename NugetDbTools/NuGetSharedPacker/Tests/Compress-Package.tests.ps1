@@ -1,7 +1,7 @@
-﻿if ( Get-Module NugetSharedPacker) {
-	Remove-Module NugetSharedPacker
+﻿if ( Get-Module NuGetSharedPacker) {
+	Remove-Module NuGetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
 
 Describe "Compress-Package" {
 	$projFolder = "$testDrive\proj"
@@ -24,9 +24,9 @@ Describe "Compress-Package" {
 "@
 mkdir "$testDrive\.git"
 Context "Exists" {
-		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NugetShared
-		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NugetShared
-		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName NugetShared
+		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
+		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NuGetSharedPacker
+		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName NuGetSharedPacker
 		mkdir $projDbFolder
 		mkdir $nugetFolder
 		$projText | Set-Content $projPath

@@ -6,9 +6,9 @@ pushd $projDir
 try {
 
 	$loaded = $false
-	if (-not (Get-Module NugetShared)) {
+	if (-not (Get-Module NugetSharedPacker)) {
 		$loaded = $true
-		Import-Module "$projDir\bin\Debug\$id\NugetShared.psm1"
+		Import-Module "$slnDir\NugetSharedPacker\bin\Debug\NugetSharedPacker\NugetSharedPacker.psd1"
 	}
 
 	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir
@@ -27,6 +27,7 @@ try {
 	'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $projDir\NuGet\$_ | Out-Null }
 
 	copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
+	copy "bin\Debug\$id\VSTSExtension.ps*1" "NuGet\content\$contentType\"
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
 		NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir

@@ -36,9 +36,7 @@
     <Compile Include="Package.ps1" />
     <Compile Include="Scripts\Add-DictionaryNode.ps1" />
     <Compile Include="Scripts\Add-Node.ps1" />
-    <Compile Include="Scripts\Export-NuGetSettings.ps1" />
     <Compile Include="Scripts\Format-XmlIndent.ps1" />
-    <Compile Include="Scripts\Get-Branch.ps1" />
     <Compile Include="Scripts\Get-Caller.ps1" />
     <Compile Include="Scripts\Get-CSharpProjects.ps1" />
     <Compile Include="Scripts\Get-GroupNode.ps1" />
@@ -52,36 +50,23 @@
     <Compile Include="Scripts\Get-ParentSubfolder.ps1" />
     <Compile Include="Scripts\Get-PowerShellProjects.ps1" />
     <Compile Include="Scripts\Get-ProjectsByType.ps1" />
-    <Compile Include="Scripts\Get-ProjectVersion.ps1" />
-    <Compile Include="Scripts\Get-RevisionCount.ps1" />
     <Compile Include="Scripts\Get-SqlProjects.ps1" />
-    <Compile Include="Scripts\Import-NuGetSettings.ps1" />
     <Compile Include="Scripts\Invoke-Trap.ps1" />
     <Compile Include="Scripts\Log.ps1" />
-    <Compile Include="Scripts\New-NuGetSettings.ps1" />
     <Compile Include="Scripts\Out-FormattedXml.ps1" />
     <Compile Include="Scripts\Publish-NuGetPackage.ps1" />
-    <Compile Include="Scripts\Remove-GitRepository.ps1" />
     <Compile Include="Scripts\Remove-Node.ps1" />
     <Compile Include="Scripts\Remove-NugetFolder.ps1" />
     <Compile Include="Scripts\Save-CSharpProject.ps1" />
     <Compile Include="Scripts\Set-NodeText.ps1" />
-    <Compile Include="Scripts\Set-NuspecDependencyVersion.ps1" />
-    <Compile Include="Scripts\Set-NuspecVersion.ps1" />
     <Compile Include="Scripts\Set-ProjectDependencyVersion.ps1" />
     <Compile Include="Scripts\Test-NuGetVersionExists.ps1" />
-    <Compile Include="Scripts\Test-PathIsInGitRepo.ps1" />
-    <Compile Include="Tests\Export-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Get-GroupNode.tests.ps1" />
     <Compile Include="Tests\Get-NuGetDbToolsConfigPath.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalApiKey.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalPushSource.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalSource.tests.ps1" />
-    <Compile Include="Tests\Get-NuGetPackageVersion.tests.ps1" />
-    <Compile Include="Tests\Get-ProjectVersion.tests.ps1" />
     <Compile Include="Tests\Get-SqlProjects.tests.ps1" />
-    <Compile Include="Tests\Import-NuGetSettings.tests.ps1" />
-    <Compile Include="Tests\Initialize-TestNugetConfig.ps1" />
     <Compile Include="Tests\Test-NuGetVersionExists.tests.ps1" />
   </ItemGroup>
   <ItemGroup>

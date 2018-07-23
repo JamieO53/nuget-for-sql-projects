@@ -1,7 +1,7 @@
-﻿if (Get-Module NugetShared) {
-	Remove-Module NugetShared
+﻿if ( Get-Module NugetSharedPacker) {
+	Remove-Module NugetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1"
 
 Describe "Get-NuGetPackageVersion" {
 	Context "Existing package" {

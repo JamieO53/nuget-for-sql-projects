@@ -1,0 +1,1 @@
+powershell -Command ".\Invoke-RegressionTests.ps1"

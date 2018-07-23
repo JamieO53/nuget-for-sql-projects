@@ -26,8 +26,9 @@ function Publish-ProjectDatabase {
 			}
 	
 			Log "Publishing $DacpacPath using $ProfilePath"
-			Invoke-Trap -Command "$cmd /a:Publish /sf:`"$DacpacPath`" $db" -Message "Deploying database failed" -Fatal
+			Invoke-Trap -Command "& `"$cmd`" /a:Publish /sf:`"$DacpacPath`" $db" -Message "Deploying database failed" -Fatal
 		} catch {
+			Log "SqlPackage.exe failed: $_" -Error
 			exit 1
 		}
 	} else {

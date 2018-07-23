@@ -1,7 +1,7 @@
-﻿if ( Get-Module NugetSharedPacker) {
-	Remove-Module NugetSharedPacker
+﻿if ( Get-Module NuGetSharedPacker) {
+	Remove-Module NuGetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
 if (-not (Get-Module TestUtils)) {
 	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
 }
@@ -34,9 +34,9 @@ Describe Initialize-NuGetSpec {
 		}
 	}
 	Context "Nuget spec settings" {
-		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' }
-		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" }
-		mock Invoke-Expression { return '1.0' } -ParameterFilter { $Command -eq 'git describe --tags' }
+		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
+		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NuGetSharedPacker
+		mock Invoke-Expression { return '1.0' } -ParameterFilter { $Command -eq 'git describe --tags' } -ModuleName NuGetSharedPacker
 		md $projFolder
 		Initialize-NuGetFolders -Path $nugetFolder
 		Initialize-NuGetSpec -Path $nugetFolder -setting $nugetSettings
