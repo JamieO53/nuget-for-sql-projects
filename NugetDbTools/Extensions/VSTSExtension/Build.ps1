@@ -1,8 +1,8 @@
 $ProjectName = 'VSTSExtension'
 $SolutionDir = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..\..").Path
 $ProjectDir = "$SolutionDir\Extensions\$ProjectName"
-$Dependencies = @('NuGetShared')
-$Dependents = @()
+$Dependencies = @()
+$Dependents = @('NuGetSharedPacker', 'NugetDbPacker', 'DbSolutionBuilder', 'NuGetProjectPacker')
 
 "'$SolutionDir\PowershellBuilder\PSModuleBuilder.ps1' -project $ProjectName -path $SolutionDir\Extensions -outputPath $ProjectDir\bin\Debug"
 pushd $SolutionDir
