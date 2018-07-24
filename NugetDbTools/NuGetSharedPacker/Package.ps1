@@ -18,7 +18,7 @@ try {
 		throw "Invalid version $version"
 	}
 
-	$dependencies | @ {
+	$dependencies | % {
 		Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency $_
 	}
 
@@ -31,7 +31,7 @@ try {
 	'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $projDir\NuGet\$_ | Out-Null }
 
 	copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
-	$extensions | @ {
+	$extensions | % {
 		copy "bin\Debug\$id\$_.ps*1" "NuGet\content\$contentType\"
 	}
 
