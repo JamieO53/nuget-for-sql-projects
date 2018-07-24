@@ -37,12 +37,18 @@ else {
 		if ($LASTEXITCODE) {
 			throw "Package of DbSolutionBuilder failed"
 		}
-		pushd '.\Extensions\VSTSExtension'
-		powershell.exe -command '.\Package.ps1'
-		popd
-		if ($LASTEXITCODE) {
-			throw "Package of VSTSExtension failed"
-		}
+		#pushd '.\Extensions\VSTSExtension'
+		#powershell.exe -command '.\Package.ps1'
+		#popd
+		#if ($LASTEXITCODE) {
+		#	throw "Package of VSTSExtension failed"
+		#}
+		#pushd '.\Extensions\GetExtension'
+		#powershell.exe -command '.\Package.ps1'
+		#popd
+		#if ($LASTEXITCODE) {
+		#	throw "Package of GetExtension failed"
+		#}
 	} catch {
 		Write-Host $_.Exception.Message -ForegroundColor Red
 		exit 1

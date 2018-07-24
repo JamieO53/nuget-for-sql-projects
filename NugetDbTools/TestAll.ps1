@@ -3,8 +3,20 @@ $SolutionPath = ls "$SolutionFolder\*.sln"
 if (Get-Module NuGetSharedPacker) {
 	Remove-Module NuGetSharedPacker
 }
-if (Get-Module NuGetShared) {
+if (Get-Module GitExtension) {
+	Remove-Module GitExtension
+}
+if (Get-Module VSTSExtension) {
+	Remove-Module VSTSExtension
+}
+If (Get-Module NuGetShared) {
 	Remove-Module NuGetShared
+}
+if (-not (Get-Module GitExtension)) {
+	Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\GitExtension.psd1"
+}
+if (-not (Get-Module VSTSExtension)) {
+	Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\VSTSExtension.psd1"
 }
 if (-not (Get-Module NuGetShared)) {
 	Import-Module "$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psd1"
@@ -38,6 +50,14 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 			Remove-Module NuGetShared
 		}
 		Import-Module "$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psd1" 
+		if (Get-Module GitExtension) {
+			Remove-Module GitExtension
+		}
+		Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\GitExtension.psd1" 
+		if (Get-Module VSTSExtension) {
+			Remove-Module VSTSExtension
+		}
+		Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\VSTSExtension.psd1" 
 		if (Get-Module NuGetSharedPacker) {
 			Remove-Module NuGetSharedPacker
 		}

@@ -82,6 +82,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", 
 EndProject
 Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "VSTSExtension", "Extensions\VSTSExtension\VSTSExtension.pssproj", "{FE66DA4E-E2FC-4094-97D6-76740533AF1F}"
 EndProject
+Project("{F5034706-568F-408A-B7B3-4D38C6DB8A32}") = "GitExtension", "Extensions\GitExtension\GitExtension.pssproj", "{4997846A-C474-4304-B857-8FBEACF773C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,6 +132,10 @@ Global
 		{FE66DA4E-E2FC-4094-97D6-76740533AF1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE66DA4E-E2FC-4094-97D6-76740533AF1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE66DA4E-E2FC-4094-97D6-76740533AF1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4997846A-C474-4304-B857-8FBEACF773C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4997846A-C474-4304-B857-8FBEACF773C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4997846A-C474-4304-B857-8FBEACF773C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4997846A-C474-4304-B857-8FBEACF773C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,6 +146,7 @@ Global
 		{890F4222-B59A-4295-86FB-825D037326E1} = {6F4074EE-2079-4DB5-9C97-7BF371C263AA}
 		{6221769E-E6AE-460A-A239-D3FB82CA91EB} = {6F4074EE-2079-4DB5-9C97-7BF371C263AA}
 		{FE66DA4E-E2FC-4094-97D6-76740533AF1F} = {1A5925BD-2A30-426B-B7C4-E6170709B4F4}
+		{4997846A-C474-4304-B857-8FBEACF773C8} = {1A5925BD-2A30-426B-B7C4-E6170709B4F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7BD0216A-1FF9-4A04-88A8-824A2B56813B}

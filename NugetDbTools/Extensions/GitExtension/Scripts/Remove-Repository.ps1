@@ -1,4 +1,4 @@
-function Remove-GitRepository {
+function Remove-Repository {
     [CmdletBinding()]
     param
     (

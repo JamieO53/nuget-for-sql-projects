@@ -25,8 +25,8 @@ Describe "Compress-Package" {
 mkdir "$testDrive\.git"
 Context "Exists" {
 		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
-		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NuGetSharedPacker
-		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName NuGetSharedPacker
+		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName GitExtension
+		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName GitExtension
 		mkdir $projDbFolder
 		mkdir $nugetFolder
 		$projText | Set-Content $projPath
