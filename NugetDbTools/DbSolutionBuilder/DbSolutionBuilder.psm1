@@ -1,3 +1,3 @@
-if (-not (Get-Module NugetDbPacker)) {
-	Import-Module "$PSScriptRoot\NugetDbPacker.psd1"
+if (-not (Get-Module NugetDbPacker -All)) {
+	Import-Module "$PSScriptRoot\NugetShared.psd1"
 }

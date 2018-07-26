@@ -1,3 +1,3 @@
-if (-not (Get-Module NugetShared)) {
+if (-not (Get-Module NugetShared -All)) {
 	Import-Module "$PSScriptRoot\NugetShared.psd1"
 }

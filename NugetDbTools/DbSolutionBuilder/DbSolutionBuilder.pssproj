@@ -35,7 +35,10 @@
     <Compile Include="DbSolutionBuilder.psm1" />
     <Compile Include="Package.ps1" />
     <Compile Include="Scripts\New-DbSolution.ps1" />
+    <Compile Include="Scripts\New-DbSolutionFromTemplate.ps1" />
+    <Compile Include="Scripts\New-DbSolutionProjects.ps1" />
     <Compile Include="Scripts\New-SqlProject.ps1" />
+    <Compile Include="Scripts\New-DbSolutionDependencies.ps1" />
     <Compile Include="Scripts\Set-DbReferencesInProject.ps1" />
     <Compile Include="Scripts\Set-NuGetDependenciesInPkgProject.ps1" />
     <Compile Include="Scripts\Set-SqlProjectDependenciesInSolution.ps1" />
