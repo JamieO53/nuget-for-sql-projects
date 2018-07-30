@@ -1,8 +1,12 @@
-﻿if ( Get-Module NugetDbPacker) {
+﻿if (Get-Module NuGetShared) {
+	Remove-Module NuGetShared
+}
+
+if (Get-Module NugetDbPacker) {
 	Remove-Module NugetDbPacker
 }
 
-if ( Get-Module DbSolutionBuilder) {
+if (Get-Module DbSolutionBuilder) {
 	Remove-Module DbSolutionBuilder
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psm1"
