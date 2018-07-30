@@ -35,6 +35,16 @@ try {
 		copy "bin\Debug\$id\$_.ps*1" "NuGet\content\$contentType\"
 	}
 
+	if (Test-Path "NuGet\content\$contentType\$id.psd1") {
+		gc "NuGet\content\$contentType\$id.psd1" | % {
+			if ( $_.StartsWith('ModuleVersion = ')) {
+				"ModuleVersion = '$version'"
+			} else {
+				$_
+			}
+		} | sc "NuGet\content\$contentType\$id.psd1"
+	}
+
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
 		NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
 		Publish-NuGetPackage -PackagePath "$projDir\$id.$version.nupkg"

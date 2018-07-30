@@ -1,6 +1,8 @@
 $projectType = 'Project'
 $id="NuGet$($projectType)Packer"
 $contentType='PowerShell'
+$dependencies=@('NuGetSharedPacker')
+$extensions=@()
 $projDir = (Get-Item "$(Split-Path -Path $MyInvocation.MyCommand.Path)").FullName
 $slnDir = (Get-Item "$projDir\..").FullName
 pushd $projDir
@@ -17,7 +19,9 @@ try {
 		throw "Invalid version $version"
 	}
 
-	Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency 'NuGetSharedPacker'
+	$dependencies | % {
+		Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency $_
+	}
 
 	if (Test-Path $projDir\NuGet) {
 		del $projDir\NuGet\* -Recurse -Force
@@ -27,11 +31,24 @@ try {
 	md "$projDir\NuGet" | Out-Null
 	'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $projDir\NuGet\$_ | Out-Null }
 
-	copy "$projDir\bin\Debug\$id\$id.ps*1" "$projDir\NuGet\content\$contentType\"
+	copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
+	$extensions | % {
+		copy "bin\Debug\$id\$_.ps*1" "NuGet\content\$contentType\"
+	}
 	copy "$slnDir\PackageTools\*" "$projDir\NuGet\content\PackageTools\"
-	copy "$slnDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\"
+	copy "$slnDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\" -Force
 	"powershell -Command `".\Bootstrap.ps1`" -ProjectType $projectType" |
 		Set-Content "$projDir\NuGet\content\PackageTools\Bootstrap.cmd" -Encoding Ascii
+
+		if (Test-Path "NuGet\content\$contentType\$id.psd1") {
+		gc "NuGet\content\$contentType\$id.psd1" | % {
+			if ( $_.StartsWith('ModuleVersion = ')) {
+				"ModuleVersion = '$version'"
+			} else {
+				$_
+			}
+		} | sc "NuGet\content\$contentType\$id.psd1"
+	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
 		NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
