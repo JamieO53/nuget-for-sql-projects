@@ -36,13 +36,14 @@ try {
 	}
 
 	if (Test-Path "NuGet\content\$contentType\$id.psd1") {
-		gc "NuGet\content\$contentType\$id.psd1" | % {
+		$lines = gc "NuGet\content\$contentType\$id.psd1" | % {
 			if ( $_.StartsWith('ModuleVersion = ')) {
 				"ModuleVersion = '$version'"
 			} else {
 				$_
 			}
-		} | sc "NuGet\content\$contentType\$id.psd1"
+		}
+		$lines | sc "NuGet\content\$contentType\$id.psd1"
 	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
