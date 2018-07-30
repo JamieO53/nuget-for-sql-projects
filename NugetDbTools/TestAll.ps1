@@ -1,32 +1,17 @@
 $SolutionFolder = Split-Path -Path $MyInvocation.MyCommand.Path
 $SolutionPath = ls "$SolutionFolder\*.sln"
-if (Get-Module NuGetSharedPacker) {
-	Remove-Module NuGetSharedPacker
-}
-if (Get-Module GitExtension) {
-	Remove-Module GitExtension
-}
-if (Get-Module VSTSExtension) {
-	Remove-Module VSTSExtension
-}
-If (Get-Module NuGetShared) {
-	Remove-Module NuGetShared
-}
-if (-not (Get-Module GitExtension)) {
-	Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\GitExtension.psd1"
-}
-if (-not (Get-Module VSTSExtension)) {
-	Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\VSTSExtension.psd1"
+$modules = @{
+	GitExtension="$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\GitExtension.psd1"
+	VSTSExtension="$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\VSTSExtension.psd1"
+	NuGetShared="$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psd1"
+	NuGetSharedPacker="$SolutionFolder\NugetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1"
+	NuGetDbPacker="$SolutionFolder\NuGetDbPacker\bin\Debug\NuGetDbPacker\NuGetDbPacker.psd1"
+	NuGetProjectPacker="$SolutionFolder\NuGetProjectPacker\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psd1"
 }
 if (-not (Get-Module NuGetShared)) {
-	Import-Module "$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psd1"
+	Import-Module $modules['NuGetShared']
 }
-if (Get-Module NuGetSharedPacker) {
-	Remove-Module NuGetSharedPacker
-}
-if (-not (Get-Module NuGetSharedPacker)) {
-	Import-Module "$SolutionFolder\NugetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1"
-}
+
 if (Test-Path "$SolutionFolder\TestResults") {
 	rmdir "$SolutionFolder\TestResults\*" -Recurse -Force
 }
@@ -39,29 +24,19 @@ $failCount = 0
 $renderHtml = $true
 
 Get-PowerShellProjects -SolutionPath $SolutionPath | % {
+	$modules.Keys | % {
+		$module = $_[0]
+		if ((Get-Module $module)) {
+			Remove_Module $module
+		}
+	}
+	"GitExtension","VSTSExtension","NuGetShared","NuGetSharedPacker" | % {
+		Import-Module "$($modules[$_])"
+	}
 	$projectFolder = Split-Path "$SolutionFolder\$($_.ProjectPath)"
 	$testName = $_.Project
 	if (Test-Path "$projectFolder\Tests")
 	{
-		if (Get-Module TestUtils) {
-			Remove-Module TestUtils
-		}
-		if (Get-Module NuGetShared) {
-			Remove-Module NuGetShared
-		}
-		Import-Module "$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psd1" 
-		if (Get-Module GitExtension) {
-			Remove-Module GitExtension
-		}
-		Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\GitExtension.psd1" 
-		if (Get-Module VSTSExtension) {
-			Remove-Module VSTSExtension
-		}
-		Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\VSTSExtension.psd1" 
-		if (Get-Module NuGetSharedPacker) {
-			Remove-Module NuGetSharedPacker
-		}
-		Import-Module "$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1" 
 		pushd "$projectFolder\Tests"
 		$testResult = Invoke-Pester "$projectFolder\Tests" -OutputFile "$SolutionFolder\TestResults\$($_.Project).xml" -OutputFormat NUnitXml -PassThru -EnableExit
 		$failCount = $failCount + $testResult.FailedCount

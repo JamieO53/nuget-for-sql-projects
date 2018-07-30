@@ -95,14 +95,15 @@ Describe "New-DbSolution" {
 			$prj.xml | should be $null
 		}
 
-		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep1 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep1 1.0.123' } -ModuleName NuGetSharedPacker
-		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep2 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep2 1.0.234' } -ModuleName NuGetSharedPacker
-		Mock -CommandName Invoke-Trap -ParameterFilter { (${Command} -eq  "nuget restore $SolutionPath") -and (${Message} -eq "Unable to restore $sln") } -ModuleName NuGetShared
+		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep1 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep1 1.0.123' } -ModuleName NuGetShared
+		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep2 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep2 1.0.234' } -ModuleName NuGetShared
+		Mock -CommandName Invoke-Trap -ParameterFilter { ($PSBoundParameters.Command -eq  "nuget restore $SolutionPath") -and ($PSBoundParameters.Message -eq "Unable to restore $sln") } -ModuleName NuGetSharedPacker
 
-		New-DbSolutionDependencies -Parameters $Parameters -PkgProjectPath $pkgProjectPath
+		New-DbSolutionDependencies -Parameters $params -PkgProjectPath $pkgProjectPath
 
-		Get-SolutionContent -SolutionPath $slnPath
+		Get-SolutionContent -SolutionPath $SolutionPath
 
+		$prj = gc "$location\$name\$($cs.ProjectPath)"
 		Context "Dependencies" {
 			It "The specified properties were added" {
 				($prj.Project.ItemGroup.PackageReference).Count | should be 4
@@ -126,9 +127,8 @@ Describe "New-DbSolution" {
 				}
 			}
 		}
-		#Get-SolutionContent -SolutionPath $SolutionPath
 
-		New-DbSolutionProjects -Parameters $Parameters -SolutionFolder $SolutionFolder -TemplateFolder $templateFolder -SolutionPath $SolutionPath -PkgProjectPath $pkgProjectPath
+		New-DbSolutionProjects -Parameters $params -SolutionFolder $SolutionFolder -TemplateFolder $templateFolder -SolutionPath $SolutionPath -PkgProjectPath $pkgProjectPath
 			#$temp = New-DbSolution -Parameters $params
 		$sql = Get-SqlProjects -SolutionPath "$location\$name\$name.sln"
 		It "Two SQL projects are in the solution" {
