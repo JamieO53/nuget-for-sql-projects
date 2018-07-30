@@ -28,7 +28,7 @@ function New-SqlProject {
 	$projectFolder = "$SolutionFolder\$ProjectName"
 	$projectPath = "$projectFolder\$projectName.sqlproj"
 	mkdir $projectFolder | Out-Null
-	ls "$TemplateFolder\Template.DBProject\Template.DBProject*" | % {
+	ls "$TemplateFolder\NuGetDbPacker.DbTemplate\Template\Template.DBProject\*" | % {
 		$templateFile = $_
 		$projectFile = $templateFile.Name.Replace('Template.DBProject', "$ProjectName")
 		copy $templateFile.FullName "$projectFolder\$projectFile"

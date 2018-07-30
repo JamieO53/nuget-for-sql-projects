@@ -9,7 +9,7 @@ function Find-PublishProfilePath {
 	- the specified override
 	- The computer host name - not to be used for build servers
 	- The host type - DEV, BUILD
-	- The git branch
+	- The repository branch
 
 	.EXAMPLE
 	Find-PublishProfilePath -ProjectPath C:\VSTS\EcsShared\SupportRoles\EcsShared.SupportRoles.sqlproj

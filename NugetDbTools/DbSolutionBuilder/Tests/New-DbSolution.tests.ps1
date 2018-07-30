@@ -1,11 +1,15 @@
-﻿if ( Get-Module DbSolutionBuilder) {
+﻿if (Get-Module NuGetShared) {
+	Remove-Module NuGetShared
+}
+
+if (Get-Module NugetDbPacker) {
+	Remove-Module NugetDbPacker
+}
+
+if (Get-Module DbSolutionBuilder) {
 	Remove-Module DbSolutionBuilder
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psm1"
-
-if ( Get-Module NugetDbPacker) {
-	Remove-Module NugetDbPacker
-}
 
 $global:testing = $true
 $location = "TestDrive:\Solutions"
@@ -37,6 +41,11 @@ $deps.Keys | % {
 }
 Describe "New-DbSolution" {
 	$location = "$testDrive\Solutions"
+	$sln = "$name.sln"
+	$solutionFolder = "$location\$name"
+	$SolutionPath = "$solutionFolder\$sln"
+	$templateFolder = "$location\Template"
+	$pkgProjectPath = "$location\$name\${name}Pkg\${name}Pkg.csproj"
 	[xml]$params = @"
 <dbSolution>
 	<parameters>
@@ -55,9 +64,11 @@ Describe "New-DbSolution" {
 		New-DummyDacpac -DbName $_
 	}
 	Context "Solution folder" {
-		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep1 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep1 1.0.123' } -ModuleName NuGetShared
-		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep2 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep2 1.0.234' } -ModuleName NuGetShared
-		$temp = New-DbSolution -Parameters $params
+		New-DbSolutionFromTemplate -Parameters $params -SolutionFolder $SolutionFolder -TemplateFolder $templateFolder -PkgProjectPath $pkgProjectPath
+		if (-not (Get-Module NugetDbPacker)) {
+			Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1"
+		}
+
 		It "$location\$name folder exists" {
 			Test-Path "$location\$name" | should be $true
 		}
@@ -87,6 +98,16 @@ Describe "New-DbSolution" {
 		It "Project header" {
 			$prj.xml | should be $null
 		}
+
+		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep1 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep1 1.0.123' } -ModuleName NuGetShared
+		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep2 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep2 1.0.234' } -ModuleName NuGetShared
+		Mock -CommandName Invoke-Trap -ParameterFilter { ($PSBoundParameters.Command -eq  "nuget restore $SolutionPath") -and ($PSBoundParameters.Message -eq "Unable to restore $sln") } -ModuleName NuGetSharedPacker
+
+		New-DbSolutionDependencies -Parameters $params -PkgProjectPath $pkgProjectPath
+
+		Get-SolutionContent -SolutionPath $SolutionPath
+
+		$prj = gc "$location\$name\$($cs.ProjectPath)"
 		Context "Dependencies" {
 			It "The specified properties were added" {
 				($prj.Project.ItemGroup.PackageReference).Count | should be 4
@@ -110,6 +131,9 @@ Describe "New-DbSolution" {
 				}
 			}
 		}
+
+		New-DbSolutionProjects -Parameters $params -SolutionFolder $SolutionFolder -TemplateFolder $templateFolder -SolutionPath $SolutionPath -PkgProjectPath $pkgProjectPath
+			#$temp = New-DbSolution -Parameters $params
 		$sql = Get-SqlProjects -SolutionPath "$location\$name\$name.sln"
 		It "Two SQL projects are in the solution" {
 			$sql.Count | should be 2
@@ -156,7 +180,6 @@ Describe "New-DbSolution" {
 					It "$dep dependency version" {
 						$ref.value | should be $deps[$dep]
 					}
-				
 				}
 			}
 			Context "$projectName project file" {

@@ -18,8 +18,8 @@ function Set-NuGetProjectDependencyVersion {
 	)
 
 	$cfg = Import-NuGetSettings -NugetConfigPath $NugetConfigPath
-		if ($cfg.nugetDependencies[$Dependency]) {
-			$cfg.nugetDependencies[$Dependency] = $Version
-		}
- 	Export-NuGetSettings -NugetConfigPath $NugetConfigPath -Settings $cfg
+	if (($cfg.nugetDependencies[$Dependency]) -and ($cfg.nugetDependencies[$Dependency] -ne $Version)) {
+		$cfg.nugetDependencies[$Dependency] = $Version
+ 		Export-NuGetSettings -NugetConfigPath $NugetConfigPath -Settings $cfg
+	}
 }

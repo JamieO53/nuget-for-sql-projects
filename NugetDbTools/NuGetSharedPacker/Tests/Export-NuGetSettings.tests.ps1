@@ -14,8 +14,8 @@ Describe "Export-NuGetSettings" {
 		$expectedSettings = Initialize-TestNugetConfig
 		$expectedOptions = $expectedSettings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
 		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
-		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName NuGetSharedPacker
-		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName NuGetSharedPacker
+		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName GitExtension
+		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName GitExtension
 		Context "Dependencies exist" {
 			Export-NuGetSettings -NugetConfigPath $configPath -Settings $expectedSettings
 			It "Exported nuGet config exists" { Test-Path $configPath | should be $true }
