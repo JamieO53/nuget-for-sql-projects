@@ -1,6 +1,6 @@
-﻿if (Get-Module NuGetShared) {
-	Remove-Module NuGetShared
-}
+﻿#if (Get-Module NuGetShared) {
+#	Remove-Module NuGetShared
+#}
 
 if (Get-Module NugetDbPacker) {
 	Remove-Module NugetDbPacker
