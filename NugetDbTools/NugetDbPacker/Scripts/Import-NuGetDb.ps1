@@ -31,14 +31,14 @@ function Import-NuGetDb {
 	if (Test-Path "$ProjDbFolder\$dacpac.dacpac") {
 		Copy-Item "$ProjDbFolder\$dacpac.dacpac" $NugetDbFolder
 	}
-	Copy-Item "$ProjDbFolder\$assembly.*" $NugetDbFolder
+	Copy-Item "$ProjDbFolder\*.*" $NugetDbFolder
 	ls $ProjDbFolder -Directory | % {
 		$dir = $_.Name
 		md "$NugetDbFolder\$dir"  | Out-Null
 		if (Test-Path "$ProjDbFolder\$dir\$dacpac.dacpac") {
 			Copy-Item "$ProjDbFolder\$dir\$dacpac.dacpac" "$NugetDbFolder\$dir"
 		}
-		Copy-Item "$ProjDbFolder\$dir\$assembly.*" "$NugetDbFolder\$dir"
+		Copy-Item "$ProjDbFolder\$dir\*.dll" "$NugetDbFolder\$dir"
 	}
 	[xml]$spec = gc $NugetSpecPath
 	Add-DbFileNode -parentNode $spec.package
