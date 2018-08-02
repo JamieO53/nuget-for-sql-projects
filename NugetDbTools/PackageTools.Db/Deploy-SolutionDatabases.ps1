@@ -10,9 +10,10 @@ $branch = Get-Branch $slnFolder
 Get-SqlProjects -SolutionPath $slnPath | % {
 	$projName = $_.Project
 	$projPath = "$slnFolder\$($_.ProjectPath)"
+	$projFolder = Split-Path $projPath
 	$dacpacName = "$projName.dacpac"
 	$dacpacPath = "$slnFolder\Databases\$dacpacName"
-	$projectDacpacPath = "$slnFolder\$projName\Databases\$dacpacName"
+	$projectDacpacPath = "$projFolder\Databases\$dacpacName"
 	copy $projectDacpacPath* $slnFolder\Databases
 	$profilePath = Find-PublishProfilePath -ProjectPath $projPath
 	if (Test-Path $profilePath) {
