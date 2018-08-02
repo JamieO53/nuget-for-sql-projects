@@ -36,7 +36,7 @@ try {
 		copy "bin\Debug\$id\$_.ps*1" "NuGet\content\$contentType\"
 	}
 	copy "$slnDir\PackageTools\*" "$projDir\NuGet\content\PackageTools\"
-	copy "$slnDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\" -Force
+	copy "$projDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\" -Force
 	"powershell -Command `".\Bootstrap.ps1`" -ProjectType $projectType" |
 		Set-Content "$projDir\NuGet\content\PackageTools\Bootstrap.cmd" -Encoding Ascii
 
