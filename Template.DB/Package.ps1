@@ -4,9 +4,9 @@ $slnDir = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)").Path
 pushd $slnDir
 
 $loaded = $false
-if (-not (Get-Module NuGetShared)) {
+if (-not (Get-Module NuGetSharedPacker)) {
 	$loaded = $true
-	Import-Module $slnDir\..\NugetDbTools\NuGetShared\bin\Debug\NuGetShared\NuGetShared.psd1
+	Import-Module $slnDir\..\NugetDbTools\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1
 }
 
 $version = Set-NuspecVersion -Path $slnDir\Package.nuspec -ProjectFolder $slnDir
@@ -31,6 +31,6 @@ del $slnDir\NuGet\* -Recurse -Force
 rmdir $slnDir\NuGet
 del "$slnDir\$id.$version.nupkg"
 if ($loaded) {
-	Remove-Module NugetShared
+	Remove-Module NuGetSharedPacker
 }
 popd
