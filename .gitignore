@@ -259,15 +259,18 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
-/NugetDbTools/PowerShell/PSModuleBuilder/PSModuleBuilder.ps1
-*.bak
-/NugetDbTools/CiTools
-/Template.DB/PowerShell
+
+# Ecentric build files
+.git/
+obj/
+bin/
 Databases/
-/NugetDbTools/NugetDbPackerDb/PowerShell/NuGetShared.psm1
-/NugetDbTools/NugetDbPackerDb/PowerShell/NuGetShared.psd1
-/NugetDbTools/NugetDbPackerDb/PowerShell/NuGetDbPacker.psm1
-/NugetDbTools/NugetDbPackerDb/PowerShell/NuGetDbPacker.psd1
+Logs/
+NuGetInstall/
+*.bak
+*.dtbcache
+TestResults/
+commands.json
+Runtime/
+*.dacpac
 CallGraph_*
-/NugetDbTools/NugetDbPacker/CallGraph-NuGetDbPacker.txt
-/NugetDbTools/NugetDbPacker/CallGraph-NuGetDbPacker.ps1
