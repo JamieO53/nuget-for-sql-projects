@@ -22,7 +22,7 @@ function Publish-Package {
     $version = $settings.nugetSettings.version
     if (-not (Test-NuGetVersionExists -Id $id -Version $version)) {
         $nugetPackage = [IO.Path]::Combine($nugetFolder, "$id.$version.nupkg")
-        Initialize-Package -ProjectPath $ProjectPath
+        Initialize-Package -ProjectPath $ProjectPath -NugetSettings $settings
         Publish-NuGetPackage -PackagePath $nugetPackage
 		Remove-NugetFolder $nugetFolder
     }

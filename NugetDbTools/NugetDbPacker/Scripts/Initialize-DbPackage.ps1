@@ -17,12 +17,10 @@ function Initialize-DbPackage
 	)
 	$projectFolder = Split-Path -LiteralPath $ProjectPath -Resolve
 	$nugetPath = Join-Path -Path $projectFolder -ChildPath 'Nuget'
-	# $projectName = Split-Path -Path $projectFolder -Leaf
-	# $configPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
-	# Initialize-NuGetFolders -Path $nugetPath
-	# $nugetSettings = Import-NuGetSettings -NugetConfigPath $configPath
-	# Initialize-NuGetSpec -Path $nugetPath -setting $nugetSettings
-	Initialize-Package -ProjectPath $ProjectPath
+	$configPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
+	$nugetSettings = Import-NuGetSettings -NugetConfigPath $configPath
+
+	Initialize-Package -ProjectPath $ProjectPath -NugetSettings $nugetSettings
 	Import-NuGetDb -ProjectPath $ProjectPath -ProjDbFolder "$projectFolder\Databases" -NugetDbFolder "$nugetPath\content\Databases" -NugetSpecPath "$nugetPath\Package.nuspec"
 	Compress-Package -NugetPath $nugetPath
 }
