@@ -13,6 +13,7 @@ function Get-SolutionDependencies {
         [string]$SolutionPath
 	)
 	$reference = @{}
+	$slnFolder = Split-Path -Path $SolutionPath
 	Get-PkgProjects $SolutionPath | % {
 		$projPath = "$slnFolder\$($_.ProjectPath)"
 		$projFolder = Split-Path $projPath
