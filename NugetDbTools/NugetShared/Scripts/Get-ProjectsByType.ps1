@@ -17,7 +17,7 @@ function Get-ProjectsByType {
         # The project type ID
         [string]$ProjId
     )
-    [string]$sln=gc $SolutionPath | Out-String
+    [string]$sln=if ($SolutionPath -and (Test-Path $SolutionPath)) {gc $SolutionPath | Out-String} else {''}
 
     $nameGrouping = '(?<name>[^"]+)'
     $pathGrouping = '(?<path>[^"]+)'
