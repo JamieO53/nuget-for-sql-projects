@@ -18,7 +18,6 @@ if (Test-Path "$SolutionFolder\TestResults") {
 mkdir "$SolutionFolder\TestResults\HTML" | Out-Null
 
 $links = ''
-$results = @{}
 $statistics = @()
 $failCount = 0
 $renderHtml = $true
