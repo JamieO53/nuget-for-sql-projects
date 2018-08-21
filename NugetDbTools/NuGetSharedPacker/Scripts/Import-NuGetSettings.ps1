@@ -5,7 +5,7 @@ function Import-NuGetSettings
 	.DESCRIPTION
 	Import the NuGet spec settings from the project's NuGet configuration file (<projctName>.nuget.config)
 	.EXAMPLE
-	Import-NuGetSettings -NugetConfigPath 'EcsShared.SharedBase.nuget.config'
+	Import-NuGetSettings -NugetConfigPath 'EcsShared.SharedBase.nuget.config', -SolutionPath $slnPath
 	#>
     [CmdletBinding()]
     [OutputType([Collections.Hashtable])]
@@ -13,7 +13,9 @@ function Import-NuGetSettings
     (
         # The project's NuGet configuration file
 		[Parameter(Mandatory=$true, Position=0)]
-		[string]$NugetConfigPath
+		[string]$NugetConfigPath,
+		# The solution file
+		[string]$SolutionPath
 	)
 	$nugetSettings = New-NuGetSettings
 
@@ -34,7 +36,8 @@ function Import-NuGetSettings
 	    $projPath = Split-Path -LiteralPath $NugetConfigPath
 	    $nugetSettings.nugetSettings['version'] = Get-ProjectVersion -Path $projPath -MajorVersion $nugetSettings.nugetOptions.majorVersion -minorVersion $nugetSettings.nugetOptions.minorVersion
 	    $cfg.configuration.nugetDependencies.add | ? { $_ } | % {
-		    $nugetSettings.nugetDependencies[$_.key] = $_.value
+		    $version = Get-ProjectDependencyVersion -SolutionPath $SolutionPath -Dependency $_.key -OldVersion $_.value
+			$nugetSettings.nugetDependencies[$_.key] = $version
 	    }
     }
 	$nugetSettings

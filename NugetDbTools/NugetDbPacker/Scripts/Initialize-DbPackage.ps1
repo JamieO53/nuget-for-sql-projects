@@ -13,14 +13,16 @@ function Initialize-DbPackage
     param
     (
         # The location of .sqlproj file of the project being packaged
-        [string]$ProjectPath
+        [string]$ProjectPath,
+		# The solution file
+		[string]$SolutionPath
 	)
 	$projectFolder = Split-Path -LiteralPath $ProjectPath -Resolve
 	$nugetPath = Join-Path -Path $projectFolder -ChildPath 'Nuget'
 	$configPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
 	$nugetSettings = Import-NuGetSettings -NugetConfigPath $configPath
 
-	Initialize-Package -ProjectPath $ProjectPath -NugetSettings $nugetSettings
+	Initialize-Package -ProjectPath $ProjectPath -NugetSettings $nugetSettings -SolutionPath $SolutionPath
 	Import-NuGetDb -ProjectPath $ProjectPath -ProjDbFolder "$projectFolder\Databases" -NugetDbFolder "$nugetPath\content\Databases" -NugetSpecPath "$nugetPath\Package.nuspec"
 	Compress-Package -NugetPath $nugetPath
 }

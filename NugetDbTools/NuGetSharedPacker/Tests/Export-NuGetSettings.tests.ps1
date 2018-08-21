@@ -6,7 +6,9 @@ Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.ps
 . $PSScriptRoot\Initialize-TestNugetConfig.ps1
 
 Describe "Export-NuGetSettings" {
-	$projFolder = "TestDrive:\proj"
+	$slnFolder = "TestDrive:\sln"
+	$slnPath = "$snlFolder\sln.sln"
+	$projFolder = "$slnFolder\proj"
 	$projPath = "$projFolder\proj.sqlproj"
 	$configPath = "$projFolder\proj.nuget.config"
 	md $projFolder
@@ -19,7 +21,7 @@ Describe "Export-NuGetSettings" {
 		Context "Dependencies exist" {
 			Export-NuGetSettings -NugetConfigPath $configPath -Settings $expectedSettings
 			It "Exported nuGet config exists" { Test-Path $configPath | should be $true }
-			$importedSettings = Import-NuGetSettings -NugetConfigPath $configPath
+			$importedSettings = Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath
 			$importedOptions = $importedSettings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
 			It "Options count" { $importedOptions.Length | Should Be $expectedOptions.Length }
 			$expectedOptions | % {
@@ -42,7 +44,7 @@ Describe "Export-NuGetSettings" {
 			$expectedSettings = Initialize-TestNugetConfig -NoDependencies
 			Export-NuGetSettings -NugetConfigPath $configPath -Settings $expectedSettings
 			It "Exported nuGet config exists" { Test-Path $configPath | should be $true }
-			$importedSettings = Import-NuGetSettings -NugetConfigPath $configPath
+			$importedSettings = Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath
 			$importedOptions = $importedSettings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
 			It "Options count" { $importedOptions.Length | Should Be $expectedOptions.Length }
 			$expectedOptions | % {

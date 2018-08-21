@@ -6,7 +6,9 @@ Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.ps
 . $PSScriptRoot\Initialize-TestNugetConfig.ps1
 
 Describe "Import-NuGetSettings" {
-	$projFolder = "TestDrive:\proj"
+	$slnFolder = "TestDrive:\sln"
+	$slnPath = "$snlFolder\sln.sln"
+	$projFolder = "$slnFolder\proj"
 	$configPath = "$projFolder\proj.nuget.config"
 	$expectedSettings = Initialize-TestNugetConfig
 	$expectedOptions = $expectedSettings | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
@@ -37,13 +39,13 @@ Describe "Import-NuGetSettings" {
 	$config | sc $configPath -Encoding UTF8
 
 	Context "Exists" {
-		It "Runs" { Import-NuGetSettings -NugetConfigPath $configPath | should not BeNullOrEmpty }
+		It "Runs" { Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath | should not BeNullOrEmpty }
 	}
 	Context "Content" {
 		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
 		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName GitExtension
 		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName GitExtension
-		$content = Import-NuGetSettings -NugetConfigPath $configPath
+		$content = Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath
 		$options = $content.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
 		It "Options count" { $options.Length | Should Be $expectedOptions.Length }
 		$expectedOptions | % {

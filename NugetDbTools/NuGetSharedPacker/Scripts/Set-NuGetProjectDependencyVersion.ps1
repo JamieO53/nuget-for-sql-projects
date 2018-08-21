@@ -11,13 +11,15 @@ function Set-NuGetProjectDependencyVersion {
     (
         # The location of the .nuget.config file being updated
         [string]$NugetConfigPath,
+		# The solution file
+		[string]$SolutionPath,
 		# The dependency being updated
 		[string]$Dependency,
 		# The new package version
 		[string]$Version
 	)
 
-	$cfg = Import-NuGetSettings -NugetConfigPath $NugetConfigPath
+	$cfg = Import-NuGetSettings -NugetConfigPath $NugetConfigPath -SolutionPath $SolutionPath
 	if (($cfg.nugetDependencies[$Dependency]) -and ($cfg.nugetDependencies[$Dependency] -ne $Version)) {
 		$cfg.nugetDependencies[$Dependency] = $Version
  		Export-NuGetSettings -NugetConfigPath $NugetConfigPath -Settings $cfg
