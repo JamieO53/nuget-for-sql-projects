@@ -3,7 +3,9 @@
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
 
-. $PSScriptRoot\Initialize-TestNugetConfig.ps1
+if (-not (Get-Module TestUtils)) {
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+}
 
 Describe "Export-NuGetSettings" {
 	$slnFolder = "TestDrive:\sln"
@@ -13,7 +15,7 @@ Describe "Export-NuGetSettings" {
 	$configPath = "$projFolder\proj.nuget.config"
 	md $projFolder
 	Context "Content" {
-		$expectedSettings = Initialize-TestNugetConfig
+		$expectedSettings = Initialize-TestNugetConfig -Content 'Database'
 		$expectedOptions = $expectedSettings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
 		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
 		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName GitExtension
@@ -41,7 +43,7 @@ Describe "Export-NuGetSettings" {
 			}
 		}
 		Context "Dependencies do not exist" {
-			$expectedSettings = Initialize-TestNugetConfig -NoDependencies
+			$expectedSettings = Initialize-TestNugetConfig -NoDependencies -Content 'Database'
 			Export-NuGetSettings -NugetConfigPath $configPath -Settings $expectedSettings
 			It "Exported nuGet config exists" { Test-Path $configPath | should be $true }
 			$importedSettings = Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath

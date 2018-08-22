@@ -3,14 +3,16 @@
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
 
-. $PSScriptRoot\Initialize-TestNugetConfig.ps1
+if (-not (Get-Module TestUtils)) {
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+}
 
 Describe "Import-NuGetSettings" {
 	$slnFolder = "TestDrive:\sln"
 	$slnPath = "$snlFolder\sln.sln"
 	$projFolder = "$slnFolder\proj"
 	$configPath = "$projFolder\proj.nuget.config"
-	$expectedSettings = Initialize-TestNugetConfig
+	$expectedSettings = Initialize-TestNugetConfig -Content 'Database'
 	$expectedOptions = $expectedSettings | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
 	$config = @'
 <?xml version="1.0"?>
@@ -23,11 +25,11 @@ Describe "Import-NuGetSettings" {
 	<nugetSettings>
 		<add key="id" value="TestPackage"/>
 		<add key="authors" value="joglethorpe"/>
-		<add key="owners" value="Jamie Oglethorpe"/>
-		<add key="projectUrl" value="https://epsdev.visualstudio.com/Sandbox"/>
+		<add key="owners" value="Dummy Company"/>
+		<add key="projectUrl" value="https://dummy.visualstudio.com/Sandbox"/>
 		<add key="description" value="This package is for testing NuGet creation functionality"/>
 		<add key="releaseNotes" value="Some stuff to say about the release"/>
-		<add key="copyright" value="Copyright 2017"/>
+		<add key="copyright" value="Copyright 2018"/>
 	</nugetSettings>
 	<nugetDependencies>
 		<add key="EcsShared.SharedBase" value="[1.0)"/>

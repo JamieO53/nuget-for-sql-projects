@@ -2,11 +2,15 @@ function Initialize-TestNugetConfig {
 	param (
 		[switch]$NoOptions = $false,
 		[switch]$NoSettings = $false,
-		[switch]$NoDependencies = $false
+		[switch]$NoDependencies = $false,
+		[string]$Content = ''
 	)
 	$nugetOptions = New-Object -TypeName PSObject -Property @{
 		majorVersion = '1';
 		minorVersion = '0'
+	}
+	if ($Content) {
+		$nugetOptions = ($nugetOptions | Add-Member @{contentFolders = $Content} -PassThru)
 	}
 	$nugetSettings = @{
 		id = 'TestPackage';
