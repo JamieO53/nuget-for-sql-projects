@@ -17,6 +17,7 @@ function New-DbSolution {
 		[xml]$Parameters
 	)
 	$solutionName = $Parameters.dbSolution.parameters.name
+	$solutionLocation = $Parameters.dbSolution.parameters.location
 	$slnFolder = "$solutionLocation\$solutionName"
 	$templateFolder = "$env:TEMP\$([Guid]::NewGuid())\template"
     $slnPath = "$slnFolder\$($SolutionName).sln"
