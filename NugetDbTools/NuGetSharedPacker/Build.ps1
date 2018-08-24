@@ -10,8 +10,9 @@ iex "$SolutionDir\PowershellBuilder\PSModuleBuilder.ps1 -project $ProjectName -p
 popd
 copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"
 $Dependencies | % {
-	if (Test-Path "$SolutionDir\$_\bin\Debug\$_") {
-		copy "$SolutionDir\$_\bin\Debug\$_\*" "$ProjectDir\bin\Debug\$ProjectName"
+	$name=(Split-Path $_ -Leaf)
+	if (Test-Path "$SolutionDir\$_\bin\Debug\$name") {
+		copy "$SolutionDir\$_\bin\Debug\$name\*" "$ProjectDir\bin\Debug\$ProjectName"
 	}
 }
 $Dependents | % {

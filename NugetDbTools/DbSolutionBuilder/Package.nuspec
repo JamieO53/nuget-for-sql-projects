@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DbSolutionBuilder</id>
-    <version>0.1.103</version>
+    <version>0.1.107</version>
     <authors>joglethorpe</authors>
     <owners>Jamie Oglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -13,6 +13,7 @@
     <tags>DbSolutionBuilder CI Migration</tags>
     <dependencies>
       <dependency id="NuGetDbPacker" version="0.1.117" />
+      <dependency id="NuGetShared" version="0.1.119" />
     </dependencies>
   </metadata>
   <files>
