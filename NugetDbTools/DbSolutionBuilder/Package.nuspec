@@ -12,8 +12,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>DbSolutionBuilder CI Migration</tags>
     <dependencies>
-      <dependency id="NuGetDbPacker" version="0.1.112" />
-      <dependency id="NuGetShared" version="0.1.117" />
+      <dependency id="NuGetDbPacker" version="0.1.117" />
     </dependencies>
   </metadata>
   <files>

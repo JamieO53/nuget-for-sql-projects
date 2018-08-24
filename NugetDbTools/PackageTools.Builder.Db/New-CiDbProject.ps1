@@ -4,6 +4,6 @@ param(
 if (Get-Module DbSolutionBuilder) {
     Remove-Module DbSolutionBuilder
 }
-Import-Module .\PowerShell\DbSolutionBuilder.psm1
+Import-Module .\PowerShell\DbSolutionBuilder.psd1
 $params = gc $Path
 New-DbSolution -Parameters $params
