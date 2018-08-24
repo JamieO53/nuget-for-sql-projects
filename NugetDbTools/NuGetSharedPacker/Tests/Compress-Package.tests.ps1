@@ -3,6 +3,10 @@
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
 
+if (-not (Get-Module TestUtils)) {
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+}
+
 Describe "Compress-Package" {
 	$projFolder = "$testDrive\proj"
 	$projDbFolder = "$projFolder\Databases"

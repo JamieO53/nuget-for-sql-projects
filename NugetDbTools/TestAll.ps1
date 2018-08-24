@@ -24,12 +24,7 @@ $failCount = 0
 $renderHtml = $true
 
 Get-PowerShellProjects -SolutionPath $SolutionPath | % {
-	$modules.Keys | % {
-		$module = $_[0]
-		if ((Get-Module $module)) {
-			Remove_Module $module
-		}
-	}
+	Remove-Module Nuget*,*Extension,TestUtils,DbSolutionBuilder -ErrorAction SilentlyContinue
 	"GitExtension","VSTSExtension","NuGetShared","NuGetSharedPacker" | % {
 		Import-Module "$($modules[$_])"
 	}
@@ -75,9 +70,7 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 		if (Test-Path variable:\global:testing) {
 			$Global:testing = $false
 		}
-		if (Get-Module $_.Project) {
-			Remove-Module $_.Project
-		}
+		Remove-Module Nuget*,*Extension,TestUtils,DbSolutionBuilder -ErrorAction SilentlyContinue
 	}
 }
 $total = @{Name='Total'}
