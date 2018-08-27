@@ -37,6 +37,7 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build.ps1" />
+    <Compile Include="BuildConfig.psd1" />
     <Compile Include="NugetDbPacker.psd1" />
     <Compile Include="NugetDbPacker.psm1" />
     <Compile Include="Package.ps1" />
