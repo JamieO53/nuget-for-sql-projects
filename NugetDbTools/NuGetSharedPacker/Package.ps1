@@ -1,9 +1,12 @@
-$id='NuGetSharedPacker'
+$cfg = Import-PowerShellDataFile "$(Split-Path -Path $MyInvocation.MyCommand.Path)\BuildConfig.psd1"
+
+$id = $cfg.ProjectName
 $contentType='PowerShell'
-$dependencies=@('NuGetShared')
-$extensions=@('GitExtension','VSTSExtension')
+$dependencies=$cfg.Dependencies
+$extensions=$cfg.Extensions
 $projDir = (Get-Item "$(Split-Path -Path $MyInvocation.MyCommand.Path)").FullName
 $slnDir = (Get-Item "$projDir\..").FullName
+
 pushd $projDir
 try {
 

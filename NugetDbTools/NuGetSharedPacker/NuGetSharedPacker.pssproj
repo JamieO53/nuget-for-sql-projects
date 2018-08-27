@@ -33,6 +33,7 @@
     <Compile Include="NuGetSharedPacker.psd1" />
     <Compile Include="NuGetSharedPacker.psm1" />
     <Compile Include="Package.ps1" />
+    <Compile Include="BuildConfig.psd1" />
     <Compile Include="Scripts\Compress-Package.ps1" />
     <Compile Include="Scripts\Export-NuGetSettings.ps1" />
     <Compile Include="Scripts\Get-NuspecProperty.ps1" />
