@@ -52,10 +52,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools", "PackageTool
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Builder.Db", "PackageTools.Builder.Db", "{4DE504AA-C602-457A-9875-2546CD0969DA}"
 	ProjectSection(SolutionItems) = preProject
-		PackageTools.Builder.Db\Bootstrap.ps1 = PackageTools.Builder.Db\Bootstrap.ps1
-		PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1 = PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1
-		PackageTools.Builder.Db\New-CiDbProject.ps1 = PackageTools.Builder.Db\New-CiDbProject.ps1
-		PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1 = PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1
+		DbSolutionBuilder\PackageTools.Builder.Db\Bootstrap.ps1 = DbSolutionBuilder\PackageTools.Builder.Db\Bootstrap.ps1
+		DbSolutionBuilder\PackageTools.Builder.Db\DbTemplate.xml = DbSolutionBuilder\PackageTools.Builder.Db\DbTemplate.xml
+		DbSolutionBuilder\PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1 = DbSolutionBuilder\PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1
+		DbSolutionBuilder\PackageTools.Builder.Db\New-CiDbProject.ps1 = DbSolutionBuilder\PackageTools.Builder.Db\New-CiDbProject.ps1
+		DbSolutionBuilder\PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1 = DbSolutionBuilder\PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Db", "PackageTools.Db", "{890F4222-B59A-4295-86FB-825D037326E1}"
@@ -72,10 +73,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Db", "PackageT
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Project", "PackageTools.Project", "{6221769E-E6AE-460A-A239-D3FB82CA91EB}"
 	ProjectSection(SolutionItems) = preProject
-		PackageTools.Project\Get-PackageContent.ps1 = PackageTools.Project\Get-PackageContent.ps1
-		PackageTools.Project\Package.nuspec.txt = PackageTools.Project\Package.nuspec.txt
-		PackageTools.Project\Package.ps1 = PackageTools.Project\Package.ps1
-		PackageTools.Project\PackageSolution.ps1 = PackageTools.Project\PackageSolution.ps1
+		NuGetProjectPacker\PackageTools.Project\Get-PackageContent.ps1 = NuGetProjectPacker\PackageTools.Project\Get-PackageContent.ps1
+		NuGetProjectPacker\PackageTools.Project\Package.nuspec.txt = NuGetProjectPacker\PackageTools.Project\Package.nuspec.txt
+		NuGetProjectPacker\PackageTools.Project\Package.ps1 = NuGetProjectPacker\PackageTools.Project\Package.ps1
+		NuGetProjectPacker\PackageTools.Project\PackageSolution.ps1 = NuGetProjectPacker\PackageTools.Project\PackageSolution.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{1A5925BD-2A30-426B-B7C4-E6170709B4F4}"

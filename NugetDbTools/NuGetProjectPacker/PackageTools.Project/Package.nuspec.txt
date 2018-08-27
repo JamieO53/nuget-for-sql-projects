@@ -1,0 +1,25 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Triton</id>
+    <version>1.0.2</version>
+    <authors>joglethorpe</authors>
+    <owners>Jamie Oglethorpe</owners>
+    <projectUrl>https://epsdev.visualstudio.com/SharedServices/_git/SharedServices</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Dummy Triton Windows Service Container</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Triton</tags>
+    <dependencies>
+      <dependency id="Autofac" version="3.3.1"/>
+      <dependency id="Autofac.Mef" version="4.0.0"/>
+      <dependency id="Autofac.Wcf" version="4.0.0"/>
+      <dependency id="NLog" version="4.3.11"/>
+      <dependency id="System.Reactive.Core" version="3.1.1"/>
+      <dependency id="System.Reactive.Interfaces" version="3.1.1"/>
+      <dependency id="System.Reactive.Linq" version="3.1.1"/>
+      <dependency id="System.Reactive.PlatformServices" version="3.1.1"/>
+    </dependencies>
+  </metadata>
+</package>
