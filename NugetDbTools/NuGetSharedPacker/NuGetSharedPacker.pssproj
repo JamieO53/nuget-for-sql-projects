@@ -40,6 +40,7 @@
     <Compile Include="Scripts\Get-ProjectProperty.ps1" />
     <Compile Include="Scripts\Get-ProjectDependencyVersion.ps1" />
     <Compile Include="Scripts\Get-SolutionContent.ps1" />
+    <Compile Include="Scripts\Get-SolutionDependencies.ps1" />
     <Compile Include="Scripts\Get-SolutionPackages.ps1" />
     <Compile Include="Scripts\Import-NuGetSettings.ps1" />
     <Compile Include="Scripts\Initialize-NuGetFolders.ps1" />
