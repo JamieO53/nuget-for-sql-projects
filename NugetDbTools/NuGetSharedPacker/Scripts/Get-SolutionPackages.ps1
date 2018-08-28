@@ -27,6 +27,5 @@ function Get-SolutionPackages {
 		if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {
 			iex "nuget install $package -Version '$version' -Source '$localSource' -OutputDirectory '$ContentFolder' -ExcludeVersion"
 		}
-		Set-NuGetDependencyVersion -SolutionPath $SolutionPath -Dependency $_.Include -Version $_.Version
 	}
 }

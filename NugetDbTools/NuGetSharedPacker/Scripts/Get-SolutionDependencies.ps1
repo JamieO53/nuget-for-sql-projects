@@ -24,4 +24,5 @@ function Get-SolutionDependencies {
 			$reference[$package] = $version
 		}
 	}
+	$reference
 }
