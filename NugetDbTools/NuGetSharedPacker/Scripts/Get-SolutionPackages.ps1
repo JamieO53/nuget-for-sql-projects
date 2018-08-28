@@ -18,7 +18,7 @@ function Get-SolutionPackages {
 	$sln = Split-Path $SolutionPath -Leaf
 	$localSource = Get-NuGetLocalSource
 
-	Invoke-Trap "nuget restore $SolutionPath" "Unable to restore $sln"
+	Invoke-Trap "nuget restore `"$SolutionPath`"" "Unable to restore $sln"
 
 	$reference = Get-SolutionDependencies $SolutionPath
 	$reference.Keys | sort | % {
