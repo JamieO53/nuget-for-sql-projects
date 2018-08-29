@@ -23,6 +23,7 @@ copy "$slnDir\PackageTools\Bootstrap.*" "NuGet\content\PackageTools\"
 copy "$slnDir\*.sln" "NuGet\content\$contentType\"
 copy "$slnDir\Template.DBProject\*" "NuGet\content\$contentType\Template.DBProject\" -Exclude @('bin','obj','*.user','*.dbmdl','*.jfm')
 copy "$slnDir\Template.DBPkg\*" "NuGet\content\$contentType\Template.DBPkg\" -Exclude @('bin','obj','*.user')
+copy "$slnDir\.gitignore" "NuGet\content\$contentType\"
 
 NuGet pack -BasePath "$slnDir\NuGet"
 Publish-NuGetPackage -PackagePath "$slnDir\$id.$version.nupkg"
