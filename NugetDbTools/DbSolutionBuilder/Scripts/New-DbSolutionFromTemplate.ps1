@@ -35,7 +35,7 @@ function New-DbSolutionFromTemplate {
 	copy "$templatePath\Template.DBPkg\Class1.cs" "$SolutionFolder\$($SolutionName)Pkg"
 	copy "$templatePath\Template.DBPkg\Template.DBPkg.csproj" $PkgProjectPath
 	copy "$templatePath\Template.DB.sln" $slnPath
-	copy "$templatePath\.gitignore" $slnPath
+	copy "$templatePath\.gitignore" $SolutionFolder
 	copy "$toolsPath\*" "$SolutionFolder\PackageTools"
 
 	$newGuid = [Guid]::NewGuid().ToString().ToUpperInvariant()
