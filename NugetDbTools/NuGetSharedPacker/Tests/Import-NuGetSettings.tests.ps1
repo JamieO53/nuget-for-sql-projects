@@ -3,12 +3,16 @@
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
 
-. $PSScriptRoot\Initialize-TestNugetConfig.ps1
+if (-not (Get-Module TestUtils)) {
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+}
 
 Describe "Import-NuGetSettings" {
-	$projFolder = "TestDrive:\proj"
+	$slnFolder = "TestDrive:\sln"
+	$slnPath = "$snlFolder\sln.sln"
+	$projFolder = "$slnFolder\proj"
 	$configPath = "$projFolder\proj.nuget.config"
-	$expectedSettings = Initialize-TestNugetConfig
+	$expectedSettings = Initialize-TestNugetConfig -Content 'Database'
 	$expectedOptions = $expectedSettings | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
 	$config = @'
 <?xml version="1.0"?>
@@ -21,11 +25,11 @@ Describe "Import-NuGetSettings" {
 	<nugetSettings>
 		<add key="id" value="TestPackage"/>
 		<add key="authors" value="joglethorpe"/>
-		<add key="owners" value="Jamie Oglethorpe"/>
-		<add key="projectUrl" value="https://epsdev.visualstudio.com/Sandbox"/>
+		<add key="owners" value="Dummy Company"/>
+		<add key="projectUrl" value="https://dummy.visualstudio.com/Sandbox"/>
 		<add key="description" value="This package is for testing NuGet creation functionality"/>
 		<add key="releaseNotes" value="Some stuff to say about the release"/>
-		<add key="copyright" value="Copyright 2017"/>
+		<add key="copyright" value="Copyright 2018"/>
 	</nugetSettings>
 	<nugetDependencies>
 		<add key="EcsShared.SharedBase" value="[1.0)"/>
@@ -37,13 +41,13 @@ Describe "Import-NuGetSettings" {
 	$config | sc $configPath -Encoding UTF8
 
 	Context "Exists" {
-		It "Runs" { Import-NuGetSettings -NugetConfigPath $configPath | should not BeNullOrEmpty }
+		It "Runs" { Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath | should not BeNullOrEmpty }
 	}
 	Context "Content" {
 		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
 		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName GitExtension
 		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName GitExtension
-		$content = Import-NuGetSettings -NugetConfigPath $configPath
+		$content = Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath
 		$options = $content.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
 		It "Options count" { $options.Length | Should Be $expectedOptions.Length }
 		$expectedOptions | % {

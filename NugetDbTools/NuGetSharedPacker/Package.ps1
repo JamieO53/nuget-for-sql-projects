@@ -1,9 +1,14 @@
-$id='NuGetSharedPacker'
+$cfg = Import-PowerShellDataFile "$(Split-Path -Path $MyInvocation.MyCommand.Path)\BuildConfig.psd1"
+
+$id = $cfg.ProjectName
+
+$projectType = $cfg.ProjectType
 $contentType='PowerShell'
-$dependencies=@('NuGetShared')
-$extensions=@('GitExtension','VSTSExtension')
+$dependencies=$cfg.Dependencies
+$extensions=$cfg.Extensions
 $projDir = (Get-Item "$(Split-Path -Path $MyInvocation.MyCommand.Path)").FullName
 $slnDir = (Get-Item "$projDir\..").FullName
+
 pushd $projDir
 try {
 
@@ -33,6 +38,23 @@ try {
 	copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
 	$extensions | % {
 		copy "bin\Debug\$id\$_.ps*1" "NuGet\content\$contentType\"
+	}
+	if ($projectType){
+		copy "$slnDir\PackageTools\*" "$projDir\NuGet\content\PackageTools\"
+		copy "$projDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\" -Force
+		"powershell -Command `".\Bootstrap.ps1`" -ProjectType $projectType" |
+			Set-Content "$projDir\NuGet\content\PackageTools\Bootstrap.cmd" -Encoding Ascii
+	}
+
+	if (Test-Path "NuGet\content\$contentType\$id.psd1") {
+		$lines = gc "NuGet\content\$contentType\$id.psd1" | % {
+			if ( $_.StartsWith('ModuleVersion = ')) {
+				"ModuleVersion = '$version'"
+			} else {
+				$_
+			}
+		}
+		$lines | sc "NuGet\content\$contentType\$id.psd1"
 	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){

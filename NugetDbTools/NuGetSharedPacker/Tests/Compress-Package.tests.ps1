@@ -3,6 +3,10 @@
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
 
+if (-not (Get-Module TestUtils)) {
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+}
+
 Describe "Compress-Package" {
 	$projFolder = "$testDrive\proj"
 	$projDbFolder = "$projFolder\Databases"
@@ -36,7 +40,7 @@ Context "Exists" {
 		'dacpac' | Set-Content "$projDbFolder\ProjDb.dacpac"
 		'lib' | Set-Content "$projDbFolder\ProjLib.dll"
 		'pdb' | Set-Content "$projDbFolder\ProjLib.pdb"
-		Initialize-Package -ProjectPath $projPath
+		Initialize-Package -ProjectPath $projPath -NugetSettings $nugetSettings
 		Compress-Package -NugetPath $nugetFolder
 
 		$id = $nugetSettings.nugetSettings.id

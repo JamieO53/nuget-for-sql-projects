@@ -26,7 +26,6 @@ function New-DbSolutionFromTemplate {
 
 	$solutionName = $Parameters.dbSolution.parameters.name
     $slnPath = "$SolutionFolder\$($SolutionName).sln"
-	$pkgProjectPath = "$SolutionFolder\$($SolutionName)Pkg\$($SolutionName)Pkg.csproj"
 
 	mkdir "$SolutionFolder\$($SolutionName)Pkg" | Out-Null
 	mkdir "$SolutionFolder\PackageTools" | Out-Null
@@ -34,8 +33,9 @@ function New-DbSolutionFromTemplate {
 	$templatePath = "$templateFolder\NuGetDbPacker.DbTemplate\Template"
 	$toolsPath = "$templateFolder\NuGetDbPacker.DbTemplate\PackageTools"
 	copy "$templatePath\Template.DBPkg\Class1.cs" "$SolutionFolder\$($SolutionName)Pkg"
-	copy "$templatePath\Template.DBPkg\Template.DBPkg.csproj" $pkgProjectPath
+	copy "$templatePath\Template.DBPkg\Template.DBPkg.csproj" $PkgProjectPath
 	copy "$templatePath\Template.DB.sln" $slnPath
+	copy "$templatePath\.gitignore" $SolutionFolder
 	copy "$toolsPath\*" "$SolutionFolder\PackageTools"
 
 	$newGuid = [Guid]::NewGuid().ToString().ToUpperInvariant()

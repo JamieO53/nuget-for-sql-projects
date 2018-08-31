@@ -7,6 +7,7 @@ $modules = @{
 	NuGetSharedPacker="$SolutionFolder\NugetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1"
 	NuGetDbPacker="$SolutionFolder\NuGetDbPacker\bin\Debug\NuGetDbPacker\NuGetDbPacker.psd1"
 	NuGetProjectPacker="$SolutionFolder\NuGetProjectPacker\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psd1"
+	DbSolutionBuilder="$SolutionFolder\DbSolutionBuilder\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psd1"
 }
 if (-not (Get-Module NuGetShared)) {
 	Import-Module $modules['NuGetShared']
@@ -18,18 +19,12 @@ if (Test-Path "$SolutionFolder\TestResults") {
 mkdir "$SolutionFolder\TestResults\HTML" | Out-Null
 
 $links = ''
-$results = @{}
 $statistics = @()
 $failCount = 0
 $renderHtml = $true
 
 Get-PowerShellProjects -SolutionPath $SolutionPath | % {
-	$modules.Keys | % {
-		$module = $_[0]
-		if ((Get-Module $module)) {
-			Remove_Module $module
-		}
-	}
+	Remove-Module Nuget*,*Extension,TestUtils,DbSolutionBuilder -ErrorAction SilentlyContinue
 	"GitExtension","VSTSExtension","NuGetShared","NuGetSharedPacker" | % {
 		Import-Module "$($modules[$_])"
 	}
@@ -75,9 +70,7 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 		if (Test-Path variable:\global:testing) {
 			$Global:testing = $false
 		}
-		if (Get-Module $_.Project) {
-			Remove-Module $_.Project
-		}
+		Remove-Module Nuget*,*Extension,TestUtils,DbSolutionBuilder -ErrorAction SilentlyContinue
 	}
 }
 $total = @{Name='Total'}

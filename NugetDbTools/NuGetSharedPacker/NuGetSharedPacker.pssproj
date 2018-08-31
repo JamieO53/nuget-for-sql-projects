@@ -33,11 +33,15 @@
     <Compile Include="NuGetSharedPacker.psd1" />
     <Compile Include="NuGetSharedPacker.psm1" />
     <Compile Include="Package.ps1" />
+    <Compile Include="BuildConfig.psd1" />
     <Compile Include="Scripts\Compress-Package.ps1" />
     <Compile Include="Scripts\Export-NuGetSettings.ps1" />
     <Compile Include="Scripts\Get-NuspecProperty.ps1" />
+    <Compile Include="Scripts\Get-PkgProjects.ps1" />
     <Compile Include="Scripts\Get-ProjectProperty.ps1" />
+    <Compile Include="Scripts\Get-ProjectDependencyVersion.ps1" />
     <Compile Include="Scripts\Get-SolutionContent.ps1" />
+    <Compile Include="Scripts\Get-SolutionDependencies.ps1" />
     <Compile Include="Scripts\Get-SolutionPackages.ps1" />
     <Compile Include="Scripts\Import-NuGetSettings.ps1" />
     <Compile Include="Scripts\Initialize-NuGetFolders.ps1" />
@@ -45,17 +49,19 @@
     <Compile Include="Scripts\Initialize-Package.ps1" />
     <Compile Include="Scripts\New-NuGetSettings.ps1" />
     <Compile Include="Scripts\Publish-Package.ps1" />
+    <Compile Include="Scripts\Remove-NugetFolder.ps1" />
     <Compile Include="Scripts\Set-NuGetDependencyVersion.ps1" />
+    <Compile Include="Scripts\Set-NuGetProjectDependencyVersion.ps1" />
     <Compile Include="Scripts\Set-NuspecDependencyVersion.ps1" />
     <Compile Include="Scripts\Set-NuspecVersion.ps1" />
     <Compile Include="Tests\Compress-Package.tests.ps1" />
     <Compile Include="Tests\Export-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Get-NuGetPackageVersion.tests.ps1" />
+    <Compile Include="Tests\Get-ProjectDependencyVersion.tests.ps1" />
     <Compile Include="Tests\Get-ProjectProperty.tests.ps1" />
     <Compile Include="Tests\Import-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetSpec.tests.ps1" />
-    <Compile Include="Tests\Initialize-TestNugetConfig.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\" />

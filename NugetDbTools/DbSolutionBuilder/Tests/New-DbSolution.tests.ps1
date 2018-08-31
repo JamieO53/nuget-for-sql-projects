@@ -1,11 +1,4 @@
-﻿if (Get-Module NuGetShared) {
-	Remove-Module NuGetShared
-}
-
-if (Get-Module NugetDbPacker) {
-	Remove-Module NugetDbPacker
-}
-
+﻿Remove-Module NuGet*,*Extension
 if (Get-Module DbSolutionBuilder) {
 	Remove-Module DbSolutionBuilder
 }

@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build.ps1" />
+    <Compile Include="BuildConfig.psd1" />
     <Compile Include="DbSolutionBuilder.psd1" />
     <Compile Include="DbSolutionBuilder.psm1" />
     <Compile Include="Package.ps1" />

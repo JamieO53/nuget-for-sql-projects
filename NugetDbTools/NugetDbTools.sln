@@ -52,30 +52,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools", "PackageTool
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Builder.Db", "PackageTools.Builder.Db", "{4DE504AA-C602-457A-9875-2546CD0969DA}"
 	ProjectSection(SolutionItems) = preProject
-		PackageTools.Builder.Db\Bootstrap.ps1 = PackageTools.Builder.Db\Bootstrap.ps1
-		PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1 = PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1
-		PackageTools.Builder.Db\New-CiDbProject.ps1 = PackageTools.Builder.Db\New-CiDbProject.ps1
-		PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1 = PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1
+		DbSolutionBuilder\PackageTools.Builder.Db\Bootstrap.ps1 = DbSolutionBuilder\PackageTools.Builder.Db\Bootstrap.ps1
+		DbSolutionBuilder\PackageTools.Builder.Db\DbTemplate.xml = DbSolutionBuilder\PackageTools.Builder.Db\DbTemplate.xml
+		DbSolutionBuilder\PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1 = DbSolutionBuilder\PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1
+		DbSolutionBuilder\PackageTools.Builder.Db\New-CiDbProject.ps1 = DbSolutionBuilder\PackageTools.Builder.Db\New-CiDbProject.ps1
+		DbSolutionBuilder\PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1 = DbSolutionBuilder\PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Db", "PackageTools.Db", "{890F4222-B59A-4295-86FB-825D037326E1}"
 	ProjectSection(SolutionItems) = preProject
-		PackageTools.Db\Deploy-SolutionDatabases.ps1 = PackageTools.Db\Deploy-SolutionDatabases.ps1
-		PackageTools.Db\ExecuteRegressionTests.cmd = PackageTools.Db\ExecuteRegressionTests.cmd
-		PackageTools.Db\Get-PackageContent.ps1 = PackageTools.Db\Get-PackageContent.ps1
-		PackageTools.Db\Invoke-PostBuildEvent.ps1 = PackageTools.Db\Invoke-PostBuildEvent.ps1
-		PackageTools.Db\Invoke-PreBuildEvent.ps1 = PackageTools.Db\Invoke-PreBuildEvent.ps1
-		PackageTools.Db\Invoke-RegressionTests.ps1 = PackageTools.Db\Invoke-RegressionTests.ps1
-		PackageTools.Db\Publish-DbProjects.ps1 = PackageTools.Db\Publish-DbProjects.ps1
-		PackageTools.Db\PublishDbProjects.cmd = PackageTools.Db\PublishDbProjects.cmd
+		NugetDbPacker\PackageTools.Db\Deploy-SolutionDatabases.ps1 = NugetDbPacker\PackageTools.Db\Deploy-SolutionDatabases.ps1
+		NugetDbPacker\PackageTools.Db\ExecuteRegressionTests.cmd = NugetDbPacker\PackageTools.Db\ExecuteRegressionTests.cmd
+		NugetDbPacker\PackageTools.Db\Get-PackageContent.ps1 = NugetDbPacker\PackageTools.Db\Get-PackageContent.ps1
+		NugetDbPacker\PackageTools.Db\Invoke-PostBuildEvent.ps1 = NugetDbPacker\PackageTools.Db\Invoke-PostBuildEvent.ps1
+		NugetDbPacker\PackageTools.Db\Invoke-PreBuildEvent.ps1 = NugetDbPacker\PackageTools.Db\Invoke-PreBuildEvent.ps1
+		NugetDbPacker\PackageTools.Db\Invoke-RegressionTests.ps1 = NugetDbPacker\PackageTools.Db\Invoke-RegressionTests.ps1
+		NugetDbPacker\PackageTools.Db\Publish-DbProjects.ps1 = NugetDbPacker\PackageTools.Db\Publish-DbProjects.ps1
+		NugetDbPacker\PackageTools.Db\PublishDbProjects.cmd = NugetDbPacker\PackageTools.Db\PublishDbProjects.cmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Project", "PackageTools.Project", "{6221769E-E6AE-460A-A239-D3FB82CA91EB}"
 	ProjectSection(SolutionItems) = preProject
-		PackageTools.Project\Get-PackageContent.ps1 = PackageTools.Project\Get-PackageContent.ps1
-		PackageTools.Project\Package.nuspec.txt = PackageTools.Project\Package.nuspec.txt
-		PackageTools.Project\Package.ps1 = PackageTools.Project\Package.ps1
-		PackageTools.Project\PackageSolution.ps1 = PackageTools.Project\PackageSolution.ps1
+		NuGetProjectPacker\PackageTools.Project\Get-PackageContent.ps1 = NuGetProjectPacker\PackageTools.Project\Get-PackageContent.ps1
+		NuGetProjectPacker\PackageTools.Project\Package.nuspec.txt = NuGetProjectPacker\PackageTools.Project\Package.nuspec.txt
+		NuGetProjectPacker\PackageTools.Project\Package.ps1 = NuGetProjectPacker\PackageTools.Project\Package.ps1
+		NuGetProjectPacker\PackageTools.Project\PackageSolution.ps1 = NuGetProjectPacker\PackageTools.Project\PackageSolution.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{1A5925BD-2A30-426B-B7C4-E6170709B4F4}"

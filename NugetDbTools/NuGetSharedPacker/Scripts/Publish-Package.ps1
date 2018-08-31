@@ -12,17 +12,19 @@ function Publish-Package {
     param
     (
         # The location of .sqlproj file of the project being published
-        [string]$ProjectPath
+        [string]$ProjectPath,
+		# The solution file
+		[string]$SolutionPath
 	)
     $configPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
     $projFolder = Split-Path $ProjectPath -Resolve
     $nugetFolder = [IO.Path]::Combine($projFolder, 'NuGet')
-    $settings = Import-NuGetSettings -NugetConfigPath $configPath
+    $settings = Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $SolutionPath
     $id = $settings.nugetSettings.Id
     $version = $settings.nugetSettings.version
     if (-not (Test-NuGetVersionExists -Id $id -Version $version)) {
         $nugetPackage = [IO.Path]::Combine($nugetFolder, "$id.$version.nupkg")
-        Initialize-Package -ProjectPath $ProjectPath
+        Initialize-Package -ProjectPath $ProjectPath -NugetSettings $settings -SolutionPath $SolutionPath
         Publish-NuGetPackage -PackagePath $nugetPackage
 		Remove-NugetFolder $nugetFolder
     }
