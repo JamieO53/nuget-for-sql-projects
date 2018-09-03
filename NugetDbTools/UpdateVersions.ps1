@@ -1,10 +1,6 @@
-if (-not (Get-Module NuGetSharedPacker)) {
+if (-not (Get-Module NugetSharedPacker -All)) {
 	Import-Module .\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1
 }
- if (-not (Test-IsRunningBuildAgent) -and -not (Test-PathIsCommitted)) {
-	 Write-Error 'Commit changes before publishing the projects to NuGet'
- }
-Remove-Variable * -ErrorAction SilentlyContinue
 $order = Import-PowerShellDataFile .\PackageSequence.psd1
 $nugetVersion = @{}
 $order.PackageOrder | % {
@@ -32,18 +28,16 @@ $order.PackageOrder | % {
 	}
 }
 
-try {
-	$order.PackageOrder | ? { $sourceIsUpdated[$_] } % {
-		pushd ".\$_"
-		powershell.exe -command '.\Package.ps1'
-		popd
-		if ($LASTEXITCODE) {
-			throw "Package of $_ failed"
+$order.PackageOrder | % {
+	$package = $_
+	$nuspecPath = ".\$_\Package.nuspec"
+	[xml]$nuspec = gc $nuspecPath
+	$version = Set-NuspecVersion -Path $nuspecPath -ProjectFolder ".\$_"
+	$update = $version -ne (Get-NuspecProperty 'version')
+	if ($update) {
+		$order.PackageOrder | % {
+			$dependant = $_
+			$depNuspecPath = ".\$_\Package.nuspec"
 		}
 	}
-} catch {
-	Write-Host $_.Exception.Message -ForegroundColor Red
-	exit 1
-} finally {
-	popd
 }
