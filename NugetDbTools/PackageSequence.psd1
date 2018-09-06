@@ -1,3 +1,3 @@
 @{
-	PackageOrder = @('NuGetShared','NuGetSharedPacker','NuGetDbPacker','NuGetProjectPacker','DbSolutionBuilder')
+	PackageOrder = @('NugetShared','NuGetSharedPacker','NugetDbPacker','NuGetProjectPacker','DbSolutionBuilder')
 }
