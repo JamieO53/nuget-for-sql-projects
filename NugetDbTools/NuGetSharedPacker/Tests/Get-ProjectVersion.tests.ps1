@@ -1,7 +1,7 @@
-﻿if ( Get-Module GitExtension) {
-	Remove-Module GitExtension
+﻿if ( Get-Module NugetSharedPacker) {
+	Remove-Module NugetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\GitExtension\GitExtension.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1"
 
 Describe "Get-ProjectVersion" {
 	$projFolder = "TestDrive:\proj"
