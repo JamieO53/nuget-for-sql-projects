@@ -2,17 +2,18 @@ if (-not (Get-Module NuGetSharedPacker)) {
 	Import-Module .\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1
 }
  if (-not (Test-IsRunningBuildAgent) -and -not (Test-PathIsCommitted)) {
-	 Write-Error 'Commit changes before publishing the projects to NuGet'
+ 	Write-Error 'Commit changes before publishing the projects to NuGet'
  }
 Remove-Variable * -ErrorAction SilentlyContinue
-$order = Import-PowerShellDataFile .\PackageSequence.psd1
+$solutionFolder = (Get-Location).Path
+$order = Import-PowerShellDataFile "$solutionFolder\PackageSequence.psd1"
 $nugetVersion = @{}
 $order.PackageOrder | % {
 	$nugetVersion[$_] = (Get-NuGetPackageVersion -PackageName $_)
 }
 $sourceVersion = @{}
 $order.PackageOrder | % {
-	$projectFolder = ".\$_"
+	$projectFolder = "$solutionFolder\$_"
 	$nuspecPath = "$projectFolder\Package.nuspec"
 	$sourceVersion[$_] = (Measure-ProjectVersion -Path $nuspecPath -ProjectFolder $projectFolder)
 }
@@ -24,7 +25,7 @@ $order.PackageOrder | % {
 	if ($sourceIsUpdated[$_]) {
 		$name = $_
 		$order.PackageOrder | ? { -not $sourceIsUpdated[$_] } % {
-			$projectFolder = ".\$_"
+			$projectFolder = "$solutionFolder\$_"
 			$buildConfigPath = "$projectFolder\BuildConfig.ps1"
 			$buildConfig = Import-PowerShellDataFile $buildConfigPath
 			$sourceIsUpdated[$_] = ($buildConfig.Dependencies -contains $name)
@@ -34,8 +35,8 @@ $order.PackageOrder | % {
 
 try {
 	$order.PackageOrder | ? { $sourceIsUpdated[$_] } % {
-		pushd ".\$_"
-		powershell.exe -command '.\Package.ps1'
+		pushd "$solutionFolder\$_"
+		powershell.exe -command "$solutionFolder\Package.ps1"
 		popd
 		if ($LASTEXITCODE) {
 			throw "Package of $_ failed"

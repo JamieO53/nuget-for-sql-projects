@@ -17,7 +17,7 @@ function Get-ProjectVersion {
 		#build minor version
 		[string]$MinorVersion = '0',
 		# Is the version after committing the update required?
-		[switch]$Next
+		[boolean]$Next = $false
 
 	)
 	$majorVer = if ([string]::IsNullOrEmpty($MajorVersion)) { '0'} else { $MajorVersion }
