@@ -23,7 +23,7 @@ function Get-ProjectVersion {
 	$majorVer = if ([string]::IsNullOrEmpty($MajorVersion)) { '0'} else { $MajorVersion }
 	$minorVer = if ([string]::IsNullOrEmpty($MinorVersion)) { '0'} else { $MinorVersion }
 	$latestTag = "$majorVer.$minorVer"
-	$revisions = Get-RevisionCount -Path $Path
+	[int]$revisions = Get-RevisionCount -Path $Path
 	if ($Next) {
 		$revisions += 1
 	}

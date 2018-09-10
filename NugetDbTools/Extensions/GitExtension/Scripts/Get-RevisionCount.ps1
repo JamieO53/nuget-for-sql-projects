@@ -1,5 +1,6 @@
 function Get-RevisionCount {
     [CmdletBinding()]
+	[OutputType([int])]
     param (
         # The project folder
 		[string]$Path
@@ -8,10 +9,10 @@ function Get-RevisionCount {
 	try {
 		Push-Location $Path
 		if (Test-PathIsInGitRepo -Path (Get-Location)) {
-			$revisions = (iex "git rev-list HEAD -- $Path").Count
+			[int]$revisions = (iex "git rev-list HEAD -- $Path").Count
 		}
 		else {
-			$revisions = '0'
+			[int]$revisions = 0
 		}
 	}
 	finally {
