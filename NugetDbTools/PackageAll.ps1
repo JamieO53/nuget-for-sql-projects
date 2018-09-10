@@ -1,9 +1,10 @@
 if (-not (Get-Module NuGetSharedPacker)) {
 	Import-Module .\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1
 }
-#if (-not (Test-IsRunningBuildAgent) -and -not (Test-PathIsCommitted)) {
-#	Write-Error 'Commit changes before publishing the projects to NuGet'
-#}
+if (-not (Test-IsRunningBuildAgent) -and -not (Test-PathIsCommitted)) {
+	Write-Error 'Commit changes before publishing the projects to NuGet'
+	exit 1
+}
 Remove-Variable * -ErrorAction SilentlyContinue
 $solutionFolder = (Get-Location).Path
 $order = Import-PowerShellDataFile "$solutionFolder\PackageSequence.psd1"
