@@ -19,7 +19,7 @@ function Set-NuspecVersion {
 
 	[xml]$cfg = gc $Path
 	$oldVersion = $cfg.package.metadata.version
-	$newVersion = Measure-ProjectVersion -Path $Path -ProjectFolder $ProjectFolder -OldVersion $oldVersion -Next
+	$newVersion = Measure-ProjectVersion -Path $Path -ProjectFolder $ProjectFolder -OldVersion $oldVersion
 	Set-NodeText -parentNode $cfg.package.metadata -id version -text $newVersion
 	Out-FormattedXml -Xml $cfg -FilePath $Path
 	$newVersion

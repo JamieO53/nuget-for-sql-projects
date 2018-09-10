@@ -15,9 +15,7 @@ function Measure-ProjectVersion {
 		# The folder for version calculations
 		[string]$ProjectFolder,
 		# The previous version to be updated with the new revision number
-		[string]$OldVersion = '1.0.0',
-		# Is the version after committing the update required?
-		[switch]$Next
+		[string]$OldVersion = '1.0.0'
 	)
 	[xml]$cfg = gc $Path
 	if (-not $oldVersion) {
@@ -26,5 +24,5 @@ function Measure-ProjectVersion {
 	$versionParts = $oldVersion.Split('.')
 	$majorVersion = $versionParts[0]
 	$minorVersion = $versionParts[1]
-	Get-ProjectVersion -Path $ProjectFolder -MajorVersion $majorVersion -MinorVersion $minorVersion -Next $Next
+	Get-ProjectVersion -Path $ProjectFolder -MajorVersion $majorVersion -MinorVersion $minorVersion
 }
