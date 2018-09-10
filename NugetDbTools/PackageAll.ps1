@@ -29,7 +29,7 @@ $order.PackageOrder | % {
 			$projectFolder = "$solutionFolder\$_"
 			$buildConfigPath = "$projectFolder\BuildConfig.ps1"
 			$buildConfig = Import-PowerShellDataFile $buildConfigPath
-			$sourceIsUpdated[$_] = ($buildConfig.Dependencies -contains $name)
+			$sourceIsUpdated[$name] = ($buildConfig.Dependencies -contains $name)
 		}
 	}
 }
