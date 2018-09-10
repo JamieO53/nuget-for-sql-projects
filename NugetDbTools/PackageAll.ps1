@@ -19,8 +19,10 @@ $order.PackageOrder | % {
 	$sourceVersion[$_] = (Measure-ProjectVersion -Path $nuspecPath -ProjectFolder $projectFolder)
 }
 $sourceIsUpdated = @{}
-$order.PackageOrder | % {
-	$sourceIsUpdated[$_] = $nugetVersion[$_] -ne $sourceVersion[$_]
+$order.PackageOrder |  ? {
+	$nugetVersion[$_] -ne $sourceVersion[$_]
+} | % {
+	$sourceIsUpdated[$_] = $true
 }
 $order.PackageOrder | % {
 	if ($sourceIsUpdated[$_]) {
