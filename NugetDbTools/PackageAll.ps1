@@ -1,10 +1,10 @@
 if (-not (Get-Module NuGetSharedPacker)) {
 	Import-Module .\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1
 }
-if (-not (Test-IsRunningBuildAgent) -and -not (Test-PathIsCommitted)) {
-	Write-Host 'Commit changes before publishing the projects to NuGet' -ForegroundColor Red
-	exit 1
-}
+# if (-not (Test-IsRunningBuildAgent) -and -not (Test-PathIsCommitted)) {
+# 	Write-Host 'Commit changes before publishing the projects to NuGet' -ForegroundColor Red
+# 	exit 1
+# }
 Remove-Variable * -ErrorAction SilentlyContinue
 $solutionFolder = (Get-Location).Path
 $order = Import-PowerShellDataFile "$solutionFolder\PackageSequence.psd1"
@@ -21,17 +21,20 @@ $order.PackageOrder | % {
 $sourceIsUpdated = @{}
 $order.PackageOrder |  ? {
 	$nugetVersion[$_] -ne $sourceVersion[$_]
+} | ? {
+	-not $sourceIsUpdated[$_]
 } | % {
 	$sourceIsUpdated[$_] = $true
 }
 $order.PackageOrder | % {
 	if ($sourceIsUpdated[$_]) {
-		$name = $_
-		$order.PackageOrder | ? { -not $sourceIsUpdated[$_] } | % {
+		$order.PackageOrder | % {
 			$projectFolder = "$solutionFolder\$_"
-			$buildConfigPath = "$projectFolder\BuildConfig.ps1"
+			$buildConfigPath = "$projectFolder\BuildConfig.psd1"
 			$buildConfig = Import-PowerShellDataFile $buildConfigPath
-			$sourceIsUpdated[$name] = ($buildConfig.Dependencies -contains $name)
+			$buildConfig.Dependents | % {
+				$sourceIsUpdated[$_] = $true
+			}
 		}
 	}
 }
@@ -39,7 +42,8 @@ $order.PackageOrder | % {
 try {
 	$order.PackageOrder | ? { $sourceIsUpdated[$_] } | % {
 		pushd "$solutionFolder\$_"
-		powershell.exe -command '.\Package.ps1; exit $LASTEXITCODE'
+		#powershell.exe -command '.\Package.ps1; exit $LASTEXITCODE'
+		.\Package.ps1
 		popd
 		if ($LASTEXITCODE) {
 			throw "Package of $_ failed"
