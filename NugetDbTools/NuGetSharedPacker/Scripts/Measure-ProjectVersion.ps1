@@ -15,14 +15,22 @@ function Measure-ProjectVersion {
 		# The folder for version calculations
 		[string]$ProjectFolder,
 		# The previous version to be updated with the new revision number
-		[string]$OldVersion = '1.0.0'
+		[string]$OldVersion
 	)
-	[xml]$cfg = gc $Path
 	if (-not $oldVersion) {
-		$oldVersion = '1.0.0'
+		if (Test-Path $Path) {
+			[xml]$cfg = gc $Path
+			$OldVersion = $cfg.package.metadata.version
+			if (-not $oldVersion) {
+				$oldVersion = '1.0.0'
+			}
+		} else {
+			$oldVersion = '1.0.0'
+		}
 	}
-	$versionParts = $oldVersion.Split('.')
-	$majorVersion = $versionParts[0]
-	$minorVersion = $versionParts[1]
+	[string[]]$versionParts = $oldVersion.Split('.',3)
+	[string]$majorVersion = $versionParts[0]
+	[string]$minorVersion = $versionParts[1]
+	$minorVersion = $minorVersion.Split('-',2)[0]
 	Get-ProjectVersion -Path $ProjectFolder -MajorVersion $majorVersion -MinorVersion $minorVersion
 }
