@@ -15,5 +15,11 @@ function Get-ProjectProperty {
 		[string]$Property
 	)
 	[string]$prop = iex "`$proj.Project.PropertyGroup.$Property"
-	return $prop.Trim()
+	$prop = $prop.Trim()
+	if ($Property -eq 'TargetFrameworkVersion') {
+		if ($prop.StartsWith('n') -and -not $prop.StartsWith('net')) {
+			$prop = $prop.Replace('n','net').Replace('.','')
+		}
+	}
+	return $prop
 }
