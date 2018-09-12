@@ -79,10 +79,10 @@
     </ArtifactReference>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>PowerShell -File '$(SolutionDir)PackageTools\Invoke-PostBuildEvent.ps1' -ProjectName  '$(ProjectName)' -ProjectDir '$(ProjectDir)' -SolutionDir '$(SolutionDir)' -TargetDir '$(TargetDir)' -AssemblyName $(AssemblyName)
+    <PostBuildEvent>PowerShell -File "$(SolutionDir)PackageTools\Invoke-PostBuildEvent.ps1" -ProjectName "$(ProjectName)" -ProjectDir "$(ProjectDir)\" -SolutionDir "$(SolutionDir)\" -TargetDir "$(TargetDir)\"
 REM Add -CopyAssembly if the CLR assembly is to be copied</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>PowerShell -File '$(SolutionDir)PackageTools\Invoke-PreBuildEvent.ps1' -ProjectName  $(ProjectName) -ProjectDir '$(ProjectDir)' -SolutionDir '$(SolutionDir)' -TargetDir '$(TargetDir)'</PreBuildEvent>
+    <PreBuildEvent>PowerShell -File "$(SolutionDir)PackageTools\Invoke-PreBuildEvent.ps1" -ProjectName  $(ProjectName) -ProjectDir '$(ProjectDir)' -SolutionDir '$(SolutionDir)' -TargetDir "$(TargetDir)"</PreBuildEvent>
   </PropertyGroup>
 </Project>
