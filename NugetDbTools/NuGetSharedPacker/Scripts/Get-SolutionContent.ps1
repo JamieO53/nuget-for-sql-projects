@@ -35,5 +35,5 @@ function Get-SolutionContent {
 		}
 	}
 
-	del $packageContentFolder\ -Include '*' -Recurse
+	del $packageContentFolder -Include '*' -Recurse
 }
