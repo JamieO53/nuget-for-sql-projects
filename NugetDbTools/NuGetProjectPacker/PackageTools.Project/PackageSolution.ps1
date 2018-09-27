@@ -37,7 +37,7 @@ try {
 		$projPath = "$projDir\$projName.csproj"
 		$projBinFolder = "$projDir\bin\Debug"
 	
-		Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $nuspecPath
+		Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $nuspecPath -DefaultAssemblyName $projName
 	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){

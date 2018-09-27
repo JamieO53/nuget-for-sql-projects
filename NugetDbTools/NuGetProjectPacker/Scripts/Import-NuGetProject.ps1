@@ -18,17 +18,32 @@ function Import-NuGetProject {
 		[string]$ProjBinFolder,
 		# The location of the NuGet bin folder
 		[string]$NugetBinFolder,
+		# The name of the project
+		[string]$DefaultAssemblyName,
 		# The location of the NuGet spec file
 		[string]$NugetSpecPath
 	)
+
 	[xml]$proj = Get-Content $ProjectPath
+	[string]$framework = (Get-ProjectProperty -Proj $proj -Property TargetFrameworkVersion)
+	
+	if (-not $framework){
+		#try netStandard if empty
+		$framework = (Get-ProjectProperty -Proj $proj -Property TargetFramework)
+	}
+	
+	$binFramework = $framework.Replace('v','net').Replace('.','')
+	
 	[string]$assembly = Get-ProjectProperty -Proj $proj -Property AssemblyName
-	[string]$framework = (Get-ProjectProperty -Proj $proj -Property TargetFrameworkVersion).Replace('v','net').Replace('.','')
-	$binFolder = "$NugetBinFolder\$framework"
+	if (-not $assembly) {
+		$assembly = $DefaultAssemblyName
+	}
+	
+	$binFolder = "$NugetBinFolder\$binFramework"
+	
 	if (-not (Test-Path $binFolder)) {
 		mkdir $binFolder
 	}
 
-	Copy-Item "$ProjBinFolder\$assembly.*" $binFolder
+	Get-ChildItem -Path "$ProjBinFolder" -Recurse -Filter "$assembly.*" | Copy-Item -Destination "$binFolder"
 }
-

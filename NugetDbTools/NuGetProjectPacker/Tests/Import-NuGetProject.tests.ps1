@@ -86,7 +86,7 @@ Describe "Import-NuGetProject" {
 		$nugetSettings = Import-NugetSettingsFramework -NuspecPath $pkgNspPath -PackagesConfigPath $pkgCfgPath
 		Initialize-NuGetFolders -Path $nugetFolder
 		Initialize-NuGetSpec -Path $projFolder -setting $nugetSettings
-		Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $projDir\$id.nuspec
+		Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $projDir\$id.nuspec -DefaultAssemblyName $id.nuspec
 		
 		It "Lib imported" { Test-Path "$nugetBinFrameworkFolder\ProjLib.dll" | should be $true }
 		It "Pdb imported" { Test-Path "$nugetBinFrameworkFolder\ProjLib.pdb" | should be $true }
