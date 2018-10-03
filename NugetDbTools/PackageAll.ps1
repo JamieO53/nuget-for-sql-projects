@@ -28,13 +28,11 @@ $order.PackageOrder |  ? {
 }
 $order.PackageOrder | % {
 	if ($sourceIsUpdated[$_]) {
-		$order.PackageOrder | % {
-			$projectFolder = "$solutionFolder\$_"
-			$buildConfigPath = "$projectFolder\BuildConfig.psd1"
-			$buildConfig = Import-PowerShellDataFile $buildConfigPath
-			$buildConfig.Dependents | % {
-				$sourceIsUpdated[$_] = $true
-			}
+		$projectFolder = "$solutionFolder\$_"
+		$buildConfigPath = "$projectFolder\BuildConfig.psd1"
+		$buildConfig = Import-PowerShellDataFile $buildConfigPath
+		$buildConfig.Dependents | % {
+			$sourceIsUpdated[$_] = $true
 		}
 	}
 }
