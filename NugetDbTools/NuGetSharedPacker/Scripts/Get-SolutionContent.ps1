@@ -31,7 +31,7 @@ function Get-SolutionContent {
 			if (-not (Test-Path "$SolutionFolder\$($_.Name)")) {
 				mkdir "$SolutionFolder\$($_.Name)"
 			}
-			copy "$($_.FullName)\*" "$SolutionFolder\$($_.Name)"
+			copy "$($_.FullName)\*" "$SolutionFolder\$($_.Name)" -Recurse -Force
 		}
 	}
 
