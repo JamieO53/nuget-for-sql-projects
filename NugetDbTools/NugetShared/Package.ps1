@@ -1,3 +1,6 @@
+param (
+	[bool]$upVersion = $false
+)
 $cfg = Import-PowerShellDataFile "$(Split-Path -Path $MyInvocation.MyCommand.Path)\BuildConfig.psd1"
 
 $id = $cfg.ProjectName
@@ -17,7 +20,7 @@ try {
 		Import-Module "$slnDir\NugetSharedPacker\bin\Debug\NugetSharedPacker\NugetSharedPacker.psd1"
 	}
 
-	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir
+	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir -UpVersion $upVersion
 	if ($version -like '*.0'){
 		throw "Invalid version $version"
 	}

@@ -26,13 +26,18 @@ $order.PackageOrder |  ? {
 } | % {
 	$sourceIsUpdated[$_] = $true
 }
+$upVersion = @{}
+$order.PackageOrder | % {
+	$upVersion[$_] = $false
+}
 $order.PackageOrder | % {
 	if ($sourceIsUpdated[$_]) {
 		$projectFolder = "$solutionFolder\$_"
 		$buildConfigPath = "$projectFolder\BuildConfig.psd1"
 		$buildConfig = Import-PowerShellDataFile $buildConfigPath
-		$buildConfig.Dependents | % {
+		$buildConfig.Dependents | ? { -not $sourceIsUpdated[$_] } | % {
 			$sourceIsUpdated[$_] = $true
+			$upVersion[$_] = $true
 		}
 	}
 }
@@ -41,7 +46,7 @@ try {
 	$order.PackageOrder | ? { $sourceIsUpdated[$_] } | % {
 		pushd "$solutionFolder\$_"
 		#powershell.exe -command '.\Package.ps1; exit $LASTEXITCODE'
-		.\Package.ps1
+		.\Package.ps1 -UpVersion $upVersion[$_]
 		popd
 		if ($LASTEXITCODE) {
 			throw "Package of $_ failed"

@@ -15,7 +15,9 @@ function Measure-ProjectVersion {
 		# The folder for version calculations
 		[string]$ProjectFolder,
 		# The previous version to be updated with the new revision number
-		[string]$OldVersion
+		[string]$OldVersion,
+		# Increase the version by 1
+		[bool]$UpVersion = $false
 	)
 	if (-not $oldVersion) {
 		if (Test-Path $Path) {
@@ -32,5 +34,5 @@ function Measure-ProjectVersion {
 	[string]$majorVersion = $versionParts[0]
 	[string]$minorVersion = $versionParts[1]
 	$minorVersion = $minorVersion.Split('-',2)[0]
-	Get-ProjectVersion -Path $ProjectFolder -MajorVersion $majorVersion -MinorVersion $minorVersion
+	Get-ProjectVersion -Path $ProjectFolder -MajorVersion $majorVersion -MinorVersion $minorVersion -UpVersion $UpVersion
 }

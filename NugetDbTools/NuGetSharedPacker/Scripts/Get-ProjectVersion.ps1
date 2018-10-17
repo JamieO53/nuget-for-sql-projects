@@ -15,13 +15,17 @@ function Get-ProjectVersion {
 		# Build major version
 		[string]$MajorVersion = '0',
 		#build minor version
-		[string]$MinorVersion = '0'
-
+		[string]$MinorVersion = '0',
+		# Increase the version by 1
+		[bool]$UpVersion = $false
 	)
 	$majorVer = if ([string]::IsNullOrEmpty($MajorVersion)) { '0'} else { $MajorVersion }
 	$minorVer = if ([string]::IsNullOrEmpty($MinorVersion)) { '0'} else { $MinorVersion }
 	$latestTag = "$majorVer.$minorVer"
 	[int]$revisions = Get-RevisionCount -Path $Path
+	if ($UpVersion) {
+		$revisions += 1
+	}
 		
 	[string]$version = "$latestTag.$revisions"
 		
