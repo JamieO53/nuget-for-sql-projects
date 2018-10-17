@@ -18,8 +18,9 @@ function Get-ProjectDependencyVersion {
 
 	)
 	$version = $OldVersion
+	$slnFolder = Split-Path $SolutionPath
 	Get-PkgProjects -SolutionPath $SolutionPath | % {
-		$projPath = $_.ProjectPath
+		$projPath = [IO.Path]::Combine($slnFolder, $_.ProjectPath)
 		[xml]$proj = gc $projPath
 		$refs = $proj.Project.ItemGroup | ? { $_.PackageReference }
 		$refs.PackageReference | ? { $_.Include -eq $Dependency } | % {
