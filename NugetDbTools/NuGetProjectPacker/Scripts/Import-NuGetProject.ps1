@@ -21,7 +21,9 @@ function Import-NuGetProject {
 		# The name of the project
 		[string]$DefaultAssemblyName,
 		# The location of the NuGet spec file
-		[string]$NugetSpecPath
+		[string]$NugetSpecPath,
+		# Additional files to copy from the project bin folder
+		[string]$ContentFiles = ''
 	)
 
 	[xml]$proj = Get-Content $ProjectPath
@@ -46,4 +48,7 @@ function Import-NuGetProject {
 	}
 
 	Get-ChildItem -Path "$ProjBinFolder" -Recurse -Filter "$assembly.*" | Copy-Item -Destination "$binFolder"
+	if ($ContentFiles) {
+		Get-ChildItem -Path "$ProjBinFolder" -Recurse -Filter $ContentFiles | Copy-Item -Destination "$binFolder"
+	}
 }
