@@ -9,7 +9,7 @@ function Get-RevisionCount {
 	try {
 		Push-Location $Path
 		if (Test-PathIsInGitRepo -Path (Get-Location)) {
-			[int]$revisions = (iex "git rev-list HEAD -- $Path").Count
+			[int]$revisions = (iex "git rev-list HEAD -- `"$Path`"").Count
 		}
 		else {
 			[int]$revisions = 0
