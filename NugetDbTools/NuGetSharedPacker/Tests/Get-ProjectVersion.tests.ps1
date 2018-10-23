@@ -14,7 +14,7 @@ Describe "Get-ProjectVersion" {
 		rmdir TestDrive:* -Recurse -Force
 	}
 	Context "In git without" {
-		mock Invoke-Expression { return 1..7 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName GitExtension
+		mock Invoke-Expression { return 1..7 } -ParameterFilter { $Command -eq "git rev-list HEAD -- `"$projFolder`"" } -ModuleName GitExtension
 		mkdir $projFolder
 		Push-Location 'TestDrive:\'
 		git init
@@ -23,7 +23,7 @@ Describe "Get-ProjectVersion" {
 		rmdir TestDrive:* -Recurse -Force
 	}
 	Context "In git branch" {
-		mock Invoke-Expression { return 1..7 } -ParameterFilter { $Command -eq "git rev-list HEAD -- $projFolder" } -ModuleName GitExtension
+		mock Invoke-Expression { return 1..7 } -ParameterFilter { $Command -eq "git rev-list HEAD -- `"$projFolder`"" } -ModuleName GitExtension
 		mkdir $projFolder
 		Push-Location 'TestDrive:\'
 		try {
