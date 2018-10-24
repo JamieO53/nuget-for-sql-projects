@@ -18,6 +18,7 @@ function Get-ProjectConfigurationProperty {
 		# The build platform
 		[string]$Platform
 	)
+	[string]$prop = ''
 	$proj.Project.PropertyGroup | % {
 		if ($_.Condition) {
 			[string]$cond = $_.Condition
@@ -26,14 +27,13 @@ function Get-ProjectConfigurationProperty {
 			$cond = $cond.Replace('==', '-eq')
 			[bool]$isCond = (iex $cond)
 		} else {
-			[bool]$isCond = $true
+			[bool]$isCond = -not [string]::IsNullOrWhiteSpace((iex "`$_.$Property"))
 		}
 		if ($isCond) {
-			[string]$prop = iex "`$_.$Property"
+			$prop = iex "`$_.$Property"
 			$prop = $prop.Trim()
-			return $prop
 		}
 	}
-	return ''
+	return $prop
 }
 
