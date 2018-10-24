@@ -47,8 +47,14 @@ function Import-NuGetProject {
 		mkdir $binFolder
 	}
 
-	Get-ChildItem -Path "$ProjBinFolder" -Recurse -Filter "$assembly.*" | Copy-Item -Destination "$binFolder"
+	if (-not (Test-Path $ProjBinFolder)) {
+		$projectFolder = Split-Path -Path $ProjectPath
+		# Debug|AnyCPU hardcoded for now
+		$ProjBinFolder = [IO.Path]::Combine($projectFolder, (Get-ProjectConfigurationProperty -Proj $proj -Property OutputPath -Configuration Debug -Platform AnyCPU))
+	}
+
+	Get-ChildItem -Path $ProjBinFolder -Recurse -Filter "$assembly.*" | Copy-Item -Destination $binFolder
 	if ($ContentFiles) {
-		Get-ChildItem -Path "$ProjBinFolder" -Recurse -Filter $ContentFiles | Copy-Item -Destination "$binFolder"
+		Get-ChildItem -Path $ProjBinFolder -Recurse -Filter $ContentFiles | Copy-Item -Destination $binFolder
 	}
 }
