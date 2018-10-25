@@ -15,10 +15,12 @@ function Set-NuGetDependenciesInPkgProject {
 		# The DB Solution Builder parameters
 		[xml]$Parameters,
 		# The DB Project file path
-		[string]$projectPath
+		[string]$projectPath,
+        # The location of .sln file of the solution being updated
+        [string]$SolutionPath
 	)
 	$cfgPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
-	$cfg = Import-NuGetSettings -NugetConfigPath $cfgPath
+	$cfg = Import-NuGetSettings -NugetConfigPath $cfgPath, -SolutionPath $SolutionPath
 	if ($Parameters.dbSolution.dependencies.dependency) {
 		$Parameters.dbSolution.dependencies.dependency | % {
 			$version = Get-NugetPackageVersion $_.id
