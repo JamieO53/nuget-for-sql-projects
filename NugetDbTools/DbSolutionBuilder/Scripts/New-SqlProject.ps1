@@ -27,6 +27,8 @@ function New-SqlProject {
 	)
 	$projectFolder = "$SolutionFolder\$ProjectName"
 	$projectPath = "$projectFolder\$projectName.sqlproj"
+	$slnName = $Parameters.dbSolution.parameters.name
+	$slnPath = "$SolutionFolder\$slnName.sln"
 	mkdir $projectFolder | Out-Null
 	ls "$TemplateFolder\NuGetDbPacker.DbTemplate\Template\Template.DBProject\*" | % {
 		$templateFile = $_
@@ -42,7 +44,7 @@ function New-SqlProject {
 	$proj.Project.ItemGroup.PackageReference | % {
 		$package = $_.Include
 		$version = $_.Version
-		Set-NuGetProjectDependencyVersion -NugetConfigPath $cfgPath -Dependency $_.Include -Version $_.Version
+		Set-NuGetProjectDependencyVersion -NugetConfigPath $cfgPath -SolutionPath $slnPath -Dependency $_.Include -Version $_.Version
 	}
 	Set-DbReferencesInProject -SolutionFolder $SolutionFolder -ProjectPath $projectPath
 	Set-NuGetDependenciesInPkgProject -Parameters $Parameters -ProjectPath $projectPath
