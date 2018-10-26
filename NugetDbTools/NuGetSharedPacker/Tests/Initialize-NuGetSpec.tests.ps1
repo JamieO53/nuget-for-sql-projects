@@ -35,7 +35,7 @@ Describe Initialize-NuGetSpec {
 	}
 	Context "Nuget spec settings" {
 		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
-		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- `"$projFolder`"" } -ModuleName GitExtension
+		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- `"$projFolder\*`"" } -ModuleName GitExtension
 		mock Invoke-Expression { return '1.0' } -ParameterFilter { $Command -eq 'git describe --tags' } -ModuleName GitExtension
 		md $projFolder
 		Initialize-NuGetFolders -Path $nugetFolder
