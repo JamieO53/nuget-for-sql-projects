@@ -36,6 +36,7 @@
     <Compile Include="BuildConfig.psd1" />
     <Compile Include="Scripts\Compress-Package.ps1" />
     <Compile Include="Scripts\Export-NuGetSettings.ps1" />
+    <Compile Include="Scripts\Get-NuGetPackage.ps1" />
     <Compile Include="Scripts\Get-NuspecProperty.ps1" />
     <Compile Include="Scripts\Get-PkgProjects.ps1" />
     <Compile Include="Scripts\Get-ProjectConfigurationProperty.ps1" />

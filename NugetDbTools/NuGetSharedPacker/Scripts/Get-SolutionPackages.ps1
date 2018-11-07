@@ -23,7 +23,7 @@ function Get-SolutionPackages {
 		$package = $_
 		$version = $reference[$package]
 		if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {
-			iex "nuget install $package -Version '$version' -Source '$localSource' -OutputDirectory '$ContentFolder' -ExcludeVersion"
+			Get-NuGetPackage -Id $package -Version $version -Source $localSource -OutputDirectory $ContentFolder
 		}
 	}
 }
