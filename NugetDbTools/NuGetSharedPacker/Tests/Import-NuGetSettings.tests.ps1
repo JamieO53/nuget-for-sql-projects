@@ -12,8 +12,8 @@ Describe "Import-NuGetSettings" {
 	$slnPath = "$snlFolder\sln.sln"
 	$projFolder = "$slnFolder\proj"
 	$configPath = "$projFolder\proj.nuget.config"
-	$expectedSettings = Initialize-TestNugetConfig -Content 'Database'
-	$expectedOptions = $expectedSettings | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
+	$expectedSettings = Initialize-TestNugetConfig -Content 'Database' -NugetContent 'content/Databases/*'
+	$expectedOptions = $expectedSettings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
 	$config = @'
 <?xml version="1.0"?>
 <configuration>
@@ -35,6 +35,9 @@ Describe "Import-NuGetSettings" {
 		<add key="EcsShared.SharedBase" value="[1.0)"/>
 		<add key="EcsShared.SupportRoles" value="[1.0)"/>
 	</nugetDependencies>
+	<nugetContents>
+		<add key="content/Databases/*" value="buildAction=&quot;none&quot; copyToOutput=&quot;true&quot;" />
+	</nugetContents>
 </configuration>
 '@
 	md $projFolder
@@ -64,6 +67,10 @@ Describe "Import-NuGetSettings" {
 		It "Dependencies count" { $content.nugetDependencies.Count | should be $expectedSettings.nugetDependencies.Count }
 		$content.nugetDependencies.Keys | % {
 			It "Content dependency $_" { $content.nugetDependencies[$_] | should be $expectedSettings.nugetDependencies[$_] }
+		}
+		It "Content count" { $content.nugetContents.Count | should be $expectedSettings.nugetContents.Count }
+		$content.nugetContents.Keys | % {
+			It "Content file $_" { $content.nugetContents[$_] | should be $expectedSettings.nugetContents[$_] }
 		}
 	}
 }

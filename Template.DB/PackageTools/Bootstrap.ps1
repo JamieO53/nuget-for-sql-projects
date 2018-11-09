@@ -3,6 +3,7 @@ param (
 )
 $SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..").Path
 $BootstrapFolder = "$SolutionFolder\Bootstrap"
+$package = "NuGet$($ProjectType)Packer"
 
 if (Test-Path $BootstrapFolder) {
     del $BootstrapFolder\* -Recurse -Force
@@ -13,7 +14,6 @@ if (Test-Path $BootstrapFolder) {
 $configPath = "$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config"
 [xml]$config = Get-Content $configPath
 $localSource = $config.configuration.nugetLocalServer.add | ? { $_.key -eq 'Source' } | % { $_.value }
-$package = "NuGet$($ProjectType)Packer"
 
 nuget install $package -Source $localSource -OutputDirectory $BootstrapFolder -ExcludeVersion
 

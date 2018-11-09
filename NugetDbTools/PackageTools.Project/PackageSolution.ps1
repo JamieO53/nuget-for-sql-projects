@@ -29,7 +29,7 @@ try {
 }
 
 	md "$nugetFolder" | Out-Null
-	'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $nugetFolder\$_ | Out-Null }
+	"content\$contentType" | % { mkdir $nugetFolder\$_ | Out-Null }
 
 	('Project1','Project2','Project3','Project4', 'Project5') | % {
 		$projName = $_

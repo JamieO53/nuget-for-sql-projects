@@ -23,6 +23,7 @@ function Initialize-DbPackage
 	$nugetSettings = Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $SolutionPath
 
 	Initialize-Package -ProjectPath $ProjectPath -NugetSettings $nugetSettings
+	mkdir "$nugetPath\content\Databases" | Out-Null
 	Import-NuGetDb -ProjectPath $ProjectPath -ProjDbFolder "$projectFolder\Databases" -NugetDbFolder "$nugetPath\content\Databases" -NugetSpecPath "$nugetPath\Package.nuspec"
 	Compress-Package -NugetPath $nugetPath
 }

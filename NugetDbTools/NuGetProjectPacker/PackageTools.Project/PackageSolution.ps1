@@ -29,7 +29,7 @@ try {
 }
 
 	md "$slnDir\NuGet" | Out-Null
-	'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $slnDir\NuGet\$_ | Out-Null }
+	"content\$contentType" | % { mkdir $slnDir\NuGet\$_ | Out-Null }
 
 	('Project1','Project2','Project3','Project4', 'Project5') | % {
 		$projName = $_

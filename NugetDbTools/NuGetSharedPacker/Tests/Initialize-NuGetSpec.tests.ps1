@@ -11,7 +11,7 @@ Describe Initialize-NuGetSpec {
 		$projFolder = 'TestDrive:\proj'
 		$nugetFolder = "$projFolder\NuGet"
 		$nugetSpecPath = "$nugetFolder\Package.nuspec"
-		$nugetSettings = Initialize-TestNugetConfig
+		$nugetSettings = Initialize-TestNugetConfig -Content 'Database' -NugetContent 'content/Databases/*'
 	}
 	Context "Nuget spec exists" {
 		md $projFolder
@@ -27,7 +27,7 @@ Describe Initialize-NuGetSpec {
 		[xml]$spec = Get-Content $nugetSpecPath
 		$metadata = $spec.package.metadata
 		Context "Settings removed" {
-			$metadata.ChildNodes |  ? { $_.Name -ne 'dependencies' } | % {
+			$metadata.ChildNodes | ? { $_.Name -ne 'dependencies' } | ? { $_.Name -ne 'contentFiles' } | % {
 				$name = $_.Name
 				it "$name must be a setting" { $name | Should BeIn $nugetSettings.nugetSettings.Keys }
 			}
@@ -62,6 +62,19 @@ Describe Initialize-NuGetSpec {
 					$nodeVer = $metadata.dependencies.dependency | where { $_.id -eq $dep}
 					It "should be in the metadata dependencies" { $nodeVer | Should Not BeNullOrEmpty }
 					It "should be version" { $nodeVer.Version | Should Be $ver }
+				}
+			}
+		}
+		Context "Content Files initialized" {
+			$nugetSettings.nugetContents.Keys | % {
+				$files = $_
+				$buildAction = 'none'
+				$copyToOutput = 'true'
+				Context "$files content files" {
+					$nodeFiles = $metadata.contentFiles.files | where { $_.include -eq $files}
+					It "should be in the metadata contentFiles" { $nodeFiles | Should Not BeNullOrEmpty }
+					It "should be buildAction" { $nodeFiles.buildAction | Should Be $buildAction }
+					It "should be copyToOutput" { $nodeFiles.copyToOutput | Should Be $copyToOutput }
 				}
 			}
 		}

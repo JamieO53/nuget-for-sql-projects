@@ -39,6 +39,9 @@ function Import-NuGetSettings
 		    $version = Get-ProjectDependencyVersion -SolutionPath $SolutionPath -Dependency $_.key -OldVersion $_.value
 			$nugetSettings.nugetDependencies[$_.key] = $version
 	    }
+		$cfg.configuration.nugetContents.add | ? { $_ } | % {
+			$nugetSettings.nugetContents[$_.key] = $_.value
+		}
     }
 	$nugetSettings
 }

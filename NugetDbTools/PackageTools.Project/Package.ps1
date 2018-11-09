@@ -32,7 +32,7 @@ try {
 	}
 
 	md "$nugetFolder" | Out-Null
-	'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $nugetFolder\$_ | Out-Null }
+	"content\$contentType" | % { mkdir $nugetFolder\$_ | Out-Null }
 
 	Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -DefaultAssemblyName $projName
 

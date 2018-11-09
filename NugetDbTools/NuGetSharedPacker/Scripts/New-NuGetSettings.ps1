@@ -7,6 +7,6 @@ function New-NuGetSettings {
 			};
 		nugetSettings = @{};
 		nugetDependencies = @{}
+		nugetContents = @{}
 	}
-
 }
