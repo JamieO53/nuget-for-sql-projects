@@ -35,7 +35,7 @@ try {
 	}
 
 	md "$projDir\NuGet" | Out-Null
-	"content\$contentType" | % { mkdir $projDir\NuGet\$_ | Out-Null }
+	'content\PackageTools', "content\$contentType" | % { mkdir $projDir\NuGet\$_ | Out-Null }
 
 	copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
 	$extensions | % {
