@@ -1,13 +1,20 @@
-﻿if ( Get-Module NugetSharedPacker) {
+﻿if ( Get-Module NugetSharedPacker -All) {
 	Remove-Module NugetSharedPacker
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1"
 
+if (Get-Module TestUtils -All) {
+	Remove-Module TestUtils
+}
+Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+
 Describe "Get-ProjectVersion" {
 	$projFolder = "TestDrive:\proj"
+	$projPath = "$projFolder\proj.sqlproj"
 
 	Context "Not in git" {
-		mkdir $projFolder
+		Initialize-TestDbProject -ProjectPath $projPath
+
 		Push-Location $projFolder 
 		It "version" { Get-ProjectVersion | should be '0.0.0' }
 		Pop-Location
@@ -15,7 +22,8 @@ Describe "Get-ProjectVersion" {
 	}
 	Context "In git without" {
 		mock Invoke-Expression { return 1..7 } -ParameterFilter { $Command -eq "git rev-list HEAD -- `"$projFolder\*`"" } -ModuleName GitExtension
-		mkdir $projFolder
+		Initialize-TestDbProject -ProjectPath $projPath
+
 		Push-Location 'TestDrive:\'
 		git init
 		It "version" { Get-ProjectVersion -Path $projFolder | should be '0.0.7' }
@@ -24,7 +32,8 @@ Describe "Get-ProjectVersion" {
 	}
 	Context "In git branch" {
 		mock Invoke-Expression { return 1..7 } -ParameterFilter { $Command -eq "git rev-list HEAD -- `"$projFolder\*`"" } -ModuleName GitExtension
-		mkdir $projFolder
+		Initialize-TestDbProject -ProjectPath $projPath
+
 		Push-Location 'TestDrive:\'
 		try {
 			git init
@@ -40,4 +49,3 @@ Describe "Get-ProjectVersion" {
 		}
 	}
 }
-Remove-Module GitExtension

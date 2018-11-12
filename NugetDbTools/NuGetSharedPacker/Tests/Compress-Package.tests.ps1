@@ -1,11 +1,12 @@
-﻿if ( Get-Module NuGetSharedPacker) {
+﻿if (Get-Module NuGetSharedPacker -All) {
 	Remove-Module NuGetSharedPacker
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
 
-if (-not (Get-Module TestUtils)) {
-	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+if (Get-Module TestUtils -All) {
+	Remove-Module TestUtils
 }
+Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
 
 Describe "Compress-Package" {
 	$projFolder = "$testDrive\proj"
@@ -14,33 +15,20 @@ Describe "Compress-Package" {
 	$configPath = "$projFolder\proj.nuget.config"
 	$nugetFolder = "$projFolder\NuGet"
 	$nugetSpecPath = "$nugetFolder\Package.nuspec"
-	$projText = @"
-<?xml version=`"1.0`" encoding=`"utf-8`"?>
-<Project DefaultTargets=`"Build`" xmlns=`"http://schemas.microsoft.com/developer/msbuild/2003`" ToolsVersion=`"4.0`">
-  <PropertyGroup>
-    <DacApplicationName>ProjDb</DacApplicationName>
-  </PropertyGroup>
-  <PropertyGroup>
-    <Configuration Condition=`" '`$(Configuration)' == '' `">Debug</Configuration>
-    <AssemblyName>ProjLib</AssemblyName>
-  </PropertyGroup>
-</Project>
-"@
 mkdir "$testDrive\.git"
 Context "Exists" {
 		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
 		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- `"$projFolder\*`"" } -ModuleName GitExtension
 		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName GitExtension
-		mkdir $projDbFolder
+		Initialize-TestDbProject -ProjectPath $projPath -NoDependencies
 		mkdir $nugetFolder
-		$projText | Set-Content $projPath
 		$nugetSettings = Initialize-TestNugetConfig -NoDependencies
-		Export-NuGetSettings -NugetConfigPath $configPath -Settings $nugetSettings
-
-		'dacpac' | Set-Content "$projDbFolder\ProjDb.dacpac"
-		'lib' | Set-Content "$projDbFolder\ProjLib.dll"
-		'pdb' | Set-Content "$projDbFolder\ProjLib.pdb"
 		Initialize-Package -ProjectPath $projPath -NugetSettings $nugetSettings
+		mkdir "$nugetFolder\tools" | Out-Null
+		mkdir "$nugetFolder\lib" | Out-Null
+		mkdir "$nugetFolder\content" | Out-Null
+		mkdir "$nugetFolder\content\Databases" | Out-Null
+		mkdir "$nugetFolder\build" | Out-Null
 		Compress-Package -NugetPath $nugetFolder
 
 		$id = $nugetSettings.nugetSettings.id

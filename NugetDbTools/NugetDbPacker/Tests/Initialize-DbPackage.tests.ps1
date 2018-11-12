@@ -1,12 +1,25 @@
-if ( Get-Module NuGetSharedPacker) {
-	Remove-Module NuGetSharedPacker
+if ( Get-Module NuGetDbPacker) {
+	Remove-Module NuGetDbPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetDbPacker\NuGetDbPacker.psm1"
+
+if (Get-Module TestUtils -All) {
+	Remove-Module TestUtils
+}
+Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+
 Describe 'Initialize-NuGetFolders' {
-	$projFolder = 'TestDrive:\proj'
+	$slnFolder = "TestDrive:\sln"
+	$projFolder = "$slnFolder\proj"
+	$projDbFolder = "$projFolder\Databases"
 	$nugetFolder = "$projFolder\NuGet"
-	$expectedFolders = 'tools','lib','content\Databases','build'
+	$expectedFolders = 'content\Databases'
+	$slnPath = "$slnFolder\sln.sln"
+	$projPath = "$projFolder\proj.sqlproj"
+	$configPath = "$projFolder\proj.nuget.config"
 	Context "The NuGet folder exists" {
+		Initialize-TestDbProject -ProjectPath $projPath
+
 		$junkFolders = 'Junk1','Junk2\Rubbish'
 		$junkData = @{'Leftover.txt'='Junk in root'; 'Junk1\Leftover1.txt'='Junk in Junk1'}
 		$junkFolders | % { md "$nugetFolder\$_" }
@@ -17,23 +30,20 @@ Describe 'Initialize-NuGetFolders' {
 			It "should be created" { (Test-Path "$nugetFolder\$_") | Should Be $true }
 			It "should contain" { gc "$nugetFolder\$_" | Should Be $junkData[$_] }
 		} }
-		Initialize-NuGetFolders -Path $nugetFolder
-		mkdir "$nugetFolder\tools" | Out-Null
-		mkdir "$nugetFolder\lib" | Out-Null
-		mkdir "$nugetFolder\content" | Out-Null
-		mkdir "$nugetFolder\content\Databases" | Out-Null
-		mkdir "$nugetFolder\build" | Out-Null
+		Initialize-DbPackage -ProjectPath $projPath -SolutionPath $slnPath
 		$junkFolders | % { Context "Junk $nugetFolder\$_" { It "should be removed" { (Test-Path "$nugetFolder\$_") | Should Be $false } } }
 
 		$expectedFolders | % { Context "$nugetFolder\$_" { It "should be recreated" { (Test-Path "$nugetFolder\$_" -PathType Container) | Should Be $true } } }
 	}
 	Context "The NuGet folder doesn't exist" {
-		Initialize-NuGetFolders -Path $nugetFolder
-		mkdir "$nugetFolder\tools" | Out-Null
-		mkdir "$nugetFolder\lib" | Out-Null
-		mkdir "$nugetFolder\content" | Out-Null
-		mkdir "$nugetFolder\content\Databases" | Out-Null
-		mkdir "$nugetFolder\build" | Out-Null
+		md $projFolder
+		Initialize-TestProject $projPath
+		'dacpac' | Set-Content "$projDbFolder\ProjDb.dacpac"
+		'lib' | Set-Content "$projDbFolder\ProjLib.dll"
+		'pdb' | Set-Content "$projDbFolder\ProjLib.pdb"
+		$nugetSettings = Initialize-TestNugetConfig -NoDependencies
+		Export-NuGetSettings -NugetConfigPath $configPath -Settings $nugetSettings
+		Initialize-DbPackage -ProjectPath $projPath -SolutionPath $slnPath
 		$expectedFolders | % { Context "$nugetFolder\$_" { It "should be created" { (Test-Path "$nugetFolder\$_" -PathType Container) | Should Be $true } } }
 	}
 }
