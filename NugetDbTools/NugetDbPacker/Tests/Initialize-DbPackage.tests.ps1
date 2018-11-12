@@ -9,7 +9,7 @@ if (Get-Module TestUtils -All) {
 Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
 
 Describe 'Initialize-NuGetFolders' {
-	$slnFolder = "TestDrive:\sln"
+	$slnFolder = "$testdrive\sln"
 	$projFolder = "$slnFolder\proj"
 	$projDbFolder = "$projFolder\Databases"
 	$nugetFolder = "$projFolder\NuGet"
@@ -18,7 +18,7 @@ Describe 'Initialize-NuGetFolders' {
 	$projPath = "$projFolder\proj.sqlproj"
 	$configPath = "$projFolder\proj.nuget.config"
 	Context "The NuGet folder exists" {
-		Initialize-TestDbProject -ProjectPath $projPath
+		Initialize-TestDbProject -ProjectPath $projPath -NoDependencies
 
 		$junkFolders = 'Junk1','Junk2\Rubbish'
 		$junkData = @{'Leftover.txt'='Junk in root'; 'Junk1\Leftover1.txt'='Junk in Junk1'}
@@ -36,8 +36,8 @@ Describe 'Initialize-NuGetFolders' {
 		$expectedFolders | % { Context "$nugetFolder\$_" { It "should be recreated" { (Test-Path "$nugetFolder\$_" -PathType Container) | Should Be $true } } }
 	}
 	Context "The NuGet folder doesn't exist" {
-		md $projFolder
-		Initialize-TestProject $projPath
+		md $projDbFolder
+		Initialize-TestProject $projPath -NoDependencies
 		'dacpac' | Set-Content "$projDbFolder\ProjDb.dacpac"
 		'lib' | Set-Content "$projDbFolder\ProjLib.dll"
 		'pdb' | Set-Content "$projDbFolder\ProjLib.pdb"
