@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>NuGetSharedPacker</id>
-    <version>0.1.113</version>
+    <version>0.1.119</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -12,11 +12,10 @@
     <copyright>Copyright 2017</copyright>
     <tags>NuGetSharedPacker 'CI tools'</tags>
     <dependencies>
-      <dependency id="NuGetShared" version="0.1.132" />
+      <dependency id="NuGetShared" version="0.1.133" />
     </dependencies>
   </metadata>
   <files>
-    <file src="tools\*" target="tools" />
     <file src="content\PackageTools\*" target="PackageTools" />
     <file src="content\PowerShell\*" target="PowerShell" />
   </files>

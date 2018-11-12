@@ -16,7 +16,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="tools\*" target="tools" />
     <file src="content\PackageTools\*" target="PackageTools" />
     <file src="content\PowerShell\*" target="PowerShell" />
   </files>
