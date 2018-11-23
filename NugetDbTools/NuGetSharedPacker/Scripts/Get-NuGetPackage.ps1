@@ -16,8 +16,15 @@ function Get-NuGetPackage {
 		# The NuGet server
 		[string]$Source,
 		# The target for the package content
-		[string]$OutputDirectory
+		[string]$OutputDirectory,
+		# The optional Framework version
+		[string]$Framework = ''
 	)
 
-	iex "nuget install $Id -Version '$Version' -Source '$Source' -OutputDirectory '$OutputDirectory' -ExcludeVersion"
+	if ($Framework) {
+		$frameworkVersion = " -Framework $Framework"
+	} else {
+		$frameworkVersion = ''
+	}
+	iex "nuget install $Id -Version '$Version' -Source '$Source' -OutputDirectory '$OutputDirectory' -ExcludeVersion$frameworkVersion"
 }
