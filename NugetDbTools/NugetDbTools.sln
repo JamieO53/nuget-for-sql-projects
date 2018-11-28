@@ -65,7 +65,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Db", "PackageT
 		NugetDbPacker\PackageTools.Db\Deploy-SolutionDatabases.ps1 = NugetDbPacker\PackageTools.Db\Deploy-SolutionDatabases.ps1
 		NugetDbPacker\PackageTools.Db\ExecuteRegressionTests.cmd = NugetDbPacker\PackageTools.Db\ExecuteRegressionTests.cmd
 		NugetDbPacker\PackageTools.Db\Get-PackageContent.ps1 = NugetDbPacker\PackageTools.Db\Get-PackageContent.ps1
-		NugetDbPacker\PackageTools.Db\Get-ReleaseDatabasePackages.ps1 = NugetDbPacker\PackageTools.Db\Get-ReleaseDatabasePackages.ps1
 		NugetDbPacker\PackageTools.Db\Invoke-PostBuildEvent.ps1 = NugetDbPacker\PackageTools.Db\Invoke-PostBuildEvent.ps1
 		NugetDbPacker\PackageTools.Db\Invoke-PreBuildEvent.ps1 = NugetDbPacker\PackageTools.Db\Invoke-PreBuildEvent.ps1
 		NugetDbPacker\PackageTools.Db\Invoke-RegressionTests.ps1 = NugetDbPacker\PackageTools.Db\Invoke-RegressionTests.ps1
