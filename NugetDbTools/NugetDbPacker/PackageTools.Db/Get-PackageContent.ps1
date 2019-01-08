@@ -6,3 +6,12 @@ if (-not (Get-Module NugetDbPacker)) {
 }
 
 Get-SolutionContent -SolutionPath $slnPath
+
+$reference = Get-SolutionDependencies $SolutionPath
+$reference.Keys | sort | % {
+	$package = $_
+	$version = $reference[$package]
+	if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {
+		Set-NuGetDependencyVersion -SolutionPath $slnPath -Dependency $package -Version $version
+	}
+}
