@@ -36,4 +36,14 @@ function Get-SolutionContent {
 	}
 
 	del $packageContentFolder -Include '*' -Recurse
+
+	$reference = Get-SolutionDependencies $SolutionPath
+	$reference.Keys | sort | % {
+		$package = $_
+		$version = $reference[$package]
+		if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {
+			Set-NuGetDependencyVersion -SolutionPath $SolutionPath -Dependency $package -Version $version
+		}
+	}
+
 }
