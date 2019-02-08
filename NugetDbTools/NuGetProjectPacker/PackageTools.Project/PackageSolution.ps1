@@ -1,6 +1,5 @@
 $projectType = 'Project'
-$projName='ProjectName'
-$id="Prefix.$projName"
+$id="Prefix.Name"
 $contentType='lib'
 
 try {
@@ -32,7 +31,8 @@ try {
 	"content\$contentType" | % { mkdir $nugetFolder\$_ | Out-Null }
 
 	('Project1','Project2','Project3','Project4', 'Project5') | % {
-		$projName = $_
+		[string]$projSubPath = $_
+		$projName = Split-Path $projSubPath -Leaf
 		$projDir = "$slnDir\$projName"
 		$projPath = "$projDir\$projName.csproj"
 		$projBinFolder = "$projDir\bin\Debug"

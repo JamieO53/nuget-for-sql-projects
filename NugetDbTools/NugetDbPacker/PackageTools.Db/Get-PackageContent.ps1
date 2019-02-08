@@ -7,7 +7,7 @@ if (-not (Get-Module NugetDbPacker)) {
 
 Get-SolutionContent -SolutionPath $slnPath
 
-$reference = Get-SolutionDependencies $SolutionPath
+$reference = Get-SolutionDependencies -SolutionPath $slnPath
 $reference.Keys | sort | % {
 	$package = $_
 	$version = $reference[$package]
