@@ -1,90 +1,14 @@
 ﻿
 function Add-DictionaryNode ($parentNode, $key, $value) {
-	$xml = @"
-<nodes>
-  <add key="$key" value="$value" />
-</nodes>
-"@
-	[xml]$child = $xml
-	$childNode = $parentNode.AppendChild($parentNode.OwnerDocument.ImportNode($child.nodes.FirstChild, $true))
+	$dic = Add-Node -parentNode $parentNode -id 'add'
+	$dic.SetAttribute('key', $key)
+	$dic.SetAttribute('value', $value)
 }
 
-function Export-NuGetSettings {
-	<#.Synopsis
-	Initializes the project's NuGet configuration file
-	.DESCRIPTION
-	Exports the settings to the project's NuGet configuration file
-	.EXAMPLE
-	Export-NuGetSettings -NugetConfigPath C:\VSTS\EcsShared\SupportRoles\EcsShared.SupportRoles.nuget.config -Settings $settings
-	#>
-    [CmdletBinding()]
-    param
-    (
-        # The location of .nuget.config file of the project being packaged
-        [string]$NugetConfigPath,
-		# The values to be set in the NuGet spec
-		[PSObject]$Settings
-	)
-	$major = $Settings.nugetOptions.majorVersion
-	$minor = $Settings.nugetOptions.minorVersion
-	$configText = @"
-<?xml version=`"1.0`"?>
-<configuration>
-	<nugetOptions>
-		<add key=`"majorVersion`" value=`"$major`"/>
-		<add key=`"minorVersion`" value=`"$minor`"/>
-	</nugetOptions>
-</configuration>
-"@
-	[xml]$xml = $configText
-	$parentNode = $xml.configuration
-
-	if ($Settings.nugetSettings.Keys.Count -gt 0) {
-		$Settings.nugetSettings.Keys | select -First 1 | % {
-			$settingKey = $_
-			$settingValue = $Settings.nugetSettings[$_]
-		}
-		$settingText = @"
-<?xml version=`"1.0`"?>
-<configuration>
-	<nugetSettings>
-		<add key=`"$settingKey`" value=`"$settingValue`"/>
-	</nugetSettings>
-</configuration>
-"@
-		[xml]$SettingsXml = $settingText
-		$settingsNode = $SettingsXml.configuration.nugetSettings
-		$Settings.nugetSettings.Keys | select -Skip 1 | % {
-			$settingKey = $_
-			$settingValue = $Settings.nugetSettings[$_]
-			Add-DictionaryNode -parentNode $settingsNode -key $settingKey -value $settingValue
-		}
-		$childNode = $parentNode.AppendChild($parentNode.OwnerDocument.ImportNode($settingsNode, $true))
-	}
-
-	if ($Settings.nugetDependencies.Keys.Count -gt 0) {
-		$Settings.nugetDependencies.Keys | select -First 1 | % {
-			$dependencyKey = $_
-			$dependencyValue = $Settings.nugetDependencies[$_]
-		}
-		$dependencyText = @"
-<?xml version=`"1.0`"?>
-<configuration>
-	<nugetDependencies>
-		<add key=`"$dependencyKey`" value=`"$dependencyValue`"/>
-	</nugetDependencies>
-</configuration>
-"@
-		[xml]$dependencyXml = $dependencyText
-		$dependenciesNode = $dependencyXml.configuration.nugetDependencies
-		$Settings.nugetDependencies.Keys | select -Skip 1 | % {
-			$dependencyKey = $_
-			$dependencyValue = $Settings.nugetDependencies[$_]
-			Add-DictionaryNode -parentNode $dependenciesNode -key $dependencyKey -value $dependencyValue
-		}
-		$childNode = $parentNode.AppendChild($parentNode.OwnerDocument.ImportNode($dependenciesNode, $true))
-	}
-	Out-FormattedXml -Xml $xml -FilePath $NugetConfigPath
+function Add-Node ($parentNode, $id) {
+	[xml]$node = "<$id/>"
+	$childNode = $parentNode.AppendChild($parentNode.OwnerDocument.ImportNode($node.FirstChild, $true))
+	$childNode
 }
 
 Function Format-XmlIndent
@@ -110,6 +34,10 @@ Function Format-XmlIndent
     $StringWriter.ToString().Replace('<?xml version="1.0" encoding="utf-16"?>','<?xml version="1.0" encoding="utf-8"?>')
 }
 
+function Get-Caller {
+	(Get-PSCallStack | Select-Object -First 3 | Select-Object -Last 1).Command
+}
+
 function Get-CSharpProjects {
     <#.Synopsis
         Get the solution's C# projects
@@ -133,6 +61,27 @@ function Get-CSharpProjects {
     Get-ProjectsByType -SolutionPath $SolutionPath -ProjId $newCsProjId
 }
 
+function Get-GroupNode ($parentNode, $id) {
+	$gn = $parentNode.SelectSingleNode($id)
+	if ($gn) {
+		$gn
+	} else {
+		Add-Node -parentNode $parentNode -id $id
+	}
+}
+
+function Get-LogPath {
+    [CmdletBinding()]
+	param (
+		[string]$Name
+	)
+	$logFolder = "$(Split-Path $MyInvocation.PSScriptRoot)\Logs"
+	if (-not (Test-Path $logFolder)) {
+		md $logFolder | Out-Null
+	}
+	"$logFolder\$Name-$((Get-Date).ToString('yyyy-MM-dd-HH-mm-ss-fff')).log"
+}
+
 function Get-NuGetDbToolsConfig {
 	[xml]$config = Get-Content (Get-NuGetDbToolsConfigPath)
 	Return $config
@@ -150,6 +99,15 @@ function Get-NuGetDbToolsConfigPath {
 function Get-NuGetLocalApiKey {
 	$config = Get-NuGetDbToolsConfig
 	$config.configuration.nugetLocalServer.add | ? { $_.key -eq 'ApiKey' } | % { $_.value }
+}
+
+function Get-NuGetLocalPushSource {
+	$config = Get-NuGetDbToolsConfig
+	$source = $config.configuration.nugetLocalServer.add | ? { $_.key -eq 'PushSource' } | % { $_.value }
+	if ([string]::IsNullOrEmpty($source)) {
+		$source = $config.configuration.nugetLocalServer.add | ? { $_.key -eq 'Source' } | % { $_.value }
+	}
+	$source
 }
 
 function Get-NuGetLocalSource {
@@ -252,7 +210,7 @@ function Get-ProjectsByType {
         # The project type ID
         [string]$ProjId
     )
-    [string]$sln=gc $SolutionPath | Out-String
+    [string]$sln=if ($SolutionPath -and (Test-Path $SolutionPath)) {gc $SolutionPath | Out-String} else {''}
 
     $nameGrouping = '(?<name>[^"]+)'
     $pathGrouping = '(?<path>[^"]+)'
@@ -271,55 +229,6 @@ function Get-ProjectsByType {
         }
     }
 }
-
-function Get-ProjectVersion {
-<#.Synopsis
-	Get the project's version
-.DESCRIPTION
-	Calculates the project's version from the git repository.
-	It uses the most recent tag for the major-minor version number (default 0.0) and counts the number of commits for the release number.
-.EXAMPLE
-	$ver = Get-ProjectVersion -Path . -MajorVersion 1 -MinorVersion 0
-#>
-    [CmdletBinding()]
-    param
-    (
-        # The project folder
-		[string]$Path,
-		# Build major version
-		[string]$MajorVersion = '0',
-		#build minor version
-		[string]$MinorVersion = '0'
-
-	)
-	# Note: use Invoke-Expression (iex) so that git calls can be mocked in tests
-	try {
-		Push-Location $Path
-		$majorVer = if ([string]::IsNullOrEmpty($MajorVersion)) { '0'} else { $MajorVersion }
-		$minorVer = if ([string]::IsNullOrEmpty($MinorVersion)) { '0'} else { $MinorVersion }
-		$latestTag = "$majorVer.$minorVer"
-		if (Test-PathIsInGitRepo -Path (Get-Location)) {
-			$revisions = (iex "git rev-list HEAD -- $Path").Count
-		}
-		else {
-			$revisions = '0'
-		}
-		$version = "$latestTag.$revisions"
-		
-		if (Test-PathIsInGitRepo -Path (Get-Location)) {
-			$branch = iex 'git branch' | ? { $_.StartsWith('* ') } | % { $_.Replace('* ', '') }
-			if ($branch -and ($branch -ne 'master')) {
-				$version += "-$branch"
-			}
-		}
-		
-		return $version
-	}
-	finally {
-		Pop-Location
-	}
-}
-
 
 function Get-SqlProjects {
     <#.Synopsis
@@ -342,51 +251,85 @@ function Get-SqlProjects {
     Get-ProjectsByType -SolutionPath $SolutionPath -ProjId $sqlProjId
 }
 
-function Import-NuGetSettings
-{
-	<#.Synopsis
-	Import NuGet settings
-	.DESCRIPTION
-	Import the NuGet spec settings from the project's NuGet configuration file (<projctName>.nuget.config)
-	.EXAMPLE
-	Import-NuGetSettings -NugetConfigPath 'EcsShared.SharedBase.nuget.config'
-	#>
+function Invoke-Trap {
     [CmdletBinding()]
-    [OutputType([Collections.Hashtable])]
-    param
-    (
-        # The project's NuGet configuration file
-		[Parameter(Mandatory=$true, Position=0)]
-		[string]$NugetConfigPath
+	param (
+		[string]$Command,
+		[string]$Message,
+		[switch]$Fatal
 	)
-	$nugetSettings = New-Object -TypeName PSObject -Property @{
-		nugetOptions = New-Object -TypeName PSObject -Property @{
-				majorVersion = '';
-				minorVersion = ''
-			};
-		nugetSettings = @{};
-		nugetDependencies = @{}
+	try {
+		iex "$Command 2> .\errors.txt"
+		if ($LASTEXITCODE -ne 0) {
+			$caller = Get-Caller
+			Log $Message -Error -taskStep $caller
+			$errors = gc .\errors.txt
+			$errors | % {
+				Log $_ -Error -taskStep $caller -allowLayout
+			}
+			if ($Fatal) {
+				throw $Message
+			}
+		}
+	} finally {
+		if (Test-Path .\errors.txt) {
+			Remove-Item .\errors.txt
+		}
+	}
+}
+
+[String]$script:logPath=$null
+function Log {
+    [CmdletBinding()]
+	param (
+		[string]$logMsg=$null,
+		[string]$task=$null,
+		[string]$taskStep=$null,
+		[string]$fg=$null,
+		[switch]$Warn, [switch]$Error, [switch]$hilite, [switch]$stdoutOnly, [switch]$allowLayout
+	)
+	if ([string]::IsNullOrEmpty($task)) {
+		$task = [IO.Path]::GetFileNameWithoutExtension((Get-PSCallStack | Select-Object -Last 1).ScriptName)
+	}
+	if ([string]::IsNullOrEmpty($taskStep)) {
+		$taskStep = Get-Caller
 	}
 
-	if (Test-Path $NugetConfigPath) {
-        [xml]$cfg = gc $NugetConfigPath
-	    $cfg.configuration.nugetOptions.add | % {
-		    if ($_.key -eq 'majorVersion') {
-			    $nugetSettings.nugetOptions.majorVersion = $_.value
-		    } elseif ($_.key -eq 'minorVersion') {
-			    $nugetSettings.nugetOptions.minorVersion = $_.value
-		    }
-	    }
-	    $cfg.configuration.nugetSettings.add | ? { $_ } | % {
-		    $nugetSettings.nugetSettings[$_.key] = $_.value
-	    }
-	    $projPath = Split-Path -LiteralPath $NugetConfigPath
-	    $nugetSettings.nugetSettings['version'] = Get-ProjectVersion -Path $projPath -MajorVersion $nugetSettings.nugetOptions.majorVersion -minorVersion $nugetSettings.nugetOptions.minorVersion
-	    $cfg.configuration.nugetDependencies.add | ? { $_ } | % {
-		    $nugetSettings.nugetDependencies[$_.key] = $_.value
-	    }
-    }
-	$nugetSettings
+	$level='I'
+	if ($hilite)
+	{
+		$level+='!'
+	}
+
+	if (-not $allowLayout -and [string]::IsNullOrEmpty($logMsg))
+	{
+		$logMsg="Log message argument expected!"
+		if (-not $Error)
+		{
+			$warn=$true
+		}
+	}
+	
+	if ($Error)
+		{$level='E'; $fg='red'}
+	elseif ($Warn)
+		{$level='W'; if ($debug) {$fg='magenta'} else {$fg='yellow'}}
+	elseif ($hilite)
+		{if ($debug) {$fg='black'} else {$fg='white'}}
+	elseif ($debug)
+		{$fg='black'} 
+	elseif (-not $fg)
+		{$fg='gray'}
+
+	$msg = "[$task][$taskStep][$level] $logMsg".Replace('[]','')
+	if (-not $stdoutOnly) {
+		if ([string]::IsNullOrEmpty($script:logPath)) {
+			$log = [IO.Path]::GetFileNameWithoutExtension($MyInvocation.PSCommandPath)
+			$script:logPath = Get-LogPath $log
+		}
+		Out-File $script:logPath -InputObject $msg -Encoding ascii -Append -NoClobber -Width 1024
+	}
+	Write-Host $msg -ForegroundColor $fg
 }
 
 Function Out-FormattedXml {
@@ -397,6 +340,34 @@ Function Out-FormattedXml {
 	Format-XMLIndent $Xml -Indent 2 | Out-File $FilePath -Encoding utf8
 }
 
+
+function Publish-NuGetPackage {
+	<#.Synopsis
+	Pushes the package to the 
+	.DESCRIPTION
+	Exports the settings to the project's NuGet configuration file
+	.EXAMPLE
+	Publish-NuGetPackage -PackagePath "$projDir\$id.$version.nupkg"
+	#>
+    [CmdletBinding()]
+    param
+    (
+        # The location of the package being published
+        [string]$PackagePath
+	)
+	$localSource = Get-NuGetLocalPushSource
+	if (Test-Path $localSource) {
+		nuget add $PackagePath -Source $localSource -NonInteractive
+	} else {
+		$apiKey = Get-NuGetLocalApiKey
+		nuget push $PackagePath $apiKey -Source $localSource
+	}
+}
+
+function Remove-Node ($parentNode, $id){
+	$childNode = $parentNode.SelectSingleNode($id)
+	$parentNode.RemoveChild($childNode) | Out-Null
+}
 
 function Save-CSharpProject {
 <#.Synopsis
@@ -419,66 +390,21 @@ function Save-CSharpProject {
 	$text | Out-File $Path -Encoding utf8
 }
 
-function Set-NuspecDependencyVersion {
-<#.Synopsis
-	Set the dependency's version in the Project.nuspec file to the latest version on the server.
-.DESCRIPTION
-	Fetches the dependency's latest version number and sets it in the .nuspec file.
-.EXAMPLE
-	Set-NuspecDependencyVersion -Path .\Package.nuspec -Dependency NugetDbPacker
-#>
-    [CmdletBinding()]
-    param
-    (
-        # The path of the .nuspec file
-		[string]$Path,
-		# The dependency name
-		[string]$Dependency
-	)
-
-	$spec = gc $Path
-	$dep = $spec | ? { $_ -like "*<dependency id=`"$Dependency`" version=`"*`"/>*"  }
-	$oldVersion = ($dep -split '"')[3]
-	$newVersion = Get-NuGetPackageVersion $Dependency
-	$newDep = $dep.Replace($oldVersion, $newVersion)
-	$specText = $spec | Out-String
-	$oldText = "<dependency id=`"$Dependency`" version=`"$oldVersion`"/>"
-	$newText = "<dependency id=`"$Dependency`" version=`"$newVersion`"/>"
-	$specText =  $specText.Replace($oldText, $newText)
-	$specText | Out-File -FilePath $Path -Encoding utf8 -Force
-}
-
-function Set-NuspecVersion {
-<#.Synopsis
-	Set the project's version in the Project.nuspec file
-.DESCRIPTION
-	Calculates the project's version from the git repository.
-	It uses the most recent tag for the major-minor version number (default 0.0) and counts the number of commits for the release number.
-	The updated version number is set in the .nuspec file, and the version is returned.
-.EXAMPLE
-	$ver = Set-NuspecVersion -Path .\Package.nuspec
-#>
-    [CmdletBinding()]
-    param
-    (
-        # The path of the .nuspec file
-		[string]$Path,
-		# The folder for version calculations
-		[string]$ProjectFolder
-	)
-
-	[xml]$cfg = gc Package.nuspec
-	$oldVersion=$cfg.package.metadata.version
-	$versionParts = $oldVersion.Split('.')
-	$majorVersion = $versionParts[0]
-	$minorVersion = $versionParts[1]
-	$newVersion = Get-ProjectVersion -Path $ProjectFolder -MajorVersion $majorVersion -MinorVersion $minorVersion
-	$cfgText = gc Package.nuspec | Out-String
-	$oldText = "<version>$oldVersion</version>"
-	$newText = "<version>$newVersion</version>"
-	$cfgText =  $cfgText.Replace($oldText, $newText).TrimEnd()
-	$cfgText | Out-File -FilePath .\Package.nuspec -Encoding utf8 -Force
-	$newVersion
+function Set-NodeText ($parentNode, $id, [String]$text){
+		[xml.XmlNode]$childNode | Out-Null
+		$parentNode.SelectSingleNode($id) |
+			where { $_ } |
+			foreach {
+				$childNode = $_
+			}
+		if (-not $childNode) {
+			$newNode = Add-Node -parentNode $parentNode -id $id
+			$newNode.InnerText = $text
+		}
+		else
+		{
+			$childNode.InnerText = $text
+		}
 }
 
 function Set-ProjectDependencyVersion {
@@ -504,8 +430,9 @@ function Set-ProjectDependencyVersion {
 	if ($ref) {
 		$ref.Version = $newVersion
 	} else {
-		[xml]$new = "<new><PackageReference Include=`"$Dependency`" Version=`"$newVersion`" /></new>"
-		$node = $refs.AppendChild($refs.OwnerDocument.ImportNode($new.new.FirstChild, $true))
+		$newRef = Add-Node -parentNode $refs -id PackageReference
+		$newRef.SetAttribute('Include', $Dependency);
+		$newRef.SetAttribute('Version', $newVersion);
 	}
 	Save-CSharpProject -Project $proj -Path $Path
 }
@@ -527,63 +454,12 @@ function Test-NuGetVersionExists {
 		[string]$Version
 	)
 	$exists = $false
-	nuget List $Id -AllVersions -Source (Get-NuGetLocalSource) | ? {
-		$_.EndsWith($Version) 
+	nuget List $Id -AllVersions -Source (Get-NuGetLocalSource) -PreRelease -NonInteractive | ? {
+		$_.Equals("$Id $Version") 
 	} | % {
 		$exists = $true 
 	}
 	return $exists
-}
-
-function Test-PathIsInGitRepo {
-	<#.Synopsis
-	Test if the Path is in a Git repository
-	.DESCRIPTION
-	Search the Path and its parents until the .git folder is found
-	.EXAMPLE
-	if (Test-PathIsInGitRepo -Path C:\VSTS\EcsShared\SupportRoles)
-	#>
-    [CmdletBinding()]
-    [OutputType([bool])]
-    param
-    (
-		# The path being tested
-		[string]$Path
-	)
-	[string]$myPath = Get-ParentSubfolder -Path $Path -Filter '.git'
-	return $myPath -ne ''
-}
-
-function Initialize-TestNugetConfig {
-	param (
-		[switch]$NoOptions = $false,
-		[switch]$NoSettings = $false,
-		[switch]$NoDependencies = $false
-	)
-	$nugetOptions = New-Object -TypeName PSObject -Property @{
-		majorVersion = '1';
-		minorVersion = '0'
-	}
-	$nugetSettings = @{
-		id = 'TestPackage';
-		version = '1.0.123';
-		authors = 'joglethorpe';
-		owners = 'Ecentric Payment Systems';
-		projectUrl = 'https://epsdev.visualstudio.com/Sandbox';
-		description = 'This package is for testing NuGet creation functionality';
-		releaseNotes = 'Some stuff to say about the release';
-		copyright = 'Copyright 2017'
-	}
-	$nugetDependencies = @{
-		'EcsShared.SharedBase' = '[1.0)';
-		'EcsShared.SupportRoles' = '[1.0)'
-	}
-	$expectedSettings = New-Object -TypeName PSObject -Property @{
-		nugetOptions = if ($NoOptions) { $null } else { $nugetOptions };
-		nugetSettings = if ($NoSettings) { @{} } else { $nugetSettings };
-		nugetDependencies = if ($NoDependencies) { @{} } else { $nugetDependencies }
-	}
-	return $expectedSettings	
 }
 
 
