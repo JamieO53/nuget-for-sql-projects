@@ -17,7 +17,7 @@ if (Test-Path $slnDir\NuGet) {
 }
 md $slnDir\NuGet | Out-Null
 cd $slnDir\NuGet
-'tools','lib',"content\PackageTools","content\$contentType\Template.DBProject","content\$contentType\Template.DBPkg",'build' | % { md $_ | Out-Null }
+"content\PackageTools","content\$contentType\Template.DBProject","content\$contentType\Template.DBPkg" | % { md $_ | Out-Null }
 cd ..
 copy "$slnDir\PackageTools\Bootstrap.*" "NuGet\content\PackageTools\"
 copy "$slnDir\*.sln" "NuGet\content\$contentType\"

@@ -48,6 +48,9 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>
+    </NoWarn>
+    <SuppressTSqlWarnings>71558</SuppressTSqlWarnings>
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -65,21 +68,16 @@
     <None Include="Template.DBProject.publish.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ArtifactReference Include="C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\Extensions\Microsoft\SQLDB\Extensions\SqlServer\110\SqlSchemas\master.dacpac">
-      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\110\SqlSchemas\master.dacpac</HintPath>
-      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
-      <DatabaseVariableLiteralValue>master</DatabaseVariableLiteralValue>
-    </ArtifactReference>
     <ArtifactReference Include="..\Databases\NugetDbPackerDb.Root.dacpac">
       <HintPath>..\Databases\NugetDbPackerDb.Root.dacpac</HintPath>
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
     </ArtifactReference>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>PowerShell -File "$(SolutionDir)PackageTools\Invoke-PostBuildEvent.ps1" -ProjectName "$(ProjectName)" -ProjectDir "$(ProjectDir)\" -SolutionDir "$(SolutionDir)\" -TargetDir "$(TargetDir)\"
+    <PostBuildEvent>PowerShell -File "$(SolutionDir)PackageTools\Invoke-PostBuildEvent.ps1" -ProjectName "$(ProjectName)" -ProjectDir "$(ProjectDir)\" -SolutionDir "$(SolutionDir)\" -TargetDir "$(TargetDir)\" -AssemblyName $(AssemblyName)
 REM Add -CopyAssembly if the CLR assembly is to be copied</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>PowerShell -File "$(SolutionDir)PackageTools\Invoke-PreBuildEvent.ps1" -ProjectName  $(ProjectName) -ProjectDir '$(ProjectDir)' -SolutionDir '$(SolutionDir)' -TargetDir "$(TargetDir)"</PreBuildEvent>
+    <PreBuildEvent>PowerShell -File "$(SolutionDir)PackageTools\Invoke-PreBuildEvent.ps1" -ProjectName  $(ProjectName) -ProjectDir "$(ProjectDir)\" -SolutionDir "$(SolutionDir)\" -TargetDir "$(TargetDir)\"</PreBuildEvent>
   </PropertyGroup>
 </Project>

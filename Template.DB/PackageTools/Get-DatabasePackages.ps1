@@ -5,4 +5,6 @@ if (-not (Get-Module NugetDbPacker)) {
 	Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1"
 }
 
-Get-SolutionContent -SolutionPath $slnPath
+$localSource = Get-NuGetLocalSource
+
+Get-NuGetPackage -Id $Id -Version $Version -Source $localSource -OutputDirectory $OutputDirectory

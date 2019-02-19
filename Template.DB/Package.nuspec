@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>NuGetDbPacker.DbTemplate</id>
-    <version>1.0.44</version>
+    <version>1.0.65</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
