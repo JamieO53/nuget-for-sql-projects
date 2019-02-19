@@ -5,16 +5,19 @@ VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NugetDbPackerDbPkg", "NugetDbPackerDbPkg\NugetDbPackerDbPkg.csproj", "{45304955-E96E-4A1D-BB50-40938DDF4763}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "NugetDbPackerDb.Root", "NugetDbPackerDb.Root\NugetDbPackerDb.Root.sqlproj", "{51176838-3088-4096-95B9-F7A18D40A9DF}"
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "NugetDbPackerDb.Root", "NugetDbPackerDb.Root\NugetDbPackerDb.Root.sqlproj", "{96EEF452-0302-4B98-BDBC-D36A24C21EA8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{73768392-40CC-4C3F-B544-B44F040DD53A}"
 	ProjectSection(SolutionItems) = preProject
 		PackageTools\Bootstrap.cmd = PackageTools\Bootstrap.cmd
 		PackageTools\Bootstrap.ps1 = PackageTools\Bootstrap.ps1
+		PackageTools\Deploy-SolutionDatabases.ps1 = PackageTools\Deploy-SolutionDatabases.ps1
+		PackageTools\ExecuteRegressionTests.cmd = PackageTools\ExecuteRegressionTests.cmd
 		PackageTools\Get-PackageContent.ps1 = PackageTools\Get-PackageContent.ps1
 		PackageTools\GetPackageContent.cmd = PackageTools\GetPackageContent.cmd
 		PackageTools\Invoke-PostBuildEvent.ps1 = PackageTools\Invoke-PostBuildEvent.ps1
 		PackageTools\Invoke-PreBuildEvent.ps1 = PackageTools\Invoke-PreBuildEvent.ps1
+		PackageTools\Invoke-RegressionTests.ps1 = PackageTools\Invoke-RegressionTests.ps1
 		PackageTools\Publish-DbProjects.ps1 = PackageTools\Publish-DbProjects.ps1
 		PackageTools\PublishDbProjects.cmd = PackageTools\PublishDbProjects.cmd
 	EndProjectSection
@@ -29,12 +32,12 @@ Global
 		{45304955-E96E-4A1D-BB50-40938DDF4763}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45304955-E96E-4A1D-BB50-40938DDF4763}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45304955-E96E-4A1D-BB50-40938DDF4763}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51176838-3088-4096-95B9-F7A18D40A9DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51176838-3088-4096-95B9-F7A18D40A9DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51176838-3088-4096-95B9-F7A18D40A9DF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{51176838-3088-4096-95B9-F7A18D40A9DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51176838-3088-4096-95B9-F7A18D40A9DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{51176838-3088-4096-95B9-F7A18D40A9DF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{96EEF452-0302-4B98-BDBC-D36A24C21EA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96EEF452-0302-4B98-BDBC-D36A24C21EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96EEF452-0302-4B98-BDBC-D36A24C21EA8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{96EEF452-0302-4B98-BDBC-D36A24C21EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96EEF452-0302-4B98-BDBC-D36A24C21EA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96EEF452-0302-4B98-BDBC-D36A24C21EA8}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,5 +46,3 @@ Global
 		SolutionGuid = {050FCAC4-AB31-4923-AEA9-D7D5203756AD}
 	EndGlobalSection
 EndGlobal
-
-

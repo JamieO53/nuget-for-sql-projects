@@ -29,6 +29,21 @@ Describe "Import-NuGetProject" {
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
+  <PropertyGroup Condition=" '`$(Configuration)|`$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>
+    </DocumentationFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <NoWarn>1591 1574 1711</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
 </Project>
 "@
 	$pkgCfgText = @'
@@ -86,7 +101,7 @@ Describe "Import-NuGetProject" {
 		$nugetSettings = Import-NugetSettingsFramework -NuspecPath $pkgNspPath -PackagesConfigPath $pkgCfgPath
 		Initialize-NuGetFolders -Path $nugetFolder
 		Initialize-NuGetSpec -Path $projFolder -setting $nugetSettings
-		Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $projDir\$id.nuspec
+		Import-NuGetProject -ProjectPath $projPath -ProjBinFolder "$($projBinFolder)Debug" -NugetBinFolder $nugetBinFolder -NugetSpecPath $projDir\$id.nuspec -DefaultAssemblyName $id.nuspec
 		
 		It "Lib imported" { Test-Path "$nugetBinFrameworkFolder\ProjLib.dll" | should be $true }
 		It "Pdb imported" { Test-Path "$nugetBinFrameworkFolder\ProjLib.pdb" | should be $true }

@@ -1,6 +1,5 @@
 $projectType = 'Project'
-$projName='ProjectName'
-$id="Prefix.$projName"
+$id="Prefix.Name"
 $contentType='lib'
 
 try {
@@ -23,29 +22,30 @@ try {
 
 	$nugetPackagePath = "$slnDir\$id.$version.nupkg"
 
-	if (Test-Path $slnDir\NuGet) {
-		del $slnDir\NuGet\* -Recurse -Force
-		rmdir $slnDir\NuGet
+	if (Test-Path $nugetFolder) {
+		del $nugetFolder\* -Recurse -Force
+		rmdir $nugetFolder
 }
 
-	md "$slnDir\NuGet" | Out-Null
-	'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $slnDir\NuGet\$_ | Out-Null }
+	md "$nugetFolder" | Out-Null
+	"content\$contentType" | % { mkdir $nugetFolder\$_ | Out-Null }
 
 	('Project1','Project2','Project3','Project4', 'Project5') | % {
-		$projName = $_
+		[string]$projSubPath = $_
+		$projName = Split-Path $projSubPath -Leaf
 		$projDir = "$slnDir\$projName"
 		$projPath = "$projDir\$projName.csproj"
 		$projBinFolder = "$projDir\bin\Debug"
 	
-		Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $nuspecPath
+		Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -NugetSpecPath $nuspecPath -DefaultAssemblyName $projName
 	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
-		NuGet pack $slnDir\Package.nuspec -BasePath "$slnDir\NuGet" -OutputDirectory $slnDir
+		NuGet pack $slnDir\Package.nuspec -BasePath "$nugetFolder" -OutputDirectory $slnDir
 	    Publish-NuGetPackage -PackagePath $nugetPackagePath
 	}
 
-	Remove-NugetFolder $slnDir\NuGet
+	Remove-NugetFolder $nugetFolder
 	if (Test-Path $nugetPackagePath)
 	{
 		del $nugetPackagePath

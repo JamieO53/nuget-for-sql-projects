@@ -5,7 +5,9 @@ Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1"
 if (-not (Get-Module TestUtils)) {
 	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
 }
+
 Describe "Import-NuGetDb" {
+	$slnFolder
 	$projFolder = "TestDrive:\proj"
 	$projDbFolder = "$projFolder\Databases"
 	$projPath = "$projFolder\proj.sqlproj"
@@ -13,25 +15,10 @@ Describe "Import-NuGetDb" {
 	$nugetDbFolder = "$nugetFolder\content\Databases"
 	$nugetSpecPath = "$nugetFolder\Package.nuspec"
 	$nugetSettings = Initialize-TestNugetConfig
-	$projText = @"
-<?xml version=`"1.0`" encoding=`"utf-8`"?>
-<Project DefaultTargets=`"Build`" xmlns=`"http://schemas.microsoft.com/developer/msbuild/2003`" ToolsVersion=`"4.0`">
-  <PropertyGroup>
-    <DacApplicationName>ProjDb</DacApplicationName>
-  </PropertyGroup>
-  <PropertyGroup>
-    <Configuration Condition=`" '`$(Configuration)' == '' `">Debug</Configuration>
-    <AssemblyName>ProjLib</AssemblyName>
-  </PropertyGroup>
-</Project>
-"@
 	Context "Files setting in nuget spec" {
-		mkdir $projDbFolder
-		$projText | Set-Content $projPath
-		'dacpac' | Set-Content "$projDbFolder\ProjDb.dacpac"
-		'lib' | Set-Content "$projDbFolder\ProjLib.dll"
-		'pdb' | Set-Content "$projDbFolder\ProjLib.pdb"
+		Initialize-TestDbProject -ProjectPath $projPath
 		Initialize-NuGetFolders -Path $nugetFolder
+		md $nugetDbFolder
 		Initialize-NuGetSpec -Path $nugetFolder -setting $nugetSettings
 		Import-NuGetDb -ProjectPath $projPath -ProjDbFolder $projDbFolder -NugetDbFolder $nugetDbFolder -NugetSpecPath $nugetSpecPath
 		[xml]$spec = gc "$nugetFolder\Package.nuspec"
@@ -47,12 +34,9 @@ Describe "Import-NuGetDb" {
 		Remove-Item -Path $projFolder -Recurse -Force
 	}
 	Context "Import project build files" {
-		mkdir $projDbFolder
-		$projText | Set-Content $projPath
-		'dacpac' | Set-Content "$projDbFolder\ProjDb.dacpac"
-		'lib' | Set-Content "$projDbFolder\ProjLib.dll"
-		'pdb' | Set-Content "$projDbFolder\ProjLib.pdb"
+		Initialize-TestDbProject -ProjectPath $projPath
 		Initialize-NuGetFolders -Path $nugetFolder
+		md $nugetDbFolder
 		Initialize-NuGetSpec -Path $nugetFolder -setting $nugetSettings
 		Import-NuGetDb -ProjectPath $projPath -ProjDbFolder $projDbFolder -NugetDbFolder $nugetDbFolder -NugetSpecPath $nugetSpecPath
 		

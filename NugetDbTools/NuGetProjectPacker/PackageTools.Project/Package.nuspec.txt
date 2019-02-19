@@ -1,0 +1,18 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Project</id>
+    <version>1.0.2</version>
+    <authors>Project Developers</authors>
+    <owners>Project Developers</owners>
+    <projectUrl>https://dev.azure.com/organization/team/_git/Project</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Project</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>Project</tags>
+    <dependencies>
+      <dependency id="Dependency.Id" version="1.0.15"/>
+    </dependencies>
+  </metadata>
+</package>

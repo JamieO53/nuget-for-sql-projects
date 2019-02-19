@@ -1,1 +1,1 @@
-powershell -Command ".\Bootstrap.ps1"
+powershell -Command ".\Bootstrap.ps1" -ProjectType Db

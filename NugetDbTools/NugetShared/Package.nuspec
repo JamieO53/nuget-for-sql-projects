@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>NuGetShared</id>
-    <version>0.1.128</version>
+    <version>0.1.135</version>
     <authors>joglethorpe</authors>
     <owners>Jamie Oglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>

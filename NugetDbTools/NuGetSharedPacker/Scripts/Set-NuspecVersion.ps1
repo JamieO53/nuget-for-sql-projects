@@ -14,12 +14,14 @@ function Set-NuspecVersion {
         # The path of the .nuspec file
 		[string]$Path,
 		# The folder for version calculations
-		[string]$ProjectFolder
+		[string]$ProjectFolder,
+		# Increase the version by 1
+		[bool]$UpVersion = $false
 	)
 
 	[xml]$cfg = gc $Path
 	$oldVersion = $cfg.package.metadata.version
-	$newVersion = Measure-ProjectVersion -Path $Path -ProjectFolder $ProjectFolder -OldVersion $oldVersion
+	$newVersion = Measure-ProjectVersion -Path $Path -ProjectFolder $ProjectFolder -OldVersion $oldVersion -UpVersion $UpVersion
 	Set-NodeText -parentNode $cfg.package.metadata -id version -text $newVersion
 	Out-FormattedXml -Xml $cfg -FilePath $Path
 	$newVersion

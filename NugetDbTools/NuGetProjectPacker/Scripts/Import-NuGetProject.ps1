@@ -18,17 +18,44 @@ function Import-NuGetProject {
 		[string]$ProjBinFolder,
 		# The location of the NuGet bin folder
 		[string]$NugetBinFolder,
+		# The name of the project
+		[string]$DefaultAssemblyName,
 		# The location of the NuGet spec file
-		[string]$NugetSpecPath
+		[string]$NugetSpecPath,
+		# Additional files to copy from the project bin folder
+		[string]$ContentFiles = ''
 	)
+
 	[xml]$proj = Get-Content $ProjectPath
+	[string]$framework = (Get-ProjectProperty -Proj $proj -Property TargetFrameworkVersion)
+	
+	if (-not $framework){
+		#try netStandard if empty
+		$framework = (Get-ProjectProperty -Proj $proj -Property TargetFramework)
+	}
+	
+	$binFramework = $framework.Replace('v','net').Replace('.','')
+	
 	[string]$assembly = Get-ProjectProperty -Proj $proj -Property AssemblyName
-	[string]$framework = (Get-ProjectProperty -Proj $proj -Property TargetFrameworkVersion).Replace('v','net').Replace('.','')
-	$binFolder = "$NugetBinFolder\$framework"
+	if (-not $assembly) {
+		$assembly = $DefaultAssemblyName
+	}
+	
+	$binFolder = "$NugetBinFolder\$binFramework"
+	
 	if (-not (Test-Path $binFolder)) {
 		mkdir $binFolder
 	}
 
-	Copy-Item "$ProjBinFolder\$assembly.*" $binFolder
-}
+	if (-not (Test-Path $ProjBinFolder)) {
+		$projectFolder = Split-Path -Path $ProjectPath
+		# Debug|AnyCPU hardcoded for now
+		[string]$subDir = (Get-ProjectConfigurationProperty -Proj $proj -Property OutputPath -Configuration Debug -Platform AnyCPU)
+		$ProjBinFolder = [IO.Path]::Combine($projectFolder, $subDir)
+	}
 
+	Get-ChildItem -Path $ProjBinFolder -Recurse -Filter "$assembly.*" | Copy-Item -Destination $binFolder
+	if ($ContentFiles) {
+		Get-ChildItem -Path $ProjBinFolder -Recurse -Filter $ContentFiles | Copy-Item -Destination $binFolder
+	}
+}

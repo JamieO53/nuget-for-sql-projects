@@ -31,7 +31,6 @@
   <ItemGroup>
     <Compile Include="Build.ps1" />
     <Compile Include="BuildConfig.psd1" />
-    <Compile Include="Get-NuGetLocalSource.ps1" />
     <Compile Include="NugetShared.psd1" />
     <Compile Include="NugetShared.psm1" />
     <Compile Include="Package.ps1" />

@@ -18,14 +18,12 @@ function Get-SolutionPackages {
 	$sln = Split-Path $SolutionPath -Leaf
 	$localSource = Get-NuGetLocalSource
 
-	Invoke-Trap "nuget restore `"$SolutionPath`"" "Unable to restore $sln"
-
 	$reference = Get-SolutionDependencies $SolutionPath
 	$reference.Keys | sort | % {
 		$package = $_
 		$version = $reference[$package]
 		if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {
-			iex "nuget install $package -Version '$version' -Source '$localSource' -OutputDirectory '$ContentFolder' -ExcludeVersion"
+			Get-NuGetPackage -Id $package -Version $version -Source $localSource -OutputDirectory $ContentFolder
 		}
 	}
 }

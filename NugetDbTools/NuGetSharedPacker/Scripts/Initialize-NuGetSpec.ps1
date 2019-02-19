@@ -47,5 +47,12 @@ function Initialize-NuGetSpec {
 		$depNode.SetAttribute('id', $dep)
 		$depNode.SetAttribute('version', $ver)
 	}
+	$contFilesNode = Add-Node -parentNode $metadata -id contentFiles
+	$setting.nugetContents.Keys | % {
+		$files = $_
+		$attrs = $setting.nugetContents[$files]
+		[xml]$node = "<files include=`"$files`" $attrs/>"
+		$childNode = $contFilesNode.AppendChild($contFilesNode.OwnerDocument.ImportNode($node.FirstChild, $true))
+	}
 	Out-FormattedXml -Xml $specDoc -FilePath $nuGetSpecPath
 }

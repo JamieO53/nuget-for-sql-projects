@@ -18,12 +18,22 @@ Describe 'Initialize-NuGetFolders' {
 			It "should contain" { gc "$nugetFolder\$_" | Should Be $junkData[$_] }
 		} }
 		Initialize-NuGetFolders -Path $nugetFolder
+		mkdir "$nugetFolder\tools" | Out-Null
+		mkdir "$nugetFolder\lib" | Out-Null
+		mkdir "$nugetFolder\content" | Out-Null
+		mkdir "$nugetFolder\content\Databases" | Out-Null
+		mkdir "$nugetFolder\build" | Out-Null
 		$junkFolders | % { Context "Junk $nugetFolder\$_" { It "should be removed" { (Test-Path "$nugetFolder\$_") | Should Be $false } } }
 
 		$expectedFolders | % { Context "$nugetFolder\$_" { It "should be recreated" { (Test-Path "$nugetFolder\$_" -PathType Container) | Should Be $true } } }
 	}
 	Context "The NuGet folder doesn't exist" {
 		Initialize-NuGetFolders -Path $nugetFolder
+		mkdir "$nugetFolder\tools" | Out-Null
+		mkdir "$nugetFolder\lib" | Out-Null
+		mkdir "$nugetFolder\content" | Out-Null
+		mkdir "$nugetFolder\content\Databases" | Out-Null
+		mkdir "$nugetFolder\build" | Out-Null
 		$expectedFolders | % { Context "$nugetFolder\$_" { It "should be created" { (Test-Path "$nugetFolder\$_" -PathType Container) | Should Be $true } } }
 	}
 }

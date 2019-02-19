@@ -26,22 +26,22 @@ try {
 
 	$nugetPackagePath = "$projDir\$id.$version.nupkg"
 
-	if (Test-Path $projDir\NuGet) {
-		del $projDir\NuGet\* -Recurse -Force
-		rmdir $projDir\NuGet
+	if (Test-Path $nugetFolder) {
+		del $nugetFolder\* -Recurse -Force
+		rmdir $nugetFolder
 	}
 
-	md "$projDir\NuGet" | Out-Null
-	'tools','lib',"content\$contentType","content\PackageTools",'build' | % { mkdir $projDir\NuGet\$_ | Out-Null }
+	md "$nugetFolder" | Out-Null
+	'content\PackageTools', "content\$contentType" | % { mkdir $nugetFolder\$_ | Out-Null }
 
-	Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder
+	Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -DefaultAssemblyName $projName
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
-		NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
+		NuGet pack $projDir\Package.nuspec -BasePath "$nugetFolder" -OutputDirectory $projDir
 		Publish-NuGetPackage -PackagePath $nugetPackagePath
 	}
 
-	Remove-NugetFolder $projDir\NuGet
+	Remove-NugetFolder $nugetFolder
 	if (Test-Path $nugetPackagePath)
 	{
 		del $nugetPackagePath

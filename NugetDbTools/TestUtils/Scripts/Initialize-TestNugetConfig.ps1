@@ -3,7 +3,9 @@ function Initialize-TestNugetConfig {
 		[switch]$NoOptions = $false,
 		[switch]$NoSettings = $false,
 		[switch]$NoDependencies = $false,
-		[string]$Content = ''
+		[switch]$NoContent = $false,
+		[string]$Content = '',
+		[string]$NugetContent = ''
 	)
 	$nugetOptions = New-Object -TypeName PSObject -Property @{
 		majorVersion = '1';
@@ -26,10 +28,15 @@ function Initialize-TestNugetConfig {
 		'EcsShared.SharedBase' = '[1.0)';
 		'EcsShared.SupportRoles' = '[1.0)'
 	}
+	$nugetContents = @{}
+	$NugetContent.Split(',') | % {
+		$nugetContents[$_] = 'buildAction="none" copyToOutput="true"'
+	}
 	$expectedSettings = New-Object -TypeName PSObject -Property @{
 		nugetOptions = if ($NoOptions) { $null } else { $nugetOptions };
 		nugetSettings = if ($NoSettings) { @{} } else { $nugetSettings };
 		nugetDependencies = if ($NoDependencies) { @{} } else { $nugetDependencies }
+		nugetContents = if ($NoContent) { @{} } else { $nugetContents }
 	}
 	return $expectedSettings	
 }

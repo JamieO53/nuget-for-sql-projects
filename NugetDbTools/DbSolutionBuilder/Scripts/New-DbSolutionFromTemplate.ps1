@@ -32,7 +32,6 @@ function New-DbSolutionFromTemplate {
 
 	$templatePath = "$templateFolder\NuGetDbPacker.DbTemplate\Template"
 	$toolsPath = "$templateFolder\NuGetDbPacker.DbTemplate\PackageTools"
-	copy "$templatePath\Template.DBPkg\Class1.cs" "$SolutionFolder\$($SolutionName)Pkg"
 	copy "$templatePath\Template.DBPkg\Template.DBPkg.csproj" $PkgProjectPath
 	copy "$templatePath\Template.DB.sln" $slnPath
 	copy "$templatePath\.gitignore" $SolutionFolder

@@ -22,7 +22,7 @@ function Set-NuGetDependencyVersion {
         [string]$projectPath = [IO.Path]::Combine($solutionFolder, $_.ProjectPath)
 		$cfgPath = [IO.Path]::ChangeExtension($projectPath, '.nuget.config')
 		if (Test-Path $cfgPath) {
-			Set-NuGetProjectDependencyVersion -NugetConfigPath $cfgPath -Dependency $Dependency -Version $Version
+			Set-NuGetProjectDependencyVersion -NugetConfigPath $cfgPath -SolutionPath $SolutionPath -Dependency $Dependency -Version $Version
 		}
     }
 }
