@@ -104,10 +104,17 @@ function Get-NuGetPackage {
 		# The NuGet server
 		[string]$Source,
 		# The target for the package content
-		[string]$OutputDirectory
+		[string]$OutputDirectory,
+		# The optional Framework version
+		[string]$Framework = ''
 	)
 
-	iex "nuget install $Id -Version '$Version' -Source '$Source' -OutputDirectory '$OutputDirectory' -ExcludeVersion"
+	if ($Framework) {
+		$frameworkVersion = " -Framework $Framework"
+	} else {
+		$frameworkVersion = ''
+	}
+	iex "nuget install $Id -Version '$Version' -Source '$Source' -OutputDirectory '$OutputDirectory' -ExcludeVersion$frameworkVersion"
 }
 
 function Get-NuspecProperty {
@@ -422,6 +429,9 @@ function Import-NuGetSettings
 		    $version = Get-ProjectDependencyVersion -SolutionPath $SolutionPath -Dependency $_.key -OldVersion $_.value
 			$nugetSettings.nugetDependencies[$_.key] = $version
 	    }
+		$cfg.configuration.nugetContents.add | ? { $_ } | % {
+			$nugetSettings.nugetContents[$_.key] = $_.value
+		}
     }
 	$nugetSettings
 }
@@ -442,11 +452,11 @@ function Initialize-NuGetFolders
 	)
 	Remove-NugetFolder -Path $Path
     mkdir "$Path" | Out-Null
-    mkdir "$Path\tools" | Out-Null
-    mkdir "$Path\lib" | Out-Null
-    mkdir "$Path\content" | Out-Null
-    mkdir "$Path\content\Databases" | Out-Null
-    mkdir "$Path\build" | Out-Null
+    #mkdir "$Path\tools" | Out-Null
+    #mkdir "$Path\lib" | Out-Null
+    #mkdir "$Path\content" | Out-Null
+    #mkdir "$Path\content\Databases" | Out-Null
+    #mkdir "$Path\build" | Out-Null
 }
 
 function Initialize-NuGetSpec {
@@ -497,6 +507,13 @@ function Initialize-NuGetSpec {
 		$depNode = Add-Node -parentNode $depsNode -id dependency
 		$depNode.SetAttribute('id', $dep)
 		$depNode.SetAttribute('version', $ver)
+	}
+	$contFilesNode = Add-Node -parentNode $metadata -id contentFiles
+	$setting.nugetContents.Keys | % {
+		$files = $_
+		$attrs = $setting.nugetContents[$files]
+		[xml]$node = "<files include=`"$files`" $attrs/>"
+		$childNode = $contFilesNode.AppendChild($contFilesNode.OwnerDocument.ImportNode($node.FirstChild, $true))
 	}
 	Out-FormattedXml -Xml $specDoc -FilePath $nuGetSpecPath
 }
@@ -574,8 +591,8 @@ function New-NuGetSettings {
 			};
 		nugetSettings = @{};
 		nugetDependencies = @{}
+		nugetContents = @{}
 	}
-
 }
 
 function Publish-Package {
@@ -673,7 +690,7 @@ function Set-NuGetProjectDependencyVersion {
 	)
 
 	$cfg = Import-NuGetSettings -NugetConfigPath $NugetConfigPath -SolutionPath $SolutionPath
-	if (($cfg.nugetDependencies[$Dependency]) -and ($cfg.nugetDependencies[$Dependency] -ne $Version)) {
+	if (($cfg.nugetDependencies[$Dependency])) {
 		$cfg.nugetDependencies[$Dependency] = $Version
  		Export-NuGetSettings -NugetConfigPath $NugetConfigPath -Settings $cfg
 	}
