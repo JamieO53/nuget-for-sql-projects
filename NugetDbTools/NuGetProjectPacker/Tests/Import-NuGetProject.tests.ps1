@@ -3,7 +3,7 @@
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psm1"
 
-Describe "Import-NuGetProject" {
+Describe "Import-ArtifactProject" {
 	$projFolder = "TestDrive:\proj"
 	$projBinFolder = "$projFolder\bin\"
 	$projPath = "$projFolder\proj.csproj"
@@ -101,7 +101,7 @@ Describe "Import-NuGetProject" {
 		$nugetSettings = Import-NugetSettingsFramework -NuspecPath $pkgNspPath -PackagesConfigPath $pkgCfgPath
 		Initialize-NuGetFolders -Path $nugetFolder
 		Initialize-NuGetSpec -Path $projFolder -setting $nugetSettings
-		Import-NuGetProject -ProjectPath $projPath -ProjBinFolder "$($projBinFolder)Debug" -NugetBinFolder $nugetBinFolder -NugetSpecPath $projDir\$id.nuspec -DefaultAssemblyName $id.nuspec
+		Import-ArtifactProject -ProjectPath $projPath -ProjBinFolder "$($projBinFolder)Debug" -ArtifactBinFolder $nugetBinFolder -DefaultAssemblyName $id.nuspec
 		
 		It "Lib imported" { Test-Path "$nugetBinFrameworkFolder\ProjLib.dll" | should be $true }
 		It "Pdb imported" { Test-Path "$nugetBinFrameworkFolder\ProjLib.pdb" | should be $true }

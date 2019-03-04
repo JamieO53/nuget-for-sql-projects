@@ -1,13 +1,12 @@
-function Import-NuGetProject {
+function Import-ArtifactProject {
 	<#.Synopsis
-	Copy the build files to the NuGet lib folder
+	Copy the build files to the Artifact lib folder
 	.DESCRIPTION
-	Copies the binary debug and config files to the NuGet lib folder
+	Copies the binary debug and config files to the Artifact lib folder
 	.EXAMPLE
-	Import-NuGetProject -ProjectPath C:\VSTS\EcsShared\SupportRoles\EcsShared.SupportRoles.csproj
+	Import-ArtifactProject -ProjectPath C:\VSTS\EcsShared\SupportRoles\EcsShared.SupportRoles.csproj
 		-ProjBinFolder C:\VSTS\EcsShared\SupportRoles\bin\net451
-		-NugetBinFolder C:\VSTS\EcsShared\SupportRoles\NuGet\lib
-		-NugetSpecPath C:\VSTS\EcsShared\SupportRoles\NuGet\Project.nuspec
+		-ArtifactBinFolder C:\VSTS\EcsShared\SupportRoles\NuGet\lib
 	#>
     [CmdletBinding()]
     param
@@ -17,13 +16,9 @@ function Import-NuGetProject {
 		# The location of the project bin folder
 		[string]$ProjBinFolder,
 		# The location of the NuGet bin folder
-		[string]$NugetBinFolder,
+		[string]$ArtifactBinFolder,
 		# The name of the project
-		[string]$DefaultAssemblyName,
-		# The location of the NuGet spec file
-		[string]$NugetSpecPath,
-		# Additional files to copy from the project bin folder
-		[string]$ContentFiles = ''
+		[string]$DefaultAssemblyName
 	)
 
 	[xml]$proj = Get-Content $ProjectPath
@@ -41,10 +36,10 @@ function Import-NuGetProject {
 		$assembly = $DefaultAssemblyName
 	}
 	
-	$binFolder = "$NugetBinFolder\$binFramework"
+	$binFolder = "$ArtifactBinFolder\$binFramework"
 	
 	if (-not (Test-Path $binFolder)) {
-		mkdir $binFolder
+		mkdir $binFolder | Out-Null
 	}
 
 	if (-not (Test-Path $ProjBinFolder)) {
@@ -55,7 +50,4 @@ function Import-NuGetProject {
 	}
 
 	Get-ChildItem -Path $ProjBinFolder -Recurse -Filter "$assembly.*" | Copy-Item -Destination $binFolder
-	if ($ContentFiles) {
-		Get-ChildItem -Path $ProjBinFolder -Recurse -Filter $ContentFiles | Copy-Item -Destination $binFolder
-	}
 }

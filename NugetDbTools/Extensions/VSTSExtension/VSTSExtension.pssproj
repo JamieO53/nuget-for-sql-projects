@@ -31,6 +31,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build.ps1" />
+    <Compile Include="Scripts\Get-AzureDevOpsCredential.ps1" />
+    <Compile Include="Scripts\Publish-UniversalPackage.ps1" />
     <Compile Include="Scripts\Test-IsRunningBuildAgent.ps1" />
     <Compile Include="Tests\Test-IsRunningBuildAgent.tests.ps1" />
     <Compile Include="VSTSExtension.psd1" />

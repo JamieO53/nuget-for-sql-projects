@@ -31,7 +31,7 @@
   <ItemGroup>
     <Compile Include="Build.ps1" />
     <Compile Include="BuildConfig.psd1" />
-    <Compile Include="Scripts\Import-NuGetProject.ps1" />
+    <Compile Include="Scripts\Import-ArtifactProject.ps1" />
     <Compile Include="Scripts\Import-NugetSettingsFramework.ps1" />
     <Compile Include="Tests\Import-NuGetProject.tests.ps1" />
     <Compile Include="NuGetProjectPacker.psd1" />

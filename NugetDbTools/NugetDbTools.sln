@@ -77,6 +77,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Project", "Pac
 		NuGetProjectPacker\PackageTools.Project\Get-PackageContent.ps1 = NuGetProjectPacker\PackageTools.Project\Get-PackageContent.ps1
 		NuGetProjectPacker\PackageTools.Project\Package.nuspec.txt = NuGetProjectPacker\PackageTools.Project\Package.nuspec.txt
 		NuGetProjectPacker\PackageTools.Project\Package.ps1 = NuGetProjectPacker\PackageTools.Project\Package.ps1
+		NuGetProjectPacker\PackageTools.Project\PackageRelease.config = NuGetProjectPacker\PackageTools.Project\PackageRelease.config
+		NuGetProjectPacker\PackageTools.Project\PackageRelease.ps1 = NuGetProjectPacker\PackageTools.Project\PackageRelease.ps1
 		NuGetProjectPacker\PackageTools.Project\PackageSolution.ps1 = NuGetProjectPacker\PackageTools.Project\PackageSolution.ps1
 	EndProjectSection
 EndProject

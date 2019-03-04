@@ -34,7 +34,7 @@ try {
 	md "$nugetFolder" | Out-Null
 	'content\PackageTools', "content\$contentType" | % { mkdir $nugetFolder\$_ | Out-Null }
 
-	Import-NuGetProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -NugetBinFolder $nugetBinFolder -DefaultAssemblyName $projName
+	Import-ArtifactProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -ArtifactBinFolder $nugetBinFolder -DefaultAssemblyName $projName
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
 		NuGet pack $projDir\Package.nuspec -BasePath "$nugetFolder" -OutputDirectory $projDir
