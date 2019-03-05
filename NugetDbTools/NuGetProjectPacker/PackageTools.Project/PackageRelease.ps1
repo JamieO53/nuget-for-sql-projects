@@ -63,7 +63,7 @@ try {
 		}
 	}
 
-	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
+	if (-not (Test-UniversalVersionExists -Id $id -Version $version)){
 	    Publish-UniversalPackage -PackageFolder $releaseFolder -PackageName $id -PackageVersion $version -PackageDescription $description
 	}
 
