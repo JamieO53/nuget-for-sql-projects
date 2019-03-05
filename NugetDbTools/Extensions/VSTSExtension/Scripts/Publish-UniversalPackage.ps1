@@ -13,8 +13,8 @@ function Publish-UniversalPackage {
 	)
 	try {
 		$login = az login --username Builder@ecentric.co.za --password $env:BuilderPassword --allow-no-subscriptions | ConvertFrom-Json
-		az devops configure --defaults organzation=https://dev.azure.com/epsdev project=$PackageName
-		az artifacts universal publish --organization https://dev.azure.com/epsdev --feed TestFeed --name $PackageName --version $PackageVersion --description $PackageDescription -Path "$PackageFolder\$PackageName"
+		az devops configure --defaults organization=https://dev.azure.com/epsdev project=$PackageName
+		az artifacts universal publish --feed TestFeed --name $PackageName --version $PackageVersion --description $PackageDescription -Path "$PackageFolder\$PackageName"
 	} finally {
 		az logout --username 'Builder@ecentric.co.za'
 	}
