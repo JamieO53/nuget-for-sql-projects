@@ -12,10 +12,10 @@ function Publish-UniversalPackage {
 		[string]$PackageDescription
 	)
 	try {
-		$login = az login --username Builder@ecentric.co.za --password $env:BuilderPassword --allow-no-subscriptions | ConvertFrom-Json
-		az devops configure --defaults organization=https://dev.azure.com/epsdev project=$PackageName
-		az artifacts universal publish --feed TestFeed --name $PackageName --version $PackageVersion --description $PackageDescription -Path "$PackageFolder\$PackageName"
+		$login = Invoke-Trap -Command "az login --username Builder@ecentric.co.za --password $env:BuilderPassword --allow-no-subscriptions" -Message 'Publish-UniversalPackage: Login failed' -Fatal | ConvertFrom-Json
+		Invoke-Trap -Command "az devops configure --defaults organization=https://dev.azure.com/epsdev project=$PackageName" -Message 'Publish-UniversalPackage: Defaults configuration failed' -Fatal
+		Invoke-Trap -Command "az artifacts universal publish --feed TestFeed --name $PackageName --version $PackageVersion --description $PackageDescription -Path $PackageFolder\$PackageName" -Message 'Publish-UniversalPackage: Artifact publication failed' -Fatal
 	} finally {
-		az logout --username 'Builder@ecentric.co.za'
+		Invoke-Trap -Command "az logout --username Builder@ecentric.co.za" -Message 'Publish-UniversalPackage: Logout failed' -Fatal
 	}
 }
