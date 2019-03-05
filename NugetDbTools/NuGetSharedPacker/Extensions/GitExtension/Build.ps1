@@ -1,13 +1,13 @@
 $ProjectName = 'GitExtension'
-$SolutionDir = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..\..").Path
-$ProjectDir = "$SolutionDir\Extensions\$ProjectName"
+$SolutionDir = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..\..\..").Path
+$ProjectDir = "$SolutionDir\NuGetSharedPacker\Extensions\$ProjectName"
 $Dependencies = @('NuGetShared')
 $Dependents = @('NuGetSharedPacker', 'NugetDbPacker', 'DbSolutionBuilder', 'NuGetProjectPacker')
 
-"'$SolutionDir\PowershellBuilder\PSModuleBuilder.ps1' -project $ProjectName -path $SolutionDir\Extensions -outputPath $ProjectDir\bin\Debug"
+"'$SolutionDir\PowershellBuilder\PSModuleBuilder.ps1' -project $ProjectName -path $SolutionDir\NuGetSharedPacker\Extensions -outputPath $ProjectDir\bin\Debug"
 pushd $SolutionDir
 if (-not (Test-Path $ProjectDir\bin\Debug\$ProjectName)) {mkdir $ProjectDir\bin\Debug\$ProjectName | Out-Null}
-iex "$SolutionDir\PowershellBuilder\PSModuleBuilder.ps1 -project $ProjectName -path $SolutionDir\Extensions -outputPath $ProjectDir\bin\Debug"
+iex "$SolutionDir\PowershellBuilder\PSModuleBuilder.ps1 -project $ProjectName -path $SolutionDir\NuGetSharedPacker\Extensions -outputPath $ProjectDir\bin\Debug"
 popd
 copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"
 $Dependencies | % {
