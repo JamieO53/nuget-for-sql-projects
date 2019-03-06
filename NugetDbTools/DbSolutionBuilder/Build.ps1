@@ -15,7 +15,7 @@ $cfg.Dependencies | % {
 	$cfgPath.Add($_, "$SolutionDir\$_\bin\Debug\$_\*")
 }
 $cfg.Extensions | % {
-	$cfgPath.Add($_, "$SolutionDir\Extensions\$_\bin\Debug\$_\*")
+	$cfgPath.Add($_, "$SolutionDir\NuGetSharedPacker\Extensions\$_\bin\Debug\$_\*")
 }
 
 $cfgPath.Keys | % {
