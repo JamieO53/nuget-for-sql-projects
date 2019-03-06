@@ -15,17 +15,17 @@ try {
 }
 
 	[xml]$config = gc $releaseConfigPath
-	$id = $config.package.metadata.id
-	$oldVersion = $config.package.metadata.version
-	$version = Measure-ProjectVersion -Path $Path -ProjectFolder $slnDir -OldVersion $oldVersion -UpVersion $false
-	$description = $config.package.metadata.description
+#	$id = $config.package.metadata.id
+#	$oldVersion = $config.package.metadata.version
+#	$version = Measure-ProjectVersion -Path $Path -ProjectFolder $slnDir -OldVersion $oldVersion -UpVersion $false
+#	$description = $config.package.metadata.description
 
-	if ($version -like '*.0'){
-		throw "Invalid version $version"
-	}
+#	if ($version -like '*.0'){
+#		throw "Invalid version $version"
+#	}
 
-	Set-NodeText -parentNode $config.package.metadata -id version -text $version
-	Out-FormattedXml -Xml $config -FilePath $releaseConfigPath
+#	Set-NodeText -parentNode $config.package.metadata -id version -text $version
+#	Out-FormattedXml -Xml $config -FilePath $releaseConfigPath
 
 	if (Test-Path $releaseFolder) {
 		del $releaseFolder\* -Recurse -Force
@@ -63,14 +63,14 @@ try {
 		}
 	}
 
-	if (-not (Test-UniversalVersionExists -Id $id -Version $version)){
-	    Publish-UniversalPackage -PackageFolder $releaseFolder -PackageName $id -PackageVersion $version -PackageDescription $description
-	}
-
-	Remove-NugetFolder $releaseFolder
-	if ($loaded) {
-		Remove-Module NuGetProjectPacker -ErrorAction Ignore
-	}
+#	if (-not (Test-UniversalVersionExists -Id $id -Version $version)){
+#	    Publish-UniversalPackage -PackageFolder $releaseFolder -PackageName $id -PackageVersion $version -PackageDescription $description
+#	}
+#
+#	Remove-NugetFolder $releaseFolder
+#	if ($loaded) {
+#		Remove-Module NuGetProjectPacker -ErrorAction Ignore
+#	}
 } catch {
 	Write-Host "$id packaging failed: $($_.Exception.Message)" -ForegroundColor Red
 	Exit 1
