@@ -1,7 +1,14 @@
-﻿if ( Get-Module NuGetSharedPacker) {
-	Remove-Module NuGetSharedPacker
+﻿if ( Get-Module NugetSharedPacker -All) {
+	Remove-Module NugetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
+if ( Get-Module NugetShared -All) {
+	Remove-Module NugetShared
+}
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetShared.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1"
+if (-not (Get-Module TestUtils)) {
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+}
 
 if (-not (Get-Module TestUtils)) {
 	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"

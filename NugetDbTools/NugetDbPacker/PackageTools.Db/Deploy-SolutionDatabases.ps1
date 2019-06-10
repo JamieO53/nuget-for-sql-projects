@@ -1,6 +1,7 @@
 if ( Get-Module NugetDbPacker) {
 	Remove-Module NugetDbPacker
 }
+Import-Module "$PSScriptRoot\..\PowerShell\NugetShared.psd1"
 Import-Module "$PSScriptRoot\..\PowerShell\NugetDbPacker.psd1"
 
 $slnFolder = Get-ParentSubFolder "$PSScriptRoot" '*.sln'
