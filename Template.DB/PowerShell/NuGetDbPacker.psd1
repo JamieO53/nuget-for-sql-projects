@@ -12,7 +12,7 @@
 RootModule = 'NugetDbPacker.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.152'
+ModuleVersion = '0.1.163'
 
 # ID used to uniquely identify this module
 GUID = '7aa8ca9f-d919-4157-aba2-b5e8e726b403'
@@ -66,7 +66,7 @@ Copyright = '(c) 2017 joglethorpe. All rights reserved.'
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = '*'
+FunctionsToExport = @('Enable-CLR', 'Find-PublishProfilePath', 'Publish-ProjectDatabase', 'Publish-SolutionDbPackages')
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'
