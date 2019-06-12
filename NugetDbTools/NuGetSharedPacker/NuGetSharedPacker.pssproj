@@ -62,7 +62,6 @@
     <Compile Include="Tests\Compress-Package.tests.ps1" />
     <Compile Include="Tests\Export-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Get-NuGetPackageVersion.tests.ps1" />
-    <Compile Include="Tests\Get-ProjectDependencyVersion.tests.ps1" />
     <Compile Include="Tests\Get-ProjectProperty.tests.ps1" />
     <Compile Include="Tests\Get-ProjectVersion.tests.ps1" />
     <Compile Include="Tests\Import-NuGetSettings.tests.ps1" />

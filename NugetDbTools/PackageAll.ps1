@@ -1,4 +1,5 @@
 if (-not (Get-Module NuGetSharedPacker)) {
+	Import-Module .\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetShared.psd1
 	Import-Module .\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1
 }
 # if (-not (Test-IsRunningBuildAgent) -and -not (Test-PathIsCommitted)) {

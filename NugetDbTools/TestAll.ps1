@@ -1,13 +1,13 @@
 $SolutionFolder = Split-Path -Path $MyInvocation.MyCommand.Path
 $SolutionPath = ls "$SolutionFolder\*.sln"
 $modules = @{
-	GitExtension="$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\GitExtension.psd1"
-	VSTSExtension="$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\VSTSExtension.psd1"
-	NuGetShared="$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psd1"
-	NuGetSharedPacker="$SolutionFolder\NugetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1"
-	NuGetDbPacker="$SolutionFolder\NuGetDbPacker\bin\Debug\NuGetDbPacker\NuGetDbPacker.psd1"
-	NuGetProjectPacker="$SolutionFolder\NuGetProjectPacker\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psd1"
-	DbSolutionBuilder="$SolutionFolder\DbSolutionBuilder\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psd1"
+	GitExtension="$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\GitExtension.psm1"
+	VSTSExtension="$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\VSTSExtension.psm1"
+	NuGetShared="$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psm1"
+	NuGetSharedPacker="$SolutionFolder\NugetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
+	NuGetDbPacker="$SolutionFolder\NuGetDbPacker\bin\Debug\NuGetDbPacker\NuGetDbPacker.psm1"
+	NuGetProjectPacker="$SolutionFolder\NuGetProjectPacker\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psm1"
+	DbSolutionBuilder="$SolutionFolder\DbSolutionBuilder\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psm1"
 }
 if (-not (Get-Module NuGetShared)) {
 	Import-Module $modules['NuGetShared']
