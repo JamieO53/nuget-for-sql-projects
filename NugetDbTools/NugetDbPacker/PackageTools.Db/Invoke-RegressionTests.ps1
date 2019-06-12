@@ -3,6 +3,9 @@ $SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path
 cd $SolutionFolder
 
 if (-not (Get-Module NugetDbPacker)) {
+	Import-Module "$SolutionFolder\PowerShell\NugetShared.psd1"
+	Import-Module "$SolutionFolder\PowerShell\GitExtension.psd1"
+	Import-Module "$SolutionFolder\PowerShell\VSTSExtension.psd1"
 	Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1"
 }
 
