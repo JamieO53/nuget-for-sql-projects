@@ -1,7 +1,6 @@
 if ( Get-Module NugetDbPacker) {
 	Remove-Module NugetDbPacker
 }
-Import-Module "$PSScriptRoot\..\PowerShell\NugetShared.psd1"
 Import-Module "$PSScriptRoot\..\PowerShell\NugetDbPacker.psd1"
 
 $slnFolder = Get-ParentSubFolder "$PSScriptRoot" '*.sln'
@@ -19,8 +18,6 @@ Get-SqlProjects -SolutionPath $slnPath | % {
 	$profilePath = Find-PublishProfilePath -ProjectPath $projPath
 	if (Test-Path $profilePath) {
 		if (Test-Path $dacpacPath) {
-			Log 'Enable CLR'
-			Enable-CLR $profilePath
 			Log "Deploying $projName database"
 			Publish-ProjectDatabase -DacpacPath $dacpacPath -ProfilePath $profilePath
 		} else {
