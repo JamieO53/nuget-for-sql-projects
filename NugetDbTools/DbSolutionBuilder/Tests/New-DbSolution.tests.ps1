@@ -2,9 +2,8 @@
 if (Get-Module DbSolutionBuilder -All) {
 	Remove-Module DbSolutionBuilder
 }
+Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psm1"
 Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\NuGetShared.psd1"
-Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\NuGetSharedPacker.psd1"
-Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psd1"
 
 $global:testing = $true
 $location = "TestDrive:\Solutions"
