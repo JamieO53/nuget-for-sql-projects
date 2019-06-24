@@ -67,8 +67,8 @@ Copyright = '(c) 2017 Jamie Oglethorpe. All rights reserved.'
 
 # Functions to export from this module
 FunctionsToExport = @('Compress-Package','Export-NuGetSettings','Get-NuspecProperty','Get-ProjectConfigurationProperty','Get-ProjectProperty',
-    'Get-SolutionContent','Import-NuGetSettings','Initialize-Package','Measure-ProjectVersion','New-NuGetSettings','Remove-NugetFolder',
-	'Set-NuspecDependencyVersion','Set-NuGetProjectDependencyVersion','Set-NuspecVersion')
+    'Get-SolutionContent','Import-NuGetSettings','Initialize-Package','Measure-ProjectVersion','New-NuGetSettings','Publish-NuGetPackage',
+	'Remove-NugetFolder','Set-NuspecDependencyVersion','Set-NuGetProjectDependencyVersion','Set-NuspecVersion')
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'
