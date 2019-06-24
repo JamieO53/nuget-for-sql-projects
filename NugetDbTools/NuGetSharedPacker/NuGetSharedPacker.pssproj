@@ -50,7 +50,7 @@
     <Compile Include="Scripts\Initialize-NuGetFolders.ps1" />
     <Compile Include="Scripts\Initialize-NuGetSpec.ps1" />
     <Compile Include="Scripts\Initialize-Package.ps1" />
-    <Compile Include="Scripts\Initialize_NuGetRuntime.ps1" />
+    <Compile Include="Scripts\Initialize-NuGetRuntime.ps1" />
     <Compile Include="Scripts\Measure-ProjectVersion.ps1" />
     <Compile Include="Scripts\New-NuGetSettings.ps1" />
     <Compile Include="Scripts\Publish-Package.ps1" />
@@ -69,7 +69,7 @@
     <Compile Include="Tests\Import-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetSpec.tests.ps1" />
-    <Compile Include="Tests\Initialize_NuGetRuntime.tests.ps1" />
+    <Compile Include="Tests\Initialize-NuGetRuntime.tests.ps1" />
     <Compile Include="Tests\Step-Version.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
