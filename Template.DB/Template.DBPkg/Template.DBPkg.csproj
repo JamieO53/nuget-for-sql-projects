@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="NuGetDbPacker" Version="0.1.163" />
-    <PackageReference Include="NugetDbPackerDb.Root" Version="0.2.8" />
+    <PackageReference Include="NugetDbPackerDb.Root" Version="0.2.7" />
   </ItemGroup>
 
 </Project>
