@@ -12,7 +12,7 @@
 RootModule = 'NuGetShared.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.143'
+ModuleVersion = '0.1.142'
 
 # ID used to uniquely identify this module
 GUID = '9af4e7bd-a3fd-47a9-bd7c-dd9d232a6254'
@@ -66,7 +66,7 @@ Copyright = '(c) 2017 Jamie Oglethorpe. All rights reserved.'
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = @('Add-DictionaryNode','Add-Node','Get-CSharpProjects','Get-GroupNode','Get-NuGetLocalSource','Get-NuGetPackageVersion','Get-ParentSubfolder','Get-PowerShellProjects','Get-SqlProjects','Invoke-Trap','Log','Out-FormattedXml','Publish-NuGetPackage','Remove-Node','Set-NodeText','Set-ProjectDependencyVersion','Test-NuGetVersionExists')
+FunctionsToExport = '*'
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'

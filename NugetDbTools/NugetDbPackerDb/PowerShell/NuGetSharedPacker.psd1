@@ -12,7 +12,7 @@
 RootModule = 'NuGetSharedPacker.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.139'
+ModuleVersion = '0.1.138'
 
 # ID used to uniquely identify this module
 GUID = 'd4095a0c-52dc-40f0-b3ee-9b33cbcc769c'
@@ -66,9 +66,7 @@ Copyright = '(c) 2017 Jamie Oglethorpe. All rights reserved.'
 # NestedModules = @()
 
 # Functions to export from this module
-FunctionsToExport = @('Compress-Package','Export-NuGetSettings','Get-NuspecProperty','Get-ProjectConfigurationProperty','Get-ProjectProperty',
-    'Get-SolutionContent','Import-NuGetSettings','Initialize-Package','Measure-ProjectVersion','New-NuGetSettings','Remove-NugetFolder',
-	'Set-NuspecDependencyVersion','Set-NuGetProjectDependencyVersion','Set-NuspecVersion')
+FunctionsToExport = '*'
 
 # Cmdlets to export from this module
 CmdletsToExport = '*'
