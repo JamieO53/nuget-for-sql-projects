@@ -48,6 +48,7 @@
     <Compile Include="Scripts\Get-SolutionPackages.ps1" />
     <Compile Include="Scripts\Import-NuGetSettings.ps1" />
     <Compile Include="Scripts\Initialize-NuGetFolders.ps1" />
+    <Compile Include="Scripts\Initialize-NuGetRuntime.ps1" />
     <Compile Include="Scripts\Initialize-NuGetSpec.ps1" />
     <Compile Include="Scripts\Initialize-Package.ps1" />
     <Compile Include="Scripts\Measure-ProjectVersion.ps1" />
