@@ -67,6 +67,7 @@
     <Compile Include="Tests\Get-ProjectVersion.tests.ps1" />
     <Compile Include="Tests\Import-NuGetSettings.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetFolders.tests.ps1" />
+    <Compile Include="Tests\Initialize-NuGetRuntime.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetSpec.tests.ps1" />
     <Compile Include="Tests\Step-Version.tests.ps1" />
   </ItemGroup>
