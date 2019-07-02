@@ -21,16 +21,16 @@ function Initialize-NuGetRuntime {
 	$solutionFolder = Split-Path $SolutionPath
 	$projectFolder = Split-Path $ProjectPath
 	$contentFolder = Get-NuGetContentFolder
-	$contentFolder = "$Path\content\$contentFolder"
+	$nugetContentFolder = "$Path\content\$contentFolder"
 	if ((Test-Path $solutionFolder\$contentFolder) -or (Test-Path $projectFolder\$contentFolder)) {
-		if (-not (Test-Path $contentFolder)) {
-			mkdir $contentFolder
+		if (-not (Test-Path $nugetContentFolder)) {
+			mkdir $nugetContentFolder
 		}
 		if (Test-Path $solutionFolder\$contentFolder) {
-			copy $solutionFolder\$contentFolder\* $contentFolder -Recurse
+			copy $solutionFolder\$contentFolder\* $nugetContentFolder -Recurse
 		}
 		if (Test-Path $projectFolder\$contentFolder) {
-			copy $projectFolder\$contentFolder\* $contentFolder -Recurse
+			copy $projectFolder\$contentFolder\* $nugetContentFolder -Recurse
 		}
 	}
 }
