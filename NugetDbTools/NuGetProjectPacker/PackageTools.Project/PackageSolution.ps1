@@ -6,10 +6,6 @@ $buildConfig='Debug'
 try {
 	$slnDir = (Get-Item "$PSScriptRoot").FullName
 	$slnPath = ls "$slnDir\*.sln" | select -First 1 | % { $_.FullName }
-	$project = @{}
-	Get-CSharpProjects -SolutionPath $slnPath | % {
-		$project[$_.Project] = "$slnDir\$($_.ProjectPath)"
-	}
 
 	$nugetFolder = "$slnDir\NuGet"
 	$nuspecPath = "$slnDir\Package.nuspec"
@@ -20,6 +16,11 @@ try {
 	if (-not (Get-Module NuGetProjectPacker)) {
 		$loaded = $true
 		Import-Module "$slnDir\PowerShell\NuGetProjectPacker.psm1"
+	}
+
+	$project = @{}
+	Get-CSharpProjects -SolutionPath $slnPath | % {
+		$project[$_.Project] = "$slnDir\$($_.ProjectPath)"
 	}
 
 	$version = Set-NuspecVersion -Path $slnDir\Package.nuspec -ProjectFolder $slnDir
