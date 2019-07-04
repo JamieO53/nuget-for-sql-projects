@@ -38,47 +38,7 @@ Describe "Initialize-NuGetRuntime" {
 			Test-Path $nugetProjectContentPath | should be $true
 		}
 	}
-	Context "Runtime in solution" {
-		mkdir $projectFolder | Out-Null
-		mkdir $solutionContentFolder
-		$solutionContent | Out-File $solutionContentPath -Encoding utf8
-		Initialize-NuGetFolders -Path $nugetFolder
-		Initialize-NuGetRuntime -SolutionPath $solutionPath -ProjectPath $projectPath -Path $nugetFolder
-		It "Solution runtime in NuGet content" {
-			Test-Path $nugetSolutionContentPath | should be $true
-		}
-	}
-	Context "Runtime in project and solution" {
-		mkdir $projectFolder | Out-Null
-		mkdir $projectContentFolder
-		mkdir $solutionContentFolder
-		$projectContent | Out-File $projectContentPath -Encoding utf8
-		$solutionContent | Out-File $solutionContentPath -Encoding utf8
-		Initialize-NuGetFolders -Path $nugetFolder
-		Initialize-NuGetRuntime -SolutionPath $solutionPath -ProjectPath $projectPath -Path $nugetFolder
-		It "Project runtime in NuGet content" {
-			Test-Path $nugetProjectContentPath | should be $true
-		}
-		It "Solution runtime in NuGet content" {
-			Test-Path $nugetSolutionContentPath | should be $true
-		}
-	}
-	Context "Runtime in project overrides solution" {
-		mkdir $projectFolder | Out-Null
-		mkdir $projectContentFolder
-		mkdir $solutionContentFolder
-		$projectContent | Out-File $projectContentPath -Encoding utf8
-		$solutionContent | Out-File $solutionOverrideContentPath -Encoding utf8
-		Initialize-NuGetFolders -Path $nugetFolder
-		Initialize-NuGetRuntime -SolutionPath $solutionPath -ProjectPath $projectPath -Path $nugetFolder
-		It "Project runtime in NuGet content" {
-			Test-Path $nugetProjectContentPath | should be $true
-		}
-		It "Project content overrides solution content" {
-			gc $nugetProjectContentPath | should be $projectContent
-		}
-	}
-	Context "Runtime in neither project or solution" {
+	Context "Runtime not in project" {
 		mkdir $projectFolder | Out-Null
 		Initialize-NuGetFolders -Path $nugetFolder
 		Initialize-NuGetRuntime -SolutionPath $solutionPath -ProjectPath $projectPath -Path $nugetFolder
