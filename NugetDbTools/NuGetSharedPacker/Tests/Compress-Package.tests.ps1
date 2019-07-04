@@ -23,7 +23,7 @@ Context "Exists" {
 		Initialize-TestDbProject -ProjectPath $projPath -NoDependencies
 		mkdir $nugetFolder
 		$nugetSettings = Initialize-TestNugetConfig -NoDependencies
-		Initialize-Package -ProjectPath $projPath -NugetSettings $nugetSettings
+		Initialize-Package -ProjectPath $projPath -NugetSettings $nugetSettings -SolutionPath "$testDrive\"
 		mkdir "$nugetFolder\tools" | Out-Null
 		mkdir "$nugetFolder\lib" | Out-Null
 		mkdir "$nugetFolder\content" | Out-Null

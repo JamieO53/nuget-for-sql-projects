@@ -28,11 +28,16 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 	}
 
 	$profilePaths | % {
-		[xml]$xml = gc $_
+		$profilePath = $_
+		[xml]$xml = gc $profilePath
 		$xml.Project.ItemGroup.SqlCmdVariable | % {
-			$sqlVars[$_.Include] = $_.Value
-			if ($dbServer.ContainsKey($_.Value)) {
-				$sqlVars["$($_.Include)_Server"] = $dbServer[$_.Value]
+			if ($_) {
+				$sqlVars[$_.Include] = $_.Value
+				if ($dbServer.ContainsKey($_.Value)) {
+					$sqlVars["$($_.Include)_Server"] = $dbServer[$_.Value]
+				}
+			} else {
+				Log "No SQL variables found in $([IO.Path]::GetFileName($profilePath))" -Warn
 			}
 		}
 	}
