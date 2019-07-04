@@ -12,7 +12,7 @@
 RootModule = 'NugetDbPacker.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.162'
+ModuleVersion = '0.1.166'
 
 # ID used to uniquely identify this module
 GUID = '7aa8ca9f-d919-4157-aba2-b5e8e726b403'
