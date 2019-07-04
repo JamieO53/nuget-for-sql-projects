@@ -82,6 +82,11 @@ function Get-LogPath {
 	"$logFolder\$Name-$((Get-Date).ToString('yyyy-MM-dd-HH-mm-ss-fff')).log"
 }
 
+function Get-NuGetContentFolder {
+	$config = Get-NuGetDbToolsConfig
+	$config.configuration.nugetLocalServer.add | ? { $_.key -eq 'ContentFolder' } | % { $_.value }
+}
+
 function Get-NuGetDbToolsConfig {
 	[xml]$config = Get-Content (Get-NuGetDbToolsConfigPath)
 	Return $config
