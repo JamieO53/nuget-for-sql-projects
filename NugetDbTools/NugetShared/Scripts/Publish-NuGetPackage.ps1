@@ -17,6 +17,6 @@ function Publish-NuGetPackage {
 		nuget add $PackagePath -Source $localSource -NonInteractive
 	} else {
 		$apiKey = Get-NuGetLocalApiKey
-		nuget push $PackagePath $apiKey -Source $localSource
+		nuget push $PackagePath $apiKey -Source $localSource -t 900
 	}
 }
