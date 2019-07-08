@@ -271,7 +271,6 @@ NuGetInstall/
 *.dtbcache
 TestResults/
 commands.json
-Runtime/
 *.dacpac
 CallGraph_*
 /NugetDbTools/NugetDbPacker/Tests/errors.txt
