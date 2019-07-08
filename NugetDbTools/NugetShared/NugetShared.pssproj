@@ -46,6 +46,7 @@
     <Compile Include="Scripts\Get-NuGetDbToolsConfigPath.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalApiKey.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalPushSource.ps1" />
+    <Compile Include="Scripts\Get-NuGetLocalPushTimeout.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalSource.ps1" />
     <Compile Include="Scripts\Get-NuGetPackageVersion.ps1" />
     <Compile Include="Scripts\Get-ParentSubfolder.ps1" />
@@ -66,6 +67,7 @@
     <Compile Include="Tests\Get-NuGetDbToolsConfigPath.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalApiKey.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalPushSource.tests.ps1" />
+    <Compile Include="Tests\Get-NuGetLocalPushTimeout.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalSource.tests.ps1" />
     <Compile Include="Tests\Get-SqlProjects.tests.ps1" />
     <Compile Include="Tests\Test-NuGetVersionExists.tests.ps1" />

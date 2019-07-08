@@ -12,7 +12,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>NuGetDbPacker 'CI tools'</tags>
     <dependencies>
-      <dependency id="NuGetSharedPacker" version="0.1.145" />
+      <dependency id="NuGetSharedPacker" version="0.1.147" />
     </dependencies>
   </metadata>
   <files>

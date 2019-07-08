@@ -17,6 +17,7 @@ function Publish-NuGetPackage {
 		nuget add $PackagePath -Source $localSource -NonInteractive
 	} else {
 		$apiKey = Get-NuGetLocalApiKey
-		nuget push $PackagePath $apiKey -Source $localSource -t 900
+		$timeout = Get-NuGetLocalPushTimeout
+		nuget push $PackagePath $apiKey -Source $localSource -t $timeout
 	}
 }
