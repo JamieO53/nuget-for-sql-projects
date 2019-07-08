@@ -115,6 +115,15 @@ function Get-NuGetLocalPushSource {
 	$source
 }
 
+function Get-NuGetLocalPushTimeout {
+	$config = Get-NuGetDbToolsConfig
+	$source = $config.configuration.nugetLocalServer.add | ? { $_.key -eq 'PushTimeout' } | % { $_.value }
+	if ([string]::IsNullOrEmpty($source)) {
+		$source = 900
+	}
+	$source
+}
+
 function Get-NuGetLocalSource {
 	$config = Get-NuGetDbToolsConfig
 	$config.configuration.nugetLocalServer.add | ? { $_.key -eq 'Source' } | % { $_.value }
@@ -365,7 +374,7 @@ function Publish-NuGetPackage {
 		nuget add $PackagePath -Source $localSource -NonInteractive
 	} else {
 		$apiKey = Get-NuGetLocalApiKey
-		nuget push $PackagePath $apiKey -Source $localSource
+		nuget push $PackagePath $apiKey -Source $localSource -t 900
 	}
 }
 
