@@ -2,8 +2,8 @@ $SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path
 [string]$slnPath=ls $SolutionFolder\*.sln | ? { $_ } | % { $_.FullName }
 cd $SolutionFolder
 
-if (-not (Get-Module NugetDbPacker)) {
-	Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1"
+if (-not (Get-Module NugetSharedPacker)) {
+	Import-Module "$PSScriptRoot\..\PowerShell\NugetSharedPacker.psd1"
 }
 
 $rtFolder = "$SolutionFolder\RegressionTests\Commands"

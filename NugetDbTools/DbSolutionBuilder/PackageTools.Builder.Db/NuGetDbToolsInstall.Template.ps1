@@ -4,6 +4,7 @@ param (
 $nugetSource = '<<<<URI of local NuGet server>>>>'
 $nugetPushSource = '<<<<URI of local NuGet server for pushed packages (optional)>>>>'
 $nugetApiKey = '<<<<ApiKey of local NuGet server>>>>'
+$contentFolder = '<<<<Name of the additional content folder>>>>'
 $defaultLocation = '<<<<Default solution location on developer PC>>>>'
 $sampleSolutionName = '<<<<An example solution name>>>>'
 $sampleDatabaseName = '<<<<An example database name>>>>'
@@ -17,8 +18,10 @@ function Set-NuGetConfig {
 <configuration>
     <nugetLocalServer>
         <add key=`"ApiKey`" value=`"$nugetApiKey`"/>
+        <add key=`"ContentFolder`" value=`"$contentFolder`"/>
         <add key=`"Source`" value=`"$nugetSource`"/>
         <add key=`"PushSource`" value=`"$nugetPushSource`"/>
+        <add key=`"PushTimeout`" value=`"900`"/> <!-- seconds -->
     </nugetLocalServer>
 </configuration>
 "@
