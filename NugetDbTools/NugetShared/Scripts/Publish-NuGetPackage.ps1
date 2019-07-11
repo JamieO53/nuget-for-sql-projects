@@ -18,6 +18,6 @@ function Publish-NuGetPackage {
 	} else {
 		$apiKey = Get-NuGetLocalApiKey
 		$timeout = Get-NuGetLocalPushTimeout
-		nuget push $PackagePath $apiKey -Source $localSource -t $timeout
+		Invoke-Trap "nuget push $PackagePath -ApiKey `"$apiKey`" -Source $localSource -Timeout $timeout" -Message "Unable to push $(Split-Path $PackagePath -Leaf)" -Fatal
 	}
 }

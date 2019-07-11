@@ -27,7 +27,7 @@ function Initialize-NuGetRuntime {
 			mkdir $nugetContentFolder
 		}
 		if (Test-Path $projectFolder\$contentFolder) {
-			copy $projectFolder\$contentFolder\* $nugetContentFolder -Recurse
+			copy $projectFolder\$contentFolder\* $nugetContentFolder -Recurse -Force
 		}
 	}
 }
