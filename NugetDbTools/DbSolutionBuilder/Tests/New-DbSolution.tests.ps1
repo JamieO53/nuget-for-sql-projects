@@ -94,6 +94,8 @@ Describe "New-DbSolution" {
 
 		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep1 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep1 1.0.123' } -ModuleName NuGetShared
 		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget list dep2 -Source $(Get-NuGetLocalSource)"} -MockWith { 'dep2 1.0.234' } -ModuleName NuGetShared
+		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget restore dep1 -Source $(Get-NuGetLocalSource)"} -ModuleName NuGetShared
+		Mock -CommandName Invoke-Expression -ParameterFilter { $PSBoundParameters.Command -eq "nuget restore dep2 -Source $(Get-NuGetLocalSource)"} -ModuleName NuGetShared
 		Mock -CommandName Invoke-Trap -ParameterFilter { ($PSBoundParameters.Command -eq  "nuget restore $SolutionPath") -and ($PSBoundParameters.Message -eq "Unable to restore $sln") } -ModuleName NuGetSharedPacker
 
 		New-DbSolutionDependencies -Parameters $params -PkgProjectPath $pkgProjectPath

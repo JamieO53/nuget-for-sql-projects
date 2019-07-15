@@ -14,15 +14,27 @@ function Get-SolutionDependencies {
 	)
 	$reference = @{}
 	$slnFolder = Split-Path -Path $SolutionPath
+	nuget restore $SolutionPath | Out-Null
+
 	Get-PkgProjects $SolutionPath | % {
 		$projPath = "$slnFolder\$($_.ProjectPath)"
 		$projFolder = Split-Path $projPath
-		[xml]$proj = gc $projPath
-		$proj.Project.ItemGroup.PackageReference | % {
-			$package = $_.Include
-			$version = $_.Version
-			$reference[$package] = $version
-		}
+		$assetPath = "$projFolder\obj\project.assets.json"
+
+		nuget restore $projPath -Source (Get-NuGetLocalSource) | Out-Null
+
+		$assets = ConvertFrom-Json (gc $assetPath | Out-String)
+		$assets.libraries | Get-Member |
+			where { $_.MemberType -eq 'NoteProperty' } |
+			select -Property Name | 
+			where { Test-Path "$env:UserProfile\.nuget\packages\$($_.Name)" } | 
+			foreach {
+				[string]$ref = $_.Name
+				$pkgver = $ref.Split('/')
+				$package = $pkgver[0]
+				$version = $pkgver[1]
+				$reference[$package] = $version
+			}
 	}
 	$reference
 }

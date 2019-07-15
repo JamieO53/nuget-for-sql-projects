@@ -21,10 +21,12 @@ function Get-NuGetPackage {
 		[string]$Framework = ''
 	)
 
-	if ($Framework) {
-		$frameworkVersion = " -Framework $Framework"
-	} else {
-		$frameworkVersion = ''
+	$cacheFolder = "$env:userprofile\.nuget\packages\$Id\$Version"
+	if (Test-Path $cacheFolder) {
+		$targetFolder = "$OutputDirectory\$Id"
+		if (-not (Test-Path $targetFolder)) {
+			mkdir $targetFolder | Out-Null
+		}
+		copy $cacheFolder\* $targetFolder -Recurse -Force
 	}
-	iex "nuget install $Id -Version '$Version' -Source '$Source' -OutputDirectory '$OutputDirectory' -ExcludeVersion$frameworkVersion"
 }
