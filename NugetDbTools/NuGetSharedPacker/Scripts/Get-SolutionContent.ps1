@@ -14,6 +14,9 @@ function Get-SolutionContent {
 	)
 	$solutionFolder = Split-Path $SolutionPath
 	$packageContentFolder = "$SolutionFolder\PackageContent"
+	$packageFolder = "$SolutionFolder\Packages"
+	$contentFolder = Get-NuGetContentFolder
+	$solutionContentFolder = "$SolutionFolder\$contentFolder"
 
 	if (Test-Path $packageContentFolder) {
 		if (-not $global:testing)
@@ -36,4 +39,14 @@ function Get-SolutionContent {
 	}
 
 	del $packageContentFolder -Include '*' -Recurse
+
+	if (ls "$packageFolder\**\$contentFolder" -Recurse) {
+		if (Test-Path $solutionContentFolder) {
+			rmdir $solutionContentFolder*
+		}
+		mkdir $solutionContentFolder
+		ls "$packageFolder\**\$contentFolder" -Recurse | % {
+			copy "$($_.FullName)\*" $solutionContentFolder -Recurse -Force
+		}
+	}
 }
