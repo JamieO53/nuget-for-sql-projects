@@ -48,6 +48,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools", "PackageTools", "{E0AD2663-37D5-421B-A3E1-0BE0401BC41E}"
 	ProjectSection(SolutionItems) = preProject
 		PackageTools\Bootstrap.ps1 = PackageTools\Bootstrap.ps1
+		PackageTools\Get-PackageContent.ps1 = PackageTools\Get-PackageContent.ps1
 		PackageTools\GetPackageContent.cmd = PackageTools\GetPackageContent.cmd
 	EndProjectSection
 EndProject
@@ -74,7 +75,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Db", "PackageT
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Project", "PackageTools.Project", "{6221769E-E6AE-460A-A239-D3FB82CA91EB}"
 	ProjectSection(SolutionItems) = preProject
-		NuGetProjectPacker\PackageTools.Project\Get-PackageContent.ps1 = NuGetProjectPacker\PackageTools.Project\Get-PackageContent.ps1
 		NuGetProjectPacker\PackageTools.Project\Package.nuspec.txt = NuGetProjectPacker\PackageTools.Project\Package.nuspec.txt
 		NuGetProjectPacker\PackageTools.Project\Package.ps1 = NuGetProjectPacker\PackageTools.Project\Package.ps1
 		NuGetProjectPacker\PackageTools.Project\PackageRelease.config = NuGetProjectPacker\PackageTools.Project\PackageRelease.config
