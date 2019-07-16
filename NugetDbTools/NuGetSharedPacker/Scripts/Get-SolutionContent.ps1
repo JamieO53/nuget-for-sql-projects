@@ -29,8 +29,9 @@ function Get-SolutionContent {
 	
 	Get-SolutionPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
+	rmdir "$SolutionPath\Databases*" -Recurse -Force
 	ls $packageContentFolder -Directory | % {
-		ls $_.FullName -Directory | ? { (ls $_ -Exclude _._).Count -ne 0 } | % {
+		ls $_.FullName -Directory | ? { (ls $_.FullName -Exclude _._).Count -ne 0 } | % {
 			if (-not (Test-Path "$SolutionFolder\$($_.Name)")) {
 				mkdir "$SolutionFolder\$($_.Name)" | Out-Null
 			}
