@@ -39,7 +39,7 @@ function Get-SolutionContent {
 		}
 	}
 
-	del $packageContentFolder -Include '*' -Recurse
+	del $packageContentFolder -Include '*' -Recurse -Force
 
 	if (ls "$packageFolder\**\$contentFolder" -Recurse) {
 		if (Test-Path $solutionContentFolder) {
