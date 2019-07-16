@@ -27,7 +27,8 @@ function Get-SolutionDependencies {
 		$assets.libraries | Get-Member |
 			where { $_.MemberType -eq 'NoteProperty' } |
 			select -Property Name | 
-			where { Test-Path "$env:UserProfile\.nuget\packages\$($_.Name)" } | 
+            where { (Test-Path "$env:UserProfile\.nuget\packages\$($_.Name)") -and
+                -not (Test-Path "$env:UserProfile\.nuget\packages\$($_.Name)\lib")} |
 			foreach {
 				[string]$ref = $_.Name
 				$pkgver = $ref.Split('/')

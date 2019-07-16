@@ -42,7 +42,7 @@ function Get-SolutionContent {
 
 	if (ls "$packageFolder\**\$contentFolder" -Recurse) {
 		if (Test-Path $solutionContentFolder) {
-			rmdir $solutionContentFolder*
+			rmdir $solutionContentFolder* -Recurse -Force
 		}
 		mkdir $solutionContentFolder
 		ls "$packageFolder\**\$contentFolder" -Recurse | % {
