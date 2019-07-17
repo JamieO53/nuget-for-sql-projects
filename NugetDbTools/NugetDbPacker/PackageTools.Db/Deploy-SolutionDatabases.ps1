@@ -1,4 +1,4 @@
-if ( Get-Module NugetDbPacker) {
+if ( Get-Module NugetDbPacker -All) {
 	Remove-Module NugetDbPacker
 }
 Import-Module "$PSScriptRoot\..\PowerShell\NugetDbPacker.psd1"
