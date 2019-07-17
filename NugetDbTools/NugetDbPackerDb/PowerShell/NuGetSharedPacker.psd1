@@ -12,7 +12,7 @@
 RootModule = 'NuGetSharedPacker.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.148'
+ModuleVersion = '0.1.156'
 
 # ID used to uniquely identify this module
 GUID = 'd4095a0c-52dc-40f0-b3ee-9b33cbcc769c'

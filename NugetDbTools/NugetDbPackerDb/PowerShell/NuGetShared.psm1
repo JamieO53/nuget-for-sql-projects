@@ -374,7 +374,8 @@ function Publish-NuGetPackage {
 		nuget add $PackagePath -Source $localSource -NonInteractive
 	} else {
 		$apiKey = Get-NuGetLocalApiKey
-		nuget push $PackagePath $apiKey -Source $localSource -t 900
+		$timeout = Get-NuGetLocalPushTimeout
+		Invoke-Trap "nuget push $PackagePath -ApiKey `"$apiKey`" -Source $localSource -Timeout $timeout" -Message "Unable to push $(Split-Path $PackagePath -Leaf)" -Fatal
 	}
 }
 
