@@ -3,6 +3,7 @@ function Get-SolutionPackages {
 	Get the solution's dependency packages
 	.DESCRIPTION
     Gets the content of all the solution's NuGet dependencies and updates the SQL projects' NuGet versions for each dependency
+	The project nuget configurations are updated with the new versions.
 	.EXAMPLE
 	Get-SolutionPackages -SolutionPath C:\VSTS\Batch\Batch.sln -ContentFolder C:\VSTS\Batch\PackageContent
 	#>
@@ -24,6 +25,7 @@ function Get-SolutionPackages {
 		$version = $reference[$package]
 		if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {
 			Get-NuGetPackage -Id $package -Version $version -Source $localSource -OutputDirectory $ContentFolder
+			Set-NuGetDependencyVersion -SolutionPath $slnPath -Dependency $package -Version $version
 		}
 	}
 }
