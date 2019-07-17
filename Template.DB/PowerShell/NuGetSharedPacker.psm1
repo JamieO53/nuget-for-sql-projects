@@ -335,9 +335,10 @@ function Get-SolutionContent {
 
 	if ((Test-Path $packageFolder) -and (ls "$packageFolder\**\$contentFolder" -Recurse)) {
 		if (Test-Path $solutionContentFolder) {
-			rmdir $solutionContentFolder* -Recurse -Force
+			rmdir $solutionContentFolder\* -Recurse -Force
+		} else {
+			mkdir $solutionContentFolder | Out-Null
 		}
-		mkdir $solutionContentFolder | Out-Null
 		ls "$packageFolder\**\$contentFolder" -Recurse | % {
 			copy "$($_.FullName)\*" $solutionContentFolder -Recurse -Force
 		}
@@ -413,7 +414,7 @@ function Get-SolutionPackages {
 		$version = $reference[$package]
 		if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {
 			Get-NuGetPackage -Id $package -Version $version -Source $localSource -OutputDirectory $ContentFolder
-			Set-NuGetDependencyVersion -SolutionPath $slnPath -Dependency $package -Version $version
+			Set-NuGetDependencyVersion -SolutionPath $SolutionPath -Dependency $package -Version $version
 		}
 	}
 }
