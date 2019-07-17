@@ -335,9 +335,10 @@ function Get-SolutionContent {
 
 	if ((Test-Path $packageFolder) -and (ls "$packageFolder\**\$contentFolder" -Recurse)) {
 		if (Test-Path $solutionContentFolder) {
-			rmdir $solutionContentFolder* -Recurse -Force
+			rmdir $solutionContentFolder\* -Recurse -Force
+		} else {
+			mkdir $solutionContentFolder | Out-Null
 		}
-		mkdir $solutionContentFolder | Out-Null
 		ls "$packageFolder\**\$contentFolder" -Recurse | % {
 			copy "$($_.FullName)\*" $solutionContentFolder -Recurse -Force
 		}
