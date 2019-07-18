@@ -1,5 +1,5 @@
 $projectType = 'Project'
-$projName='ReconAssistPlus.Retail'
+$projName='Name'
 $id="Ecentric.$projName"
 $contentType='lib'
 $buildConfig='Debug'
@@ -40,8 +40,8 @@ try {
 
 	('Project1','Project2','Project3','Project4', 'Project5') | % {
 		$projName = $_
-		$projPath = $project[$projName]
-		if ($projPath) {
+		if ($project.ContainsKey($projectName) {
+			$projPath = $project[$projName]
 			$projDir = Split-Path $projPath
 			$projBinFolder = "$projDir\bin\$buildConfig"
 
