@@ -58,6 +58,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Builder.Db", "
 		DbSolutionBuilder\PackageTools.Builder.Db\DbTemplate.xml = DbSolutionBuilder\PackageTools.Builder.Db\DbTemplate.xml
 		DbSolutionBuilder\PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1 = DbSolutionBuilder\PackageTools.Builder.Db\Install-DbSolutionBuilder.ps1
 		DbSolutionBuilder\PackageTools.Builder.Db\New-CiDbProject.ps1 = DbSolutionBuilder\PackageTools.Builder.Db\New-CiDbProject.ps1
+		DbSolutionBuilder\PackageTools.Builder.Db\NuGetDbToolsInstall.ps1.txt = DbSolutionBuilder\PackageTools.Builder.Db\NuGetDbToolsInstall.ps1.txt
 		DbSolutionBuilder\PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1 = DbSolutionBuilder\PackageTools.Builder.Db\NuGetDbToolsInstall.Template.ps1
 	EndProjectSection
 EndProject
@@ -70,6 +71,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Db", "PackageT
 		NugetDbPacker\PackageTools.Db\Invoke-RegressionTests.ps1 = NugetDbPacker\PackageTools.Db\Invoke-RegressionTests.ps1
 		NugetDbPacker\PackageTools.Db\Publish-DbProjects.ps1 = NugetDbPacker\PackageTools.Db\Publish-DbProjects.ps1
 		NugetDbPacker\PackageTools.Db\PublishDbProjects.cmd = NugetDbPacker\PackageTools.Db\PublishDbProjects.cmd
+		NugetDbPacker\PackageTools.Db\Set-BuildOptions.ps1 = NugetDbPacker\PackageTools.Db\Set-BuildOptions.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Project", "PackageTools.Project", "{6221769E-E6AE-460A-A239-D3FB82CA91EB}"
