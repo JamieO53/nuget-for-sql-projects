@@ -26,7 +26,7 @@ function Publish-ProjectDatabase {
 				$params = ''
 			}
 			if ($ProfilePath -and (Test-Path $ProfilePath)) {
-				[string]$db = "/pr:`"$ProfilePath`""
+				[string]$db = "/pr:`"$ProfilePath`" $params"
 			} else {
 				if (-not ($params.Contains('/p:CreateNewDatabase'))) {
 					$params += ' /p:CreateNewDatabase=True"'
