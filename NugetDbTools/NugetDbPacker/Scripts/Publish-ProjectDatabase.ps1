@@ -15,28 +15,15 @@ function Publish-ProjectDatabase {
         [string]$ProfilePath,
 		# Parameters overriding profile settings
 		# Format according to SqlPackage CLI https://docs.microsoft.com/en-us/sql/tools/sqlpackage?view=sql-server-2017
-		[string[]]$parameters
+		[string[]]$Parameters
 	)
 	[string]$cmd = Find-SqlPackagePath
 	if ($cmd) {
 		try {
-			if ($parameters) {
-				$params = [string]::Join(' ', $parameters)
-			} else {
-				$params = ''
-			}
-			if ($ProfilePath -and (Test-Path $ProfilePath)) {
-				[string]$db = "/pr:`"$ProfilePath`" $params"
-			} else {
-				if (-not ($params.Contains('/p:CreateNewDatabase'))) {
-					$params += ' /p:CreateNewDatabase=True"'
-				}
-				$projectName = [IO.Path]::GetFileNameWithoutExtension($DacpacPath)
-				[string]$db = "/tdn:`"$projectName`" $params"
-			}
+			$params = Format-ProjectDatabaseParameters -DacpacPath $DacpacPath -ProfilePath $ProfilePath -Parameters $Parameters
 	
 			Log "Publishing $DacpacPath using $ProfilePath"
-			Invoke-Trap -Command "& `"$cmd`" /a:Publish /sf:`"$DacpacPath`" $db" -Message "Deploying database failed" -Fatal
+			Invoke-Trap -Command "& `"$cmd`" /a:Publish /sf:`"$DacpacPath`" $params" -Message "Deploying database failed" -Fatal
 		} catch {
 			Log "SqlPackage.exe failed: $_" -Error
 			exit 1

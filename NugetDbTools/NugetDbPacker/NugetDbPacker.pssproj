@@ -45,10 +45,12 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Scripts\Enable-CLR.ps1" />
     <Compile Include="Scripts\Find-PublishProfilePath.ps1" />
     <Compile Include="Scripts\Find-SqlPackagePath.ps1" />
+    <Compile Include="Scripts\Format-ProjectDatabaseParameters.ps1" />
     <Compile Include="Scripts\Import-NuGetDb.ps1" />
     <Compile Include="Scripts\Publish-DbPackage.ps1" />
     <Compile Include="Scripts\Publish-ProjectDatabase.ps1" />
     <Compile Include="Scripts\Publish-SolutionDbPackages.ps1" />
+    <Compile Include="Tests\Format-ProjectDatabaseParameters.tests.ps1" />
     <Compile Include="Tests\Import-NuGetDb.tests.ps1" />
     <Compile Include="Scripts\Initialize-DbPackage.ps1" />
     <Compile Include="Tests\Initialize-DbPackage.tests.ps1" />
