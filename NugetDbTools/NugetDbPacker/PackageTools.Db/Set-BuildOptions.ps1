@@ -16,7 +16,8 @@ if (-not (Test-Path $nugetConfigDir)) {
 	mkdir $nugetConfigDir | Out-Null
 }
 if (-not (Test-Path $nugetConfigPath)) {
-	$configText | Set-Content $nugetConfigPath -Encoding UTF8
+	$configText | Set-Content $nugetConfigPath -Encoding UTF8 -Force
+	Write-Host "Set up $nugetConfigPath"
 }
 
 sqllocaldb create ecentric
