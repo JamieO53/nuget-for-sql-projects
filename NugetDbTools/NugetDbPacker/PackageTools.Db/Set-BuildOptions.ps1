@@ -1,4 +1,4 @@
-$nugetConfigDir = "$env:APPDATA\JamieO53\NugetDbTools"
+$nugetConfigDir = "$PSScriptRoot\..\JamieO53\NugetDbTools"
 $nugetConfigPath = "$nugetConfigDir\NugetDbTools.config"
 
 $configText = @"
