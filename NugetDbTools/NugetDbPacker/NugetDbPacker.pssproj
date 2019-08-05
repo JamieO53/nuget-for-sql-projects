@@ -50,6 +50,12 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
     <Compile Include="Scripts\Publish-DbPackage.ps1" />
     <Compile Include="Scripts\Publish-ProjectDatabase.ps1" />
     <Compile Include="Scripts\Publish-SolutionDbPackages.ps1" />
+    <Compile Include="Scripts\Publish-SSASCubeDatabase.ps1" />
+    <Compile Include="Scripts\Report-PublishProjectDatabase.ps1" />
+    <Compile Include="Scripts\Update-SSASCubeAsdatabaseFile.ps1" />
+    <Compile Include="Scripts\Update-SSASCubeDataSource.ps1" />
+    <Compile Include="Scripts\Update-SSASCubeDeploymentOptions.ps1" />
+    <Compile Include="Scripts\Update-SSASCubeDeploymentTarget.ps1" />
     <Compile Include="Tests\Format-ProjectDatabaseParameters.tests.ps1" />
     <Compile Include="Tests\Import-NuGetDb.tests.ps1" />
     <Compile Include="Scripts\Initialize-DbPackage.ps1" />
