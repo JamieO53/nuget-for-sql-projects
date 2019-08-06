@@ -24,6 +24,7 @@ function Get-SolutionPackages {
 		$package = $_
 		$version = $reference[$package]
 		if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {
+			Log "Getting $package $version"
 			Get-NuGetPackage -Id $package -Version $version -Source $localSource -OutputDirectory $ContentFolder
 			Set-NuGetDependencyVersion -SolutionPath $SolutionPath -Dependency $package -Version $version
 		}

@@ -27,6 +27,7 @@ function Get-SolutionContent {
 		mkdir $packageContentFolder | Out-Null
 	}
 	
+	Log 'Get solution packages: $SolutionPath'
 	Get-SolutionPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
 	rmdir "$SolutionPath\Databases*" -Recurse -Force

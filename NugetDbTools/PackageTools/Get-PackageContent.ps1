@@ -10,4 +10,9 @@ if (-not (Get-Module NugetSharedPacker)) {
 	Import-Module "$SolutionFolder\PowerShell\NugetSharedPacker.psd1"
 }
 
-Get-SolutionContent -SolutionPath $slnPath
+try {
+	Get-SolutionContent -SolutionPath $slnPath
+} catch {
+	Log -Error 'Get-PackageContent failed'
+	Log -Error $_
+}
