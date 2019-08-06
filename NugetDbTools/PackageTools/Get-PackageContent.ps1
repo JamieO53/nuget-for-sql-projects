@@ -11,6 +11,7 @@ if (-not (Get-Module NugetSharedPacker)) {
 }
 
 try {
+	Log 'Get solution content'
 	Get-SolutionContent -SolutionPath $slnPath
 } catch {
 	Log -Error 'Get-PackageContent failed'
