@@ -343,3 +343,4 @@ commands.json
 *.dacpac
 /RegressionTests/Log/*.txt
 /Runtime/
+/runtimes
