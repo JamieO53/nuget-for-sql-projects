@@ -27,8 +27,10 @@ function Publish-DbPackage {
         if (-not (Test-NuGetVersionExists -Id $id -Version $version)) {
             $nugetPackage = [IO.Path]::Combine($nugetFolder, "$id.$version.nupkg")
             Initialize-DbPackage -ProjectPath $ProjectPath -SolutionPath $SolutionPath
-            Publish-NuGetPackage -PackagePath $nugetPackage
-            Remove-NugetFolder $nugetFolder
+            if ($env:SYSTEM_SERVERTYPE -ne 'Hosted') {
+				Publish-NuGetPackage -PackagePath $nugetPackage
+				Remove-NugetFolder $nugetFolder
+			}
         }
     }
 }

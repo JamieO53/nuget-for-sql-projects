@@ -12,7 +12,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>NuGetProjectPacker 'CI tools'</tags>
     <dependencies>
-      <dependency id="NuGetSharedPacker" version="0.1.163" />
+      <dependency id="NuGetSharedPacker" version="0.1.165" />
     </dependencies>
   </metadata>
   <files>

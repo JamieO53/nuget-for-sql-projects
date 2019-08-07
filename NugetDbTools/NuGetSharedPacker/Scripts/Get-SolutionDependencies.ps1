@@ -24,18 +24,25 @@ function Get-SolutionDependencies {
 		nuget restore $projPath -Source (Get-NuGetLocalSource) | Out-Null
 
 		$assets = ConvertFrom-Json (gc $assetPath | Out-String)
-		$assets.libraries | Get-Member |
-			where { $_.MemberType -eq 'NoteProperty' } |
-			select -Property Name | 
-            where { (Test-Path "$env:UserProfile\.nuget\packages\$($_.Name)") -and
-                -not (Test-Path "$env:UserProfile\.nuget\packages\$($_.Name)\lib")} |
-			foreach {
-				[string]$ref = $_.Name
-				$pkgver = $ref.Split('/')
-				$package = $pkgver[0]
-				$version = $pkgver[1]
-				$reference[$package] = $version
+		$dep = Get-AssetDependencies($assets)
+		$lib = Get-AssetLibraries($assets)
+		$tgt = Get-AssetTargets($assets)
+
+		$deps = $dep
+		while ($deps.Count -gt 0) {
+			$refs = $deps
+			$deps = @{}
+			$refs.Keys | % {
+				if (-not $reference[$_]) {
+					$reference[$_] = $lib[$_]
+					if ($tgt[$_]) {
+						$tgt[$_] | ? { -not $reference[$_] } | % {
+							$deps[$_] = $lib[$_]
+						}
+					}
+				}
 			}
+		}
 	}
 	$reference
 }
