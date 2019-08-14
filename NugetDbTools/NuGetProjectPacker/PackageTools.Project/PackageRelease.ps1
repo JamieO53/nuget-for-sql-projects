@@ -20,9 +20,9 @@ try {
 	}
 	[xml]$config = gc $releaseConfigPath
 	$releaseFolder = "$slnFolder\$($config.package.metadata.releaseFolder)"
-	$content = Get-NuGetContentFolder
+	$contentFolders = $config.package.metadata.content.contentFolder | % { $_ }
+	$contentFiles = $config.package.metadata.content.contentFile | % { $_ }
 	$releaseBinFolder = "$slnFolder\$($config.package.metadata.binaryReleaseFolder)"
-	$contentFolder = "$slnFolder\$content"
 	$releaseContentFolder = "$releaseFolder\$content"
 	$releaseDbFolder = "$slnFolder\$($config.package.metadata.databaseReleaseFolder)"
 	[bool]$clearReleaseFolder = $config.package.metadata.clear -eq 'True'
@@ -89,6 +89,21 @@ try {
 
 	if (Test-Path "$slnFolder\Databases") {
 		copy "$slnFolder\Databases\*" $releaseDbFolder\ -Recurse
+		copy "$slnFolder\**\Databases\*" $releaseDbFolder\ -Recurse
+	}
+
+	$contentFolders | % {
+		if (Test-Path "$slnFolder\$_") {
+			if (-not (Test-Path "$releaseFolder\$_")) {
+				mkdir "$releaseFolder\$_"
+			}
+			copy "$slnFolder\$_\*" "$releaseFolder\$_\" -Recurse -Force
+		}
+	}
+	$contentFiles | % {
+		if (Test-Path "$slnFolder\$_") {
+			copy "$slnFolder\$_" $releaseFolder
+		}
 	}
 
 	$config.package.metadata.projects.dbProject | % {

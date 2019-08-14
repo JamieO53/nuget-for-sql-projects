@@ -23,6 +23,9 @@ if ($CopyAssembly) {
 if (Test-Path "$tgtFolder\$ProjectName.publish.xml") {
 	copy "$tgtFolder\$ProjectName.publish.xml" $outputFolder
 }
+if (Test-Path "$tgtFolder\$ProjectName.*.publish.xml") {
+	copy "$tgtFolder\$ProjectName.*.publish.xml" $outputFolder
+}
 
 if (Test-Path "$outputFolder\unzipped") {
 	rmdir $outputFolder\unzipped\* -Recurse -Force
