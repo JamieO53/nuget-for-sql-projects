@@ -21,7 +21,7 @@ function Publish-SSASCubeDatabase {
 			-DeploymentTargetConfigPath "$ConfigFolder\$CubeName.deploymenttargets"
 
 		Update-SSASCubeDataSource `
-			-SSASCubeConfigSettingsPath "$ConfigFolder\$CubeName.configsettings" `
+			-SSASCubeConfigSettingsPath "$CubeFolder\$CubeName.configsettings" `
 			-DataSourceConfigPath "$ConfigFolder\DataSources.configsettings"
 
 		Invoke-Trap -Command ".\Microsoft.AnalysisServices.Deployment.ps1 `"$CubeFolder\$CubeName.asdatabase`" `"$DatabaseName`"" -Message $DeploymentError -Fatal
