@@ -50,6 +50,7 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 	$packageContentFolder = "$SolutionFolder\PackageContent"
 	Invoke-Trap -Command "nuget install TSQLUnit -Source '$localSource' -OutputDirectory '$packageContentFolder' -ExcludeVersion" -Message "Retrieving TSQLUnit failed" -Fatal
 	$dacpacPath = "$SolutionFolder\PackageContent\TSQLUnit\Databases\TSQLUnit.dacpac"
+	$publishPath = "$SolutionFolder\PackageContent\TSQLUnit\Databases\TSQLUnit.publish.xml"
 
 	$sqlPackageCmd = Find-SqlPackagePath
 
@@ -57,11 +58,14 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 		$dbName = $_
 		$cs = $dbConn[$dbName].ToString()
 		$db = "`/tcs:`"$cs`" `/p:CreateNewDatabase=False"
+		if (Test-Path $publishPath) {
+			$db += " `/pr:`"$publishPath`" $params"
+		}
 		Log "`"$sqlPackageCmd`" `/a:Publish `/sf:`"$dacpacPath`" $db"
 		Invoke-Trap -Command "& `"$sqlPackageCmd`" `/a:Publish `/sf:`"$dacpacPath`" $db" -Message "Deploying TSQLUnit failed to $dbName" -Fatal
     }
 
-	rd "$SolutionFolder\PackageContent" -Recurse
+	rd "$SolutionFolder\PackageContent" -Recurse -Force
 	
 	@('Setup', 'Execute', 'Teardown') | % {
 		ls "$rtFolder\$($_)_*_RegressionTests.cmd" | % {
