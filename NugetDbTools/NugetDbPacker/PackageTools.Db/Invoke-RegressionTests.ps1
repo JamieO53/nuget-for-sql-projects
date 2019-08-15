@@ -1,3 +1,6 @@
+params(
+	[string]$databaseName = ''
+)
 $SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..").Path
 [string]$slnPath=ls $SolutionFolder\*.sln | ? { $_ } | % { $_.FullName }
 cd $SolutionFolder
@@ -11,7 +14,7 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 	$sqlVars = @{}
 	$dbServer = @{}
 	$dbConn = @{}
-	$profilePaths = Get-SqlProjects -SolutionPath $slnPath | % {
+	$profilePaths = Get-SqlProjects -SolutionPath $slnPath | ? { -not $databaseName -or ($databaseName -eq $_.Project) } | % {
 		$projPath = "$SolutionFolder\$($_.ProjectPath)"
 		Find-PublishProfilePath -ProjectPath $projPath
 	} | ? { Test-Path $_ }
