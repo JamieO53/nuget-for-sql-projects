@@ -112,13 +112,7 @@ try {
 			$projPath = $dbProject[$projName]
 			$projFolder = Split-Path $projPath
 			copy "$projFolder\Databases\*" $releaseDbFolder\ -Recurse
-			'release','prod','uat' |
-			% { ls "$projFolder\*.$_.publish.xml" | select -First 1 | % { $_.FullName } |
-				? { Test-Path $_ } |
-				% {
-					copy $_ $releaseDbFolder\
-				}
-			}
+			copy "$projFolder\*.publish.xml" $releaseDbFolder\
 		} else {
 			throw "Database project $projName is not in the solution"
 		}
