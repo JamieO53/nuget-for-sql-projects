@@ -88,8 +88,8 @@ try {
 	}
 
 	if (Test-Path "$slnFolder\Databases") {
-		copy "$slnFolder\Databases\*" $releaseDbFolder\ -Recurse
-		copy "$slnFolder\**\Databases\*" $releaseDbFolder\ -Recurse
+		copy "$slnFolder\**\Databases\*" $releaseDbFolder\ -Recurse -Force
+		copy "$slnFolder\Databases\*" $releaseDbFolder\ -Recurse -Force
 	}
 
 	$contentFolders | % {
@@ -102,7 +102,7 @@ try {
 	}
 	$contentFiles | % {
 		if (Test-Path "$slnFolder\$_") {
-			copy "$slnFolder\$_" $releaseFolder
+			copy "$slnFolder\$_" $releaseFolder -Force
 		}
 	}
 
