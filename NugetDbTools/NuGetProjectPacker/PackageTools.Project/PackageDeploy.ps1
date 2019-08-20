@@ -60,6 +60,8 @@ $config.package.databases.database | % {
 	}
 	[string]$params = $_.parameters
 	if ($params) {
+		$params = $params.Replace('"', '`"')
+		$params = '"{0}"' -F $params
 		$parameters = iex $params
 	} else {
 		$parameters = ''
