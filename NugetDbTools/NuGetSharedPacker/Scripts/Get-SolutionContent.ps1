@@ -18,6 +18,11 @@ function Get-SolutionContent {
 	$contentFolder = Get-NuGetContentFolder
 	$solutionContentFolder = "$SolutionFolder\$contentFolder"
 
+	if (-not $contentFolder) {
+		Log "Content folder not specified in %AppData%\JamieO53\NugetDbTools\NugetDbTools.config" -Error
+		exit 1
+	}
+
 	if (Test-Path $packageContentFolder) {
 		if (-not $global:testing)
 		{
@@ -26,7 +31,7 @@ function Get-SolutionContent {
 	} else {
 		mkdir $packageContentFolder | Out-Null
 	}
-	
+
 	Log "Get solution packages: $SolutionPath"
 	Get-SolutionPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
