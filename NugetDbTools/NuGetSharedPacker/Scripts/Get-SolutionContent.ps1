@@ -19,7 +19,8 @@ function Get-SolutionContent {
 	$solutionContentFolder = "$SolutionFolder\$contentFolder"
 
 	if (-not $contentFolder) {
-		Log "Content folder not specified in %AppData%\JamieO53\NugetDbTools\NugetDbTools.config" -Error
+		$configFolder = (Get-Item (Get-NuGetDbToolsConfigPath)).FullName
+		Log "Content folder not specified in $configFolder" -Error
 		exit 1
 	}
 
