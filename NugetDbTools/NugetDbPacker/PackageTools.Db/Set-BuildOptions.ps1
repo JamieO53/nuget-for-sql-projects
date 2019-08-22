@@ -13,7 +13,7 @@ $configText = @"
 </configuration>
 "@
 if (-not (Test-Path $nugetConfigDir)) {
-	mkdir $nugetConfigDir | Out-Null
+	mkdir $nugetConfigDir
 }
 if (-not (Test-Path $nugetConfigPath)) {
 	$configText | Set-Content $nugetConfigPath -Encoding UTF8 -Force

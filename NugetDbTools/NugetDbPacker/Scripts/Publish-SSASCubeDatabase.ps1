@@ -31,7 +31,7 @@ function Publish-SSASCubeDatabase {
 			if (-not $SSASCubeAdditionalSettingsFile.Settings.Server.Version) {
 				Write-Host "SSAS Target server version variable not defined, defaulting to $TargetServerVersion" -fore red
 			} else {
-				$TargetServerVersion = SSASCubeAdditionalSettingsFile.Settings.Server.Version;
+				$TargetServerVersion = $SSASCubeAdditionalSettingsFile.Settings.Server.Version;
 			}
 		} else {
 		    Write-Host "Additional settings file was not defined for this target deployment channel" -fore yellow
