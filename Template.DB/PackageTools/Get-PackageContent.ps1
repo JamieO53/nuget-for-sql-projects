@@ -9,7 +9,7 @@ $SolutionFolder = Get-ParentSubFolder "$PSScriptRoot" '*.sln'
 if (-not (Get-Module NugetSharedPacker)) {
 	Import-Module "$SolutionFolder\PowerShell\NugetSharedPacker.psd1"
 }
-Write-Host "Configuration path: $(Get-NuGetDbToolsConfigPath)"
+Log "Configuration path: $(Get-NuGetDbToolsConfigPath)"
 try {
 	Log 'Get solution content'
 	Get-SolutionContent -SolutionPath $slnPath
