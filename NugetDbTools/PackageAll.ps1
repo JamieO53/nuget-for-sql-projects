@@ -1,12 +1,12 @@
 if (-not (Get-Module NuGetSharedPacker)) {
-	Import-Module .\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1
+	Import-Module "$PSScriptRoot\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1"
 }
 # if (-not (Test-IsRunningBuildAgent) -and -not (Test-PathIsCommitted)) {
 # 	Write-Host 'Commit changes before publishing the projects to NuGet' -ForegroundColor Red
 # 	exit 1
 # }
 Remove-Variable * -ErrorAction SilentlyContinue
-$solutionFolder = (Get-Location).Path
+$solutionFolder = $PSScriptRoot
 $order = Import-PowerShellDataFile "$solutionFolder\PackageSequence.psd1"
 $nugetVersion = @{}
 $order.PackageOrder | % {

@@ -1,5 +1,4 @@
-function Compress-Package
-{
+function Compress-Package {
 	<#.Synopsis
 	Pack the NuGet package
 	.DESCRIPTION

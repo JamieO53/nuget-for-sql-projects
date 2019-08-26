@@ -6,7 +6,7 @@ pushd $slnDir
 $loaded = $false
 if (-not (Get-Module NuGetSharedPacker)) {
 	$loaded = $true
-	Import-Module $slnDir\..\NugetDbTools\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1
+	Import-Module $PSScriptRoot\Powershell\NuGetSharedPacker.psd1
 }
 
 $version = Set-NuspecVersion -Path $slnDir\Package.nuspec -ProjectFolder $slnDir
