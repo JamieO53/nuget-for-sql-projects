@@ -1,9 +1,12 @@
 $projectType = 'Project'
 $id="Prefix.Name"
 $contentType='lib'
+$buildConfig='Debug'
 
 try {
 	$slnDir = (Get-Item "$PSScriptRoot").FullName
+	$slnPath = ls "$slnDir\*.sln" | select -First 1 | % { $_.FullName }
+
 	$nugetFolder = "$slnDir\NuGet"
 	$nuspecPath = "$slnDir\Package.nuspec"
 	$nugetBinFolder = "$nugetFolder\$contentType"
@@ -11,9 +14,14 @@ try {
 
 	$loaded = $false
 	if (-not (Get-Module NuGetProjectPacker)) {
-	$loaded = $true
+		$loaded = $true
 		Import-Module "$slnDir\PowerShell\NuGetProjectPacker.psm1"
-}
+	}
+
+	$project = @{}
+	Get-CSharpProjects -SolutionPath $slnPath | % {
+		$project[$_.Project] = "$slnDir\$($_.ProjectPath)"
+	}
 
 	$version = Set-NuspecVersion -Path $slnDir\Package.nuspec -ProjectFolder $slnDir
 	if ($version -like '*.0'){
@@ -22,27 +30,30 @@ try {
 
 	$nugetPackagePath = "$slnDir\$id.$version.nupkg"
 
-	if (Test-Path $nugetFolder) {
-		del $nugetFolder\* -Recurse -Force
-		rmdir $nugetFolder
-}
+	if (Test-Path $slnDir\NuGet) {
+		Remove-NugetFolder $nugetFolder
+	}
 
 	md "$nugetFolder" | Out-Null
 	"content\$contentType" | % { mkdir $nugetFolder\$_ | Out-Null }
 
 	('Project1','Project2','Project3','Project4', 'Project5') | % {
-		[string]$projSubPath = $_
-		$projName = Split-Path $projSubPath -Leaf
-		$projDir = "$slnDir\$projName"
-		$projPath = "$projDir\$projName.csproj"
-		$projBinFolder = "$projDir\bin\Debug"
-	
-		Import-ArtifactProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -ArtifactBinFolder $nugetBinFolder -DefaultAssemblyName $projName
+		$projName = $_
+		$projPath = $project[$projName]
+		if ($projPath) {
+			$projDir = Split-Path $projPath
+			$projBinFolder = "$projDir\bin\$buildConfig"
+
+			Import-ArtifactProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -ArtifactBinFolder $nugetBinFolder -DefaultAssemblyName $projName
+		} else {
+			Write-Host "Project $projName is not in the solution"
+			Exit 1
+		}
 	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
-		NuGet pack $slnDir\Package.nuspec -BasePath "$nugetFolder" -OutputDirectory $slnDir
-	    Publish-NuGetPackage -PackagePath $nugetPackagePath
+		NuGet pack $slnDir\Package.nuspec -BasePath $nugetFolder -OutputDirectory $slnDir
+		Publish-NuGetPackage -PackagePath $nugetPackagePath
 	}
 
 	Remove-NugetFolder $nugetFolder

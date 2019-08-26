@@ -41,10 +41,12 @@
     <Compile Include="Scripts\Get-CSharpProjects.ps1" />
     <Compile Include="Scripts\Get-GroupNode.ps1" />
     <Compile Include="Scripts\Get-LogPath.ps1" />
+    <Compile Include="Scripts\Get-NuGetContentFolder.ps1" />
     <Compile Include="Scripts\Get-NuGetDbToolsConfig.ps1" />
     <Compile Include="Scripts\Get-NuGetDbToolsConfigPath.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalApiKey.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalPushSource.ps1" />
+    <Compile Include="Scripts\Get-NuGetLocalPushTimeout.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalSource.ps1" />
     <Compile Include="Scripts\Get-NuGetPackageVersion.ps1" />
     <Compile Include="Scripts\Get-ParentSubfolder.ps1" />
@@ -61,9 +63,11 @@
     <Compile Include="Scripts\Set-ProjectDependencyVersion.ps1" />
     <Compile Include="Scripts\Test-NuGetVersionExists.ps1" />
     <Compile Include="Tests\Get-GroupNode.tests.ps1" />
+    <Compile Include="Tests\Get-NuGetContentFolder.tests.ps1" />
     <Compile Include="Tests\Get-NuGetDbToolsConfigPath.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalApiKey.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalPushSource.tests.ps1" />
+    <Compile Include="Tests\Get-NuGetLocalPushTimeout.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalSource.tests.ps1" />
     <Compile Include="Tests\Get-SqlProjects.tests.ps1" />
     <Compile Include="Tests\Test-NuGetVersionExists.tests.ps1" />
