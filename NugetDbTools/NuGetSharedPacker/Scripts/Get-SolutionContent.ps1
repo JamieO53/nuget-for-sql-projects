@@ -14,6 +14,15 @@ function Get-SolutionContent {
 	)
 	$solutionFolder = Split-Path $SolutionPath
 	$packageContentFolder = "$SolutionFolder\PackageContent"
+	$packageFolder = "$SolutionFolder\Packages"
+	$contentFolder = Get-NuGetContentFolder
+	$solutionContentFolder = "$SolutionFolder\$contentFolder"
+
+	if (-not $contentFolder) {
+		$configFolder = (Get-Item (Get-NuGetDbToolsConfigPath)).FullName
+		Log "Content folder not specified in $configFolder" -Error
+		exit 1
+	}
 
 	if (Test-Path $packageContentFolder) {
 		if (-not $global:testing)
@@ -23,17 +32,30 @@ function Get-SolutionContent {
 	} else {
 		mkdir $packageContentFolder | Out-Null
 	}
-	
+
+	Log "Get solution packages: $SolutionPath"
 	Get-SolutionPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
+	rmdir "$SolutionPath\Databases*" -Recurse -Force
 	ls $packageContentFolder -Directory | % {
-		ls $_.FullName -Directory | % {
+		ls $_.FullName -Directory | ? { (ls $_.FullName -Exclude _._).Count -ne 0 } | % {
 			if (-not (Test-Path "$SolutionFolder\$($_.Name)")) {
-				mkdir "$SolutionFolder\$($_.Name)"
+				mkdir "$SolutionFolder\$($_.Name)" | Out-Null
 			}
 			copy "$($_.FullName)\*" "$SolutionFolder\$($_.Name)" -Recurse -Force
 		}
 	}
 
-	del $packageContentFolder -Include '*' -Recurse
+	del $packageContentFolder -Include '*' -Recurse -Force
+
+	if ((Test-Path $packageFolder) -and (ls "$packageFolder\**\$contentFolder" -Recurse)) {
+		if (Test-Path $solutionContentFolder) {
+			rmdir $solutionContentFolder\* -Recurse -Force
+		} else {
+			mkdir $solutionContentFolder | Out-Null
+		}
+		ls "$packageFolder\**\$contentFolder" -Recurse | % {
+			copy "$($_.FullName)\*" $solutionContentFolder -Recurse -Force
+		}
+	}
 }

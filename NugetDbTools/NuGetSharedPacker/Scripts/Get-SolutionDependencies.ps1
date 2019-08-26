@@ -14,14 +14,34 @@ function Get-SolutionDependencies {
 	)
 	$reference = @{}
 	$slnFolder = Split-Path -Path $SolutionPath
+	nuget restore $SolutionPath | Out-Null
+
 	Get-PkgProjects $SolutionPath | % {
 		$projPath = "$slnFolder\$($_.ProjectPath)"
 		$projFolder = Split-Path $projPath
-		[xml]$proj = gc $projPath
-		$proj.Project.ItemGroup.PackageReference | % {
-			$package = $_.Include
-			$version = $_.Version
-			$reference[$package] = $version
+		$assetPath = "$projFolder\obj\project.assets.json"
+
+		nuget restore $projPath -Source (Get-NuGetLocalSource) | Out-Null
+
+		$assets = ConvertFrom-Json (gc $assetPath | Out-String)
+		$dep = Get-AssetDependencies($assets)
+		$lib = Get-AssetLibraries($assets)
+		$tgt = Get-AssetTargets($assets)
+
+		$deps = $dep
+		while ($deps.Count -gt 0) {
+			$refs = $deps
+			$deps = @{}
+			$refs.Keys | % {
+				if (-not $reference[$_]) {
+					$reference[$_] = $lib[$_]
+					if ($tgt[$_]) {
+						$tgt[$_] | ? { -not $reference[$_] } | % {
+							$deps[$_] = $lib[$_]
+						}
+					}
+				}
+			}
 		}
 	}
 	$reference
