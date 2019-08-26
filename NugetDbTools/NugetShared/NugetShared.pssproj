@@ -41,6 +41,7 @@
     <Compile Include="Scripts\Get-CSharpProjects.ps1" />
     <Compile Include="Scripts\Get-GroupNode.ps1" />
     <Compile Include="Scripts\Get-LogPath.ps1" />
+    <Compile Include="Scripts\Get-NuGetCachePaths.ps1" />
     <Compile Include="Scripts\Get-NuGetContentFolder.ps1" />
     <Compile Include="Scripts\Get-NuGetDbToolsConfig.ps1" />
     <Compile Include="Scripts\Get-NuGetDbToolsConfigPath.ps1" />
@@ -63,6 +64,7 @@
     <Compile Include="Scripts\Set-ProjectDependencyVersion.ps1" />
     <Compile Include="Scripts\Test-NuGetVersionExists.ps1" />
     <Compile Include="Tests\Get-GroupNode.tests.ps1" />
+    <Compile Include="Tests\Get-NuGetCachePaths.tests.ps1" />
     <Compile Include="Tests\Get-NuGetContentFolder.tests.ps1" />
     <Compile Include="Tests\Get-NuGetDbToolsConfigPath.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalApiKey.tests.ps1" />
