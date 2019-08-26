@@ -5,7 +5,7 @@ ls * -Directory | % {
 if (-not (Test-Path .\NuGet)) {
     mkdir .\NuGet | Out-Null
 }
-nuget install DbSolutionBuilder -Source http://srv103octo01:808/NugetServer/nuget -OutputDirectory .\NuGet -ExcludeVersion
+nuget install DbSolutionBuilder -Source https://pkgs.dev.azure.com/epsdev/_packaging/EpsNuGet/nuget/v3/index.json -OutputDirectory .\NuGet -ExcludeVersion
 
 
 ls .\NuGet\**\* -Directory | % {
