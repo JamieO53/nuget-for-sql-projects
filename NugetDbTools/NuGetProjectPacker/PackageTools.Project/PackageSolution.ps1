@@ -1,5 +1,6 @@
 $projectType = 'Project'
-$id="Prefix.Name"
+$projName='Name'
+$id="Ecentric.$projName"
 $contentType='lib'
 $buildConfig='Debug'
 
@@ -23,27 +24,28 @@ try {
 		$project[$_.Project] = "$slnDir\$($_.ProjectPath)"
 	}
 
-	$version = Set-NuspecVersion -Path $slnDir\Package.nuspec -ProjectFolder $slnDir
+	$version = Set-NuspecVersion -Path $nuspecPath -ProjectFolder $slnDir
 	if ($version -like '*.0'){
 		throw "Invalid version $version"
 	}
 
 	$nugetPackagePath = "$slnDir\$id.$version.nupkg"
 
-	if (Test-Path $slnDir\NuGet) {
+	if (Test-Path $nugetFolder) {
 		Remove-NugetFolder $nugetFolder
 	}
 
-	md "$nugetFolder" | Out-Null
-	"content\$contentType" | % { mkdir $nugetFolder\$_ | Out-Null }
+	Initialize-NuGetFolders -Path $nugetFolder
+	'lib' | % { mkdir $nugetFolder\$_ | Out-Null }
 
 	('Project1','Project2','Project3','Project4', 'Project5') | % {
 		$projName = $_
-		$projPath = $project[$projName]
-		if ($projPath) {
+		if ($project.ContainsKey($projectName) {
+			$projPath = $project[$projName]
 			$projDir = Split-Path $projPath
 			$projBinFolder = "$projDir\bin\$buildConfig"
 
+			Initialize-NuGetRuntime -ProjectPath $projPath -SolutionPath $slnPath -Path $nugetFolder
 			Import-ArtifactProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -ArtifactBinFolder $nugetBinFolder -DefaultAssemblyName $projName
 		} else {
 			Write-Host "Project $projName is not in the solution"
@@ -52,7 +54,7 @@ try {
 	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
-		NuGet pack $slnDir\Package.nuspec -BasePath $nugetFolder -OutputDirectory $slnDir
+		NuGet pack $nuspecPath -BasePath $nugetFolder -OutputDirectory $slnDir
 		Publish-NuGetPackage -PackagePath $nugetPackagePath
 	}
 
