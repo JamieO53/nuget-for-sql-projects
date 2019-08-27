@@ -85,13 +85,57 @@ $optionItems
 	Out-FormattedXml -Xml $xml -FilePath $NugetConfigPath
 }
 
+function Get-AssetDependencies($assets) {
+    $dependencies = $assets.project.frameworks.'netstandard1.4'.dependencies
+    $dep = @{}
+    $dependencies | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | ? {
+        $id = $_.Name
+        $info = iex "`$dependencies.'$id'"
+        -not $info.autoReferenced
+    } | % {
+        $id = $_.Name
+        $info = iex "`$dependencies.'$id'"
+        $dep[$id] = $info.version
+    }
+    $dep
+}
+
+function Get-AssetLibraries($assets) {
+    $libraries = $assets.libraries
+    $lib = @{}
+    $libraries | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % {
+        $idVer = $_.Name.Split('/')
+        $lib[$idVer[0]] = $idVer[1]
+    }
+    $lib    
+}
+
+function Get-AssetTargets($assets) {
+    $targets = $assets.targets.'.NETStandard,Version=v1.4'
+    $tgt = @{}
+    $targets | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % {
+        $idVer = $_.Name
+        $id = $idVer.Split('/')[0]
+        $info = iex "`$targets.'$idVer'"
+        if ($info.dependencies) {
+            $targetDependencies = $info.dependencies | ? { $_ } | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % {
+                $_.Name
+            }
+            $tgt[$id] = $targetDependencies
+        } else {
+            $tgt[$id] = $null
+        }
+    }
+    $tgt
+}
+
 function Get-NuGetPackage {
 	<#.Synopsis
 	Get the package and its dependency content
 	.DESCRIPTION
     Gets the content of all the package and its dependencies
 	.EXAMPLE
-	Get-NuGetPackage -Id Batch.Batching -Version 0.2.11 -Source 'http://srv103octo01:808/NugetServer/nuget' -OutputDirectory C:\VSTS\Batch\PackageContent
+	Get-NuGetPackage -Id Batch.Batching -Version 0.2.11 -Source 'https://pkgs.dev.azure.com/epsdev/_packaging/EpsNuGet/nuget/v3/index.json' -OutputDirectory C:\VSTS\Batch\PackageContent
 	#>
     [CmdletBinding()]
     param
@@ -100,22 +144,20 @@ function Get-NuGetPackage {
 		[string]$Id,
 		# The package version
 		[string]$Version,
-		# The NuGet server
-		[string]$Source,
+		# The NuGet servers
+		[string]$Sources,
 		# The target for the package content
 		[string]$OutputDirectory,
 		# The optional Framework version
 		[string]$Framework = ''
 	)
 
-	$cacheFolder = "$env:userprofile\.nuget\packages\$Id\$Version"
-	if (Test-Path $cacheFolder) {
-		$targetFolder = "$OutputDirectory\$Id"
-		if (-not (Test-Path $targetFolder)) {
-			mkdir $targetFolder | Out-Null
-		}
-		copy $cacheFolder\* $targetFolder -Recurse -Force
+	if ($Framework) {
+		$frameworkVersion = " -Framework $Framework"
+	} else {
+		$frameworkVersion = ''
 	}
+	Invoke-Trap "nuget install $Id -Version '$Version' -Source '$Sources' -OutputDirectory '$OutputDirectory' -ExcludeVersion$frameworkVersion" -Message "Failed retrieving $Id $Version" -Fatal
 }
 
 function Get-NuspecProperty {
@@ -310,6 +352,12 @@ function Get-SolutionContent {
 	$contentFolder = Get-NuGetContentFolder
 	$solutionContentFolder = "$SolutionFolder\$contentFolder"
 
+	if (-not $contentFolder) {
+		$configFolder = (Get-Item (Get-NuGetDbToolsConfigPath)).FullName
+		Log "Content folder not specified in $configFolder" -Error
+		exit 1
+	}
+
 	if (Test-Path $packageContentFolder) {
 		if (-not $global:testing)
 		{
@@ -318,7 +366,8 @@ function Get-SolutionContent {
 	} else {
 		mkdir $packageContentFolder | Out-Null
 	}
-	
+
+	Log "Get solution packages: $SolutionPath"
 	Get-SolutionPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
 	rmdir "$SolutionPath\Databases*" -Recurse -Force
@@ -371,18 +420,25 @@ function Get-SolutionDependencies {
 		nuget restore $projPath -Source (Get-NuGetLocalSource) | Out-Null
 
 		$assets = ConvertFrom-Json (gc $assetPath | Out-String)
-		$assets.libraries | Get-Member |
-			where { $_.MemberType -eq 'NoteProperty' } |
-			select -Property Name | 
-            where { (Test-Path "$env:UserProfile\.nuget\packages\$($_.Name)") -and
-                -not (Test-Path "$env:UserProfile\.nuget\packages\$($_.Name)\lib")} |
-			foreach {
-				[string]$ref = $_.Name
-				$pkgver = $ref.Split('/')
-				$package = $pkgver[0]
-				$version = $pkgver[1]
-				$reference[$package] = $version
+		$dep = Get-AssetDependencies($assets)
+		$lib = Get-AssetLibraries($assets)
+		$tgt = Get-AssetTargets($assets)
+
+		$deps = $dep
+		while ($deps.Count -gt 0) {
+			$refs = $deps
+			$deps = @{}
+			$refs.Keys | % {
+				if (-not $reference[$_]) {
+					$reference[$_] = $lib[$_]
+					if ($tgt[$_]) {
+						$tgt[$_] | ? { -not $reference[$_] } | % {
+							$deps[$_] = $lib[$_]
+						}
+					}
+				}
 			}
+		}
 	}
 	$reference
 }
@@ -406,14 +462,16 @@ function Get-SolutionPackages {
 	)
 	$slnFolder = Split-Path $SolutionPath
 	$sln = Split-Path $SolutionPath -Leaf
-	$localSource = Get-NuGetLocalSource
+	$localSources = [string]::Join("' -Source '",(Get-NuGetCachePaths))
 
+	Log "Get solution dependencies"
 	$reference = Get-SolutionDependencies $SolutionPath
 	$reference.Keys | sort | % {
 		$package = $_
 		$version = $reference[$package]
 		if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {
-			Get-NuGetPackage -Id $package -Version $version -Source $localSource -OutputDirectory $ContentFolder
+			Log "Getting $package $version"
+			Get-NuGetPackage -Id $package -Version $version -Sources $localSources -OutputDirectory $ContentFolder
 			Set-NuGetDependencyVersion -SolutionPath $SolutionPath -Dependency $package -Version $version
 		}
 	}
@@ -509,16 +567,15 @@ function Initialize-NuGetRuntime {
 		# The location of the NuGet folders
 		[string]$Path
 	)
-	$paths = @()
-	$solutionFolder = Split-Path $SolutionPath
 	$projectFolder = Split-Path $ProjectPath
 	$contentFolder = Get-NuGetContentFolder
 	$nugetContentFolder = "$Path\content\$contentFolder"
-	if ((Test-Path $solutionFolder\$contentFolder) -or (Test-Path $projectFolder\$contentFolder)) {
+	if ($contentFolder -and (Test-Path $projectFolder\$contentFolder)) {
 		if (-not (Test-Path $nugetContentFolder)) {
 			mkdir $nugetContentFolder
 		}
 		if (Test-Path $projectFolder\$contentFolder) {
+			Log "Copying $projectFolder\$contentFolder\* to $nugetContentFolder"
 			copy $projectFolder\$contentFolder\* $nugetContentFolder -Recurse -Force
 		}
 	}

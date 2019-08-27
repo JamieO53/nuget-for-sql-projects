@@ -82,6 +82,11 @@ function Get-LogPath {
 	"$logFolder\$Name-$((Get-Date).ToString('yyyy-MM-dd-HH-mm-ss-fff')).log"
 }
 
+function Get-NuGetCachePaths {
+	[string[]]$paths = @("$env:userprofile\.nuget\packages", 'Microsoft Visual Studio Offline Packages')
+	$paths
+}
+
 function Get-NuGetContentFolder {
 	$config = Get-NuGetDbToolsConfig
 	$config.configuration.nugetLocalServer.add | ? { $_.key -eq 'ContentFolder' } | % { $_.value }
@@ -96,7 +101,13 @@ function Get-NuGetDbToolsConfigPath {
 	if ($Global:testing) {
 		"TestDrive:\Configuration\NugetDbTools.config"
 	} else {
-		"$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config"
+		if (Test-Path "$PSScriptRoot\..\JamieO53\NugetDBTools\NugetDbTools.config") {
+			"$PSScriptRoot\..\JamieO53\NugetDBTools\NugetDbTools.config"
+		} elseif (Test-Path "$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config") {
+			"$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config"
+		} else {
+			Log "Unable to find NuGetDbTools configuration"
+		}
 	}
 }
 

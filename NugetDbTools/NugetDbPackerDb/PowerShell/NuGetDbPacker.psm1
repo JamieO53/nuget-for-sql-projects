@@ -130,6 +130,58 @@ function Find-SqlPackagePath {
 	}
 }
 
+function Format-ProjectDatabaseParameters {
+	<#.Synopsis
+	Format the SqlCommand CLI parameters to publish the DB project dacpac
+	.DESCRIPTION
+    Formats the parameters to publish the dacpac using profile if available and override parameters.
+	.EXAMPLE
+	Publish-ProjectDatabase -PublishTemplate C:\VSTS\EcsShared\SupportRoles\EcsShared.SupportRoles.publish.xml
+	#>
+    [CmdletBinding()]
+    [OutputType([string])]
+	param
+    (
+        # The location of .dacpac file being published
+		[string]$DacpacPath,
+        # The location of the profile (.publish.xml file being) with deployment options
+        [string]$ProfilePath,
+		# Parameters overriding profile settings
+		# Format according to SqlPackage CLI https://docs.microsoft.com/en-us/sql/tools/sqlpackage?view=sql-server-2017
+		[string[]]$Parameters
+	)
+
+	if (-not $DacpacPath) {
+		throw 'No DacPac was specified'
+	}
+	if (-not (Test-Path $DacpacPath)) {
+		throw "The DacPac does not exist at $DacpacPath"
+	}
+	if ($Parameters) {
+		$params = [string]::Join(' ', $Parameters)
+	} else {
+		$params = ''
+	}
+	if ($ProfilePath) {
+		if (Test-Path $ProfilePath) {
+			[string]$db = "/pr:`"$ProfilePath`" $params"
+		} else {
+			throw "The Profile does not exist at $ProfilePath"
+		}
+	} else {
+		if (-not ($params.Contains('/p:CreateNewDatabase'))) {
+			$params += ' /p:CreateNewDatabase=True'
+		}
+		if (-not ($params.Contains('/tdn:') -or $params.Contains('/TargetDatabaseName:'))) {
+			$projectName = [IO.Path]::GetFileNameWithoutExtension($DacpacPath)
+			[string]$db = "/tdn:`"$projectName`" $params"
+		} else {
+			[string]$db = $params
+		}
+	}
+	$db
+}
+
 function Import-NuGetDb {
 	<#.Synopsis
 	Copy the build files to the NuGet content folder
@@ -207,8 +259,10 @@ function Publish-DbPackage {
         if (-not (Test-NuGetVersionExists -Id $id -Version $version)) {
             $nugetPackage = [IO.Path]::Combine($nugetFolder, "$id.$version.nupkg")
             Initialize-DbPackage -ProjectPath $ProjectPath -SolutionPath $SolutionPath
-            Publish-NuGetPackage -PackagePath $nugetPackage
-            Remove-NugetFolder $nugetFolder
+            if ($env:SYSTEM_SERVERTYPE -ne 'Hosted') {
+				Publish-NuGetPackage -PackagePath $nugetPackage
+				Remove-NugetFolder $nugetFolder
+			}
         }
     }
 }
@@ -227,21 +281,18 @@ function Publish-ProjectDatabase {
         # The location of .dacpac file being published
 		[string]$DacpacPath,
         # The location of the profile (.publish.xml file being) with deployment options
-        [string]$ProfilePath
+        [string]$ProfilePath,
+		# Parameters overriding profile settings
+		# Format according to SqlPackage CLI https://docs.microsoft.com/en-us/sql/tools/sqlpackage?view=sql-server-2017
+		[string[]]$Parameters
 	)
 	[string]$cmd = Find-SqlPackagePath
 	if ($cmd) {
 		try {
-	
-			if ($ProfilePath -and (Test-Path $ProfilePath)) {
-				[string]$db = "/pr:`"$ProfilePath`""
-			} else {
-				$projectName = [IO.Path]::GetFileNameWithoutExtension($DacpacPath)
-				[string]$db = "/tdn:`"$projectName`" /p:CreateNewDatabase=True"
-			}
+			$params = Format-ProjectDatabaseParameters -DacpacPath $DacpacPath -ProfilePath $ProfilePath -Parameters $Parameters
 	
 			Log "Publishing $DacpacPath using $ProfilePath"
-			Invoke-Trap -Command "& `"$cmd`" /a:Publish /sf:`"$DacpacPath`" $db" -Message "Deploying database failed" -Fatal
+			Invoke-Trap -Command "& `"$cmd`" /a:Publish /sf:`"$DacpacPath`" $params" -Message "Deploying database failed" -Fatal
 		} catch {
 			Log "SqlPackage.exe failed: $_" -Error
 			exit 1
@@ -274,6 +325,238 @@ function Publish-SolutionDbPackages {
         [string]$projectPath = [IO.Path]::Combine($solutionFolder, $_.ProjectPath)
         Publish-DbPackage -ProjectPath $projectPath -SolutionPath $SolutionPath
     }
+}
+
+function Publish-SSASCubeDatabase {
+	param (
+		[string]$CubeFolder,
+		[string]$CubeName,
+		[string]$ConfigSharedFolder,
+		[string]$ConfigFolder,
+		[string]$DatabaseName,
+		[string]$DeploymentError
+	)
+	if (Test-Path "$ConfigFolder") {
+		Update-SSASCubeAsdatabaseFile `
+			-SSASCubeAsdatabasePath "$CubeFolder\$CubeName.asdatabase" `
+			-DeploymentTargetConfigPath "$ConfigFolder\$CubeName.deploymenttargets"
+
+		Update-SSASCubeDeploymentOptions `
+			-SSASCubeDeploymentOptionsPath "$CubeFolder\$CubeName.deploymentoptions" `
+			-DeploymentOptionsConfigPath "$ConfigSharedFolder\default.deploymentoptions"
+
+		Update-SSASCubeDeploymentTarget `
+			-SSASCubeDeploymentTargetsPath "$CubeFolder\$CubeName.deploymenttargets" `
+			-DeploymentTargetConfigPath "$ConfigFolder\$CubeName.deploymenttargets"
+
+		Update-SSASCubeDataSource `
+			-SSASCubeConfigSettingsPath "$CubeFolder\$CubeName.configsettings" `
+			-DataSourceConfigPath "$ConfigFolder\DataSources.configsettings"
+
+		[string]$TargetServerVersion = "2016"
+
+		if(Test-Path -Path "$ConfigFolder\AdditionalSettings.xml") {
+		    [xml]$SSASCubeAdditionalSettingsFile = Get-Content "$ConfigFolder\AdditionalSettings.xml"
+			if (-not $SSASCubeAdditionalSettingsFile.Settings.Server.Version) {
+				Write-Host "SSAS Target server version variable not defined, defaulting to $TargetServerVersion" -fore red
+			} else {
+				$TargetServerVersion = $SSASCubeAdditionalSettingsFile.Settings.Server.Version;
+			}
+		} else {
+		    Write-Host "Additional settings file was not defined for this target deployment channel" -fore yellow
+		}
+		
+		Invoke-Trap -Command ".\Microsoft.AnalysisServices.Deployment.ps1 `"$CubeFolder\$CubeName.asdatabase`" `"$DatabaseName`" `"$TargetServerVersion`"" -Message $DeploymentError -Fatal
+	}
+}
+
+function Report-PublishProjectDatabase {
+	<#.Synopsis
+	Publish the DB project dacpac
+	.DESCRIPTION
+    Publishes the dacpac as specified by the publish template.
+	.EXAMPLE
+	Publish-ProjectDatabase -PublishTemplate C:\VSTS\EcsShared\SupportRoles\EcsShared.SupportRoles.publish.xml
+	#>
+    [CmdletBinding()]
+    param
+    (
+        # The location of .dacpac file being published
+		[string]$DacpacPath,
+        # The location of the profile (.publish.xml file being) with deployment options
+        [string]$ProfilePath,
+		# The destination of the deploy report
+		[string]$OutputPath,
+		# Parameters overriding profile settings
+		# Format according to SqlPackage CLI https://docs.microsoft.com/en-us/sql/tools/sqlpackage?view=sql-server-2017
+		[string[]]$Parameters
+	)
+	[string]$cmd = Find-SqlPackagePath
+	if ($cmd) {
+		try {
+			$params = Format-ProjectDatabaseParameters -DacpacPath $DacpacPath -ProfilePath $ProfilePath -Parameters $Parameters
+	
+			Log "Publishing $DacpacPath using $ProfilePath"
+			Invoke-Trap -Command "& `"$cmd`" /a:DeployReport /sf:`"$DacpacPath`" /op:`"$outputPath`" $params" -Message "Reporting the database deployment failed" -Fatal
+		} catch {
+			Log "SqlPackage.exe failed: $_" -Error
+			exit 1
+		}
+	} else {
+		Log "SqlPackage.exe could not be found" -E
+		exit 1
+	}}
+
+function Update-SSASCubeAsdatabaseFile {
+	param (
+		[string]$SSASCubeAsdatabasePath,
+		[string]$DeploymentTargetConfigPath
+	)
+	
+	try {
+		if ([string]::IsNullOrEmpty($SSASCubeAsdatabasePath)) {
+			Write-Host "$SSASCubeAsdatabasePath not found" -fore red
+			exit 1
+		}
+
+		if ([string]::IsNullOrEmpty($DeploymentTargetConfigPath)) {
+			Write-Host "$DeploymentTargetConfigPath not found" -fore red
+			exit 1
+		}
+
+		$SSASCubeAsdatabaseFileName = [IO.Path]::GetFileName($SSASCubeAsdatabasePath)
+		Write-Host "Updating $SSASCubeAsdatabaseFileName..."
+
+		[xml]$SSASCubeAsdatabaseFile = Get-Content "$SSASCubeAsdatabasePath"
+		[xml]$deploymentTargetConfigFile = Get-Content "$DeploymentTargetConfigPath"
+
+		$SSASCubeAsdatabaseFile.Database.ID = $deploymentTargetConfigFile.DeploymentTarget.Database
+		$SSASCubeAsdatabaseFile.Database.Name = $deploymentTargetConfigFile.DeploymentTarget.Database
+
+		$SSASCubeAsdatabaseFile.Save("$SSASCubeAsdatabasePath")
+
+		Write-Host "$SSASCubeAsdatabaseFileName datasource updated..."
+	} catch {
+		Log "Update-SSASCubeAsdatabaseFile failed: $_" -Error
+	}
+}
+
+function Update-SSASCubeDataSource {
+	param (
+		[string]$SSASCubeConfigSettingsPath,
+		[string]$DataSourceConfigPath
+	)
+
+	try {
+		if ([string]::IsNullOrEmpty($SSASCubeConfigSettingsPath)) {
+			Write-Host "$SSASCubeConfigSettingsPath not found" -fore red
+			exit 1
+		}
+
+		if ([string]::IsNullOrEmpty($DataSourceConfigPath)) {
+			Write-Host "$DataSourceConfigPath not found" -fore red
+			exit 1
+		}
+
+		$SSASCubeConfigSettingsFileName = [IO.Path]::GetFileName($SSASCubeConfigSettingsPath)
+		Write-Host "Updating $SSASCubeConfigSettingsFileName..."
+		
+		[xml]$SSASCubeConfigSettingsFile = Get-Content "$SSASCubeConfigSettingsPath"
+		[xml]$dataSourceConfigFile = Get-Content "$DataSourceConfigPath"
+
+		$configSettingsDataSources = $SSASCubeConfigSettingsFile.ConfigurationSettings.Database.DataSources.DataSource
+		
+		foreach ($dataSource in $dataSourceConfigFile.DataSources.DataSource) {
+			$configSettingDataSource = $configSettingsDataSources | Where-Object { $_.ID -eq $dataSource.ID }
+			$configSettingDataSource.ConnectionString = $dataSource.ConnectionString
+		}
+
+		$SSASCubeConfigSettingsFile.Save("$SSASCubeConfigSettingsPath")
+
+		Write-Host "$SSASCubeConfigSettingsFileName datasource updated..."
+	}
+	catch {
+		Log "Update-SSASCubeDetails failed: $_" -Error
+	}
+}
+
+function Update-SSASCubeDeploymentOptions {
+	param (
+		[string]$SSASCubeDeploymentOptionsPath,
+		[string]$DeploymentOptionsConfigPath
+	)
+
+	try {
+		if ([string]::IsNullOrEmpty($SSASCubeDeploymentOptionsPath)) {
+			Write-Host "$SSASCubeDeploymentOptionsPath not found" -fore red
+			exit 1
+		}
+
+		if ([string]::IsNullOrEmpty($DeploymentOptionsConfigPath)) {
+			Write-Host "$DeploymentOptionsConfigPath not found" -fore red
+			exit 1
+		}
+
+		$SSASdeploymentOptionsFileName = [IO.Path]::GetFileName($SSASCubeDeploymentOptionsPath)
+		Write-Host "Updating $SSASdeploymentOptionsFileName..."
+
+		[xml]$SSASCubeDeploymentOptionsFile = Get-Content "$SSASCubeDeploymentOptionsPath"
+		[xml]$deploymentOptionsConfigFile = Get-Content "$DeploymentOptionsConfigPath"
+		
+		$SSASCubeDeploymentOptions = $SSASCubeDeploymentOptionsFile.DeploymentOptions.ChildNodes
+		$deploymentOptions = $deploymentOptionsConfigFile.DeploymentOptions.ChildNodes
+
+		foreach ($deploymentOption in $deploymentOptions) {
+			$SSASCubeDeploymentOption = $SSASCubeDeploymentOptions | Where-Object { $_.Name -eq $deploymentOption.Name }
+
+			if ($null -ne $SSASCubeDeploymentOption) {
+				$SSASCubeDeploymentOption.InnerText = $deploymentOption.InnerText
+			}
+		}
+
+		$SSASCubeDeploymentOptionsFile.Save("$SSASCubeDeploymentOptionsPath")
+
+		Write-Host "$SSASdeploymentOptionsFileName datasource updated..."
+	}
+	catch {
+		Log "Update-SSASCubeDeploymentOptions failed: $_" -Error
+	}
+}
+
+function Update-SSASCubeDeploymentTarget {
+	param (
+		[string]$SSASCubeDeploymentTargetsPath,
+		[string]$DeploymentTargetConfigPath
+	)
+
+	try {
+		if ([string]::IsNullOrEmpty($SSASCubeDeploymentTargetsPath)) {
+			Write-Host "$SSASCubeDeploymentTargetsPath not found" -fore red
+			exit 1
+		}
+
+		if ([string]::IsNullOrEmpty($DeploymentTargetConfigPath)) {
+			Write-Host "$DeploymentTargetConfigPath not found" -fore red
+			exit 1
+		}
+
+		$SSASdeploymentTargetsFileName = [IO.Path]::GetFileName($SSASCubeDeploymentTargetsPath)
+		Write-Host "Updating $SSASdeploymentTargetsFileName..."
+
+		[xml]$SSASCubeDeploymentTargetsFile = Get-Content "$SSASCubeDeploymentTargetsPath"
+		[xml]$deploymentTargetConfigFile = Get-Content "$DeploymentTargetConfigPath"
+
+		$SSASCubeDeploymentTargetsFile.DeploymentTarget.Database = $deploymentTargetConfigFile.DeploymentTarget.Database
+		$SSASCubeDeploymentTargetsFile.DeploymentTarget.Server = $deploymentTargetConfigFile.DeploymentTarget.Server
+		$SSASCubeDeploymentTargetsFile.DeploymentTarget.ConnectionString = $deploymentTargetConfigFile.DeploymentTarget.ConnectionString
+
+		$SSASCubeDeploymentTargetsFile.Save("$SSASCubeDeploymentTargetsPath")
+
+		Write-Host "$SSASdeploymentTargetsFileName datasource updated..."
+	}
+	catch {
+		Log "Update-SSASCubeDeploymentTarget failed: $_" -Error
+	}
 }
 
 function Initialize-DbPackage
