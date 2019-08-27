@@ -16,12 +16,18 @@ if (-not (Test-Path $outputFolder)) {
 	mkdir $outputFolder | Out-Null
 }
 
+if (Test-Path "$tgtFolder\master.dacpac") {
+	copy "$tgtFolder\master.dacpac" $outputFolder -Force
+}
 copy "$tgtFolder\$ProjectName.dacpac" $outputFolder
 if ($CopyAssembly) {
 	copy "$tgtFolder\$AssemblyName.*" $outputFolder
 }
 if (Test-Path "$tgtFolder\$ProjectName.publish.xml") {
 	copy "$tgtFolder\$ProjectName.publish.xml" $outputFolder
+}
+if (Test-Path "$tgtFolder\$ProjectName.*.publish.xml") {
+	copy "$tgtFolder\$ProjectName.*.publish.xml" $outputFolder
 }
 
 if (Test-Path "$outputFolder\unzipped") {
