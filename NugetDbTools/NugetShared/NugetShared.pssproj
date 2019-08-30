@@ -39,6 +39,7 @@
     <Compile Include="Scripts\Format-XmlIndent.ps1" />
     <Compile Include="Scripts\Get-Caller.ps1" />
     <Compile Include="Scripts\Get-CSharpProjects.ps1" />
+    <Compile Include="Scripts\Get-ExtensionPaths.ps1" />
     <Compile Include="Scripts\Get-GroupNode.ps1" />
     <Compile Include="Scripts\Get-LogPath.ps1" />
     <Compile Include="Scripts\Get-NuGetCachePaths.ps1" />
@@ -63,6 +64,7 @@
     <Compile Include="Scripts\Set-NodeText.ps1" />
     <Compile Include="Scripts\Set-ProjectDependencyVersion.ps1" />
     <Compile Include="Scripts\Test-NuGetVersionExists.ps1" />
+    <Compile Include="Tests\Get-ExtensionPaths.tests.ps1" />
     <Compile Include="Tests\Get-GroupNode.tests.ps1" />
     <Compile Include="Tests\Get-NuGetCachePaths.tests.ps1" />
     <Compile Include="Tests\Get-NuGetContentFolder.tests.ps1" />
