@@ -1,5 +1,5 @@
 ﻿if (-not (Get-Module NugetSharedPacker -All)) {
-	Import-Module "$PSScriptRoot\NugetSharedPacker.psd1"
+	Import-Module "$PSScriptRoot\NugetSharedPacker.psd1" -Global
 }
 
 function Add-DbFileNode ($parentNode) {
@@ -35,7 +35,7 @@ function Enable-CLR{
 	if(-not (Get-InstalledModule SqlServer)) {
 		Install-Module SqlServer
 	}
-	Import-Module SqlServer
+	Import-Module SqlServer -Global -DisableNameChecking
 	[xml]$doc = gc $ProfilePath
 	[string]$connectionString = $doc.Project.PropertyGroup.TargetConnectionString
 	$query = @'
@@ -259,7 +259,7 @@ function Publish-DbPackage {
         if (-not (Test-NuGetVersionExists -Id $id -Version $version)) {
             $nugetPackage = [IO.Path]::Combine($nugetFolder, "$id.$version.nupkg")
             Initialize-DbPackage -ProjectPath $ProjectPath -SolutionPath $SolutionPath
-            if ($env:SYSTEM_SERVERTYPE -ne 'Hosted') {
+            if ($env:USERNAME -EQ 'Builder') {
 				Publish-NuGetPackage -PackagePath $nugetPackage
 				Remove-NugetFolder $nugetFolder
 			}
