@@ -1,7 +1,7 @@
 if ( Get-Module NugetSharedPacker -All) {
 	Remove-Module NugetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\PowerShell\NugetSharedPacker.psd1"
+Import-Module "$PSScriptRoot\..\PowerShell\NugetSharedPacker.psd1" -Global -DisableNameChecking
 
 $SolutionFolder = Get-ParentSubFolder "$PSScriptRoot" '*.sln'
 [string]$slnPath=ls $SolutionFolder\*.sln | ? { $_ } | % { $_.FullName }
