@@ -1,12 +1,12 @@
 ﻿if (Get-Module NuGetSharedPacker -All) {
 	Remove-Module NuGetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1" -Global -DisableNameChecking
 
 if (Get-Module TestUtils -All) {
 	Remove-Module TestUtils
 }
-Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global -DisableNameChecking
 
 Describe "Compress-Package" {
 	$projFolder = "$testDrive\proj"

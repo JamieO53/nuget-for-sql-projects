@@ -10,9 +10,9 @@ if ( Get-Module NugetDbPacker) {
 }
 
 if (Test-Path "$PSScriptRoot\PowerShell\NugetDbPacker.psd1") {
-	Import-Module "$PSScriptRoot\PowerShell\NugetDbPacker.psd1"
+	Import-Module "$PSScriptRoot\PowerShell\NugetDbPacker.psd1" -Global -DisableNameChecking
 } elseif (Test-Path "$PSScriptRoot\..\PowerShell\NugetDbPacker.psd1") {
-	Import-Module "$PSScriptRoot\..\PowerShell\NugetDbPacker.psd1"
+	Import-Module "$PSScriptRoot\..\PowerShell\NugetDbPacker.psd1" -Global -DisableNameChecking
 } else {
 	Write-Host "NugetDbPacker module could not be located" -ForegroundColor Red
 	exit 1

@@ -17,7 +17,7 @@ try {
 	$loaded = $false
 	if (-not (Get-Module NugetSharedPacker)) {
 		$loaded = $true
-		Import-Module "$slnDir\NugetSharedPacker\bin\Debug\NugetSharedPacker\NugetSharedPacker.psd1"
+		Import-Module "$slnDir\NugetSharedPacker\bin\Debug\NugetSharedPacker\NugetSharedPacker.psd1" -Global -DisableNameChecking
 	}
 
 	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir -UpVersion $upVersion

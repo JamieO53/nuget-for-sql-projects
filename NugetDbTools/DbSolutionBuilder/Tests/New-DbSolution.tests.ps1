@@ -2,7 +2,7 @@
 if (Get-Module DbSolutionBuilder) {
 	Remove-Module DbSolutionBuilder
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psm1" -Global
 
 $global:testing = $true
 $location = "TestDrive:\Solutions"
@@ -59,7 +59,7 @@ Describe "New-DbSolution" {
 	Context "Solution folder" {
 		New-DbSolutionFromTemplate -Parameters $params -SolutionFolder $SolutionFolder -TemplateFolder $templateFolder -PkgProjectPath $pkgProjectPath
 		if (-not (Get-Module NugetDbPacker)) {
-			Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1"
+			Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1" -Global -DisableNameChecking
 		}
 
 		It "$location\$name folder exists" {

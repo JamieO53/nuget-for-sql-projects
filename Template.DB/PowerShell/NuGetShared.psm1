@@ -61,6 +61,17 @@ function Get-CSharpProjects {
     Get-ProjectsByType -SolutionPath $SolutionPath -ProjId $newCsProjId
 }
 
+function Get-ExtensionPaths {
+	$extensions = @{}
+	Get-ToolsConfiguration | % {
+		$tools = $_
+		$tools.extensions.extension | % {
+			$extensions[$_.name] = "$PSScriptRoot\$($_.path)"
+		}
+	}
+	return $extensions
+}
+
 function Get-GroupNode ($parentNode, $id) {
 	$gn = $parentNode.SelectSingleNode($id)
 	if ($gn) {
@@ -274,6 +285,40 @@ function Get-SqlProjects {
     )
     $sqlProjId = '{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}'
     Get-ProjectsByType -SolutionPath $SolutionPath -ProjId $sqlProjId
+}
+
+function Get-ToolsConfiguration {
+	$configPath = "$PSScriptRoot\..\PackageTools\PackageTools.root.config"
+	if (-not (Test-Path $configPath)) {
+		## Testing - look in test scripts folder
+		$configPath = "$PSScriptRoot\..\..\..\Tests\PackageTools.root.config"
+		# $configPath = "$((Split-Path (Get-PSCallStack |
+		# 	? {$_.Command -like '*.test.ps1' } |
+		# 	select -Last 1).ScriptName))\PackageTools.root.config"
+	}
+	$tools = @()
+	if (Test-Path $configPath) {
+		[xml]$config = gc $configPath
+		if ($config.tools) {
+			$tools += $config.tools
+		}
+	}
+	$tools
+}
+
+function Import-Extensions {
+    $extensions = Get-ExtensionPaths
+    $extensions.Keys | % {
+        $extension = $_
+        $extensionPath = $extensions[$_]
+        if (-not (Get-Module $extension -All)) {
+            if (Test-Path $extensionPath) {
+                Import-Module $extensionPath -Global -DisableNameChecking
+            } else {
+                throw "Unable to import extension $extension"
+            }
+        }
+    }
 }
 
 function Invoke-Trap {

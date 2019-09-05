@@ -1,7 +1,7 @@
 ﻿if ( Get-Module NuGetProjectPacker) {
 	Remove-Module NuGetProjectPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psm1" -Global -DisableNameChecking
 
 $projText = @"
 <?xml version=`"1.0`" encoding=`"utf-8`"?>

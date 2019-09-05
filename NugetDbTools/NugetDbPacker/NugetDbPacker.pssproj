@@ -64,6 +64,7 @@ copy "$ProjectDir\$ProjectName.psd1" "$ProjectDir\bin\Debug\$ProjectName"</PreBu
   </ItemGroup>
   <ItemGroup>
     <Content Include="Package.nuspec" />
+    <Content Include="Tests\PackageTools.root.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />

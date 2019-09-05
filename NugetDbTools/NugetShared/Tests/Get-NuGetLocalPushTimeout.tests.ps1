@@ -1,7 +1,7 @@
 ﻿if (Get-Module NugetShared) {
 	Remove-Module NugetShared
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1" -Global -DisableNameChecking
 
 $Global:testing = $true
 $config = @"

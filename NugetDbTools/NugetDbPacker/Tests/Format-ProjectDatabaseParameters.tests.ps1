@@ -1,7 +1,7 @@
 ﻿if ( Get-Module NugetDbPacker) {
 	Remove-Module NugetDbPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1" -Global -DisableNameChecking
 
 Describe "Format-ProjectDatabaseParameters" {
 	$dbFolder = 'TestDrive:\Databases'

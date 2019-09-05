@@ -1,7 +1,7 @@
 if ( Get-Module NugetShared) {
 	Remove-Module NugetShared
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1" -Global -DisableNameChecking
 
 $solutionText = @"
 Microsoft Visual Studio Solution File, Format Version 12.00

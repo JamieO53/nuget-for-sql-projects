@@ -1,10 +1,10 @@
 ﻿if ( Get-Module NuGetSharedPacker) {
 	Remove-Module NuGetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1" -Global -DisableNameChecking
 
 if (-not (Get-Module TestUtils)) {
-	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global -DisableNameChecking
 }
 
 Describe "Initialize-NuGetRuntime" {

@@ -1,5 +1,5 @@
 if (-not (Get-Module NuGetSharedPacker)) {
-	Import-Module "$PSScriptRoot\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1"
+	Import-Module "$PSScriptRoot\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1" -Global
 }
 # if (-not (Test-IsRunningBuildAgent) -and -not (Test-PathIsCommitted)) {
 # 	Write-Host 'Commit changes before publishing the projects to NuGet' -ForegroundColor Red
