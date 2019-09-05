@@ -55,6 +55,8 @@
     <Compile Include="Scripts\Get-PowerShellProjects.ps1" />
     <Compile Include="Scripts\Get-ProjectsByType.ps1" />
     <Compile Include="Scripts\Get-SqlProjects.ps1" />
+    <Compile Include="Scripts\Get-ToolsConfiguration.ps1" />
+    <Compile Include="Scripts\Import-Extensions.ps1" />
     <Compile Include="Scripts\Invoke-Trap.ps1" />
     <Compile Include="Scripts\Log.ps1" />
     <Compile Include="Scripts\Out-FormattedXml.ps1" />
@@ -74,6 +76,7 @@
     <Compile Include="Tests\Get-NuGetLocalPushTimeout.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalSource.tests.ps1" />
     <Compile Include="Tests\Get-SqlProjects.tests.ps1" />
+    <Compile Include="Tests\Import-Extensions.tests.ps1" />
     <Compile Include="Tests\Test-NuGetVersionExists.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
