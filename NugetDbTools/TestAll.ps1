@@ -10,7 +10,7 @@ $modules = @{
 	DbSolutionBuilder="$SolutionFolder\DbSolutionBuilder\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psd1"
 }
 if (-not (Get-Module NuGetShared)) {
-	Import-Module $modules['NuGetShared']
+	Import-Module $modules['NuGetShared'] -Global -DisableNameChecking
 }
 
 if (Test-Path "$SolutionFolder\TestResults") {
@@ -26,7 +26,7 @@ $renderHtml = $true
 Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 	Remove-Module Nuget*,*Extension,TestUtils,DbSolutionBuilder -ErrorAction SilentlyContinue
 	"GitExtension","VSTSExtension","NuGetShared","NuGetSharedPacker" | % {
-		Import-Module "$($modules[$_])"
+		Import-Module "$($modules[$_])" -Global -DisableNameChecking
 	}
 	$projectFolder = Split-Path "$SolutionFolder\$($_.ProjectPath)"
 	$testName = $_.Project

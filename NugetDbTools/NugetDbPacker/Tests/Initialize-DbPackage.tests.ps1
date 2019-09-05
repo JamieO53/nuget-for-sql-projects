@@ -1,12 +1,12 @@
 if ( Get-Module NuGetDbPacker) {
 	Remove-Module NuGetDbPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NuGetDbPacker\NuGetDbPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetDbPacker\NuGetDbPacker.psm1" -Global -DisableNameChecking
 
 if (Get-Module TestUtils -All) {
 	Remove-Module TestUtils
 }
-Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global
 
 Describe 'Initialize-NuGetFolders' {
 	$slnFolder = "$testdrive\sln"

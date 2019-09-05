@@ -1,9 +1,9 @@
 ﻿if ( Get-Module NugetDbPacker) {
 	Remove-Module NugetDbPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1" -Global -DisableNameChecking
 if (-not (Get-Module TestUtils)) {
-	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global
 }
 
 Describe "Import-NuGetDb" {

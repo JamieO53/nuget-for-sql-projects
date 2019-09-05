@@ -1,7 +1,7 @@
 if ( Get-Module NuGetSharedPacker) {
 	Remove-Module NuGetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1" -Global -DisableNameChecking
 Describe 'Initialize-NuGetFolders' {
 	$projFolder = 'TestDrive:\proj'
 	$nugetFolder = "$projFolder\NuGet"

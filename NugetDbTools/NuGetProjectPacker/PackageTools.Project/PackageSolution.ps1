@@ -16,7 +16,7 @@ try {
 	$loaded = $false
 	if (-not (Get-Module NuGetProjectPacker)) {
 		$loaded = $true
-		Import-Module "$slnDir\PowerShell\NuGetProjectPacker.psm1"
+		Import-Module "$slnDir\PowerShell\NuGetProjectPacker.psm1" -Global -DisableNameChecking
 	}
 
 	$project = @{}

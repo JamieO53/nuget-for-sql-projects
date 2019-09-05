@@ -6,7 +6,7 @@ $SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path
 cd $SolutionFolder
 
 if (-not (Get-Module NugetDbPacker)) {
-	Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1"
+	Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1" -Global -DisableNameChecking
 }
 
 $rtFolder = "$SolutionFolder\RegressionTests\Commands"

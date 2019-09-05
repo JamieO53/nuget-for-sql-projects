@@ -11,7 +11,7 @@ try {
 	$slnPath = (Get-Item "$slnFolder\*.sln") | select -First 1 | % { $_.FullName }
 	
 	if (-not (Get-Module NuGetProjectPacker)) {
-		Import-Module "$slnFolder\PowerShell\NuGetProjectPacker.psd1"
+		Import-Module "$slnFolder\PowerShell\NuGetProjectPacker.psd1" -Global -DisableNameChecking
 	}
 
 	$releaseConfigPath = "$slnFolder\PackageRelease.config"

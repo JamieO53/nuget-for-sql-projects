@@ -45,6 +45,6 @@ function New-DbSolutionFromTemplate {
 	iex "$SolutionFolder\PackageTools\Bootstrap.ps1"
 
 	if (-not (Get-Module NugetSharedPacker)) {
-		Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1" -DisableNameChecking
+		Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1" -Global -DisableNameChecking
 	}
 }

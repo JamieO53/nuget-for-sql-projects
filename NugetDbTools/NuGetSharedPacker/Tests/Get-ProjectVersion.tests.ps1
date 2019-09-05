@@ -1,12 +1,12 @@
 ﻿if ( Get-Module NugetSharedPacker -All) {
 	Remove-Module NugetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1" -Global -DisableNameChecking
 
 if (Get-Module TestUtils -All) {
 	Remove-Module TestUtils
 }
-Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global -DisableNameChecking
 
 Describe "Get-ProjectVersion" {
 	$projFolder = "TestDrive:\proj"

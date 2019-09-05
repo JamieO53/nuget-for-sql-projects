@@ -1,5 +1,5 @@
 if (-not (Get-Module NugetSharedPacker -All)) {
-	Import-Module .\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1
+	Import-Module .\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1 -Global -DisableNameChecking
 }
 $order = Import-PowerShellDataFile .\PackageSequence.psd1
 $nugetVersion = @{}
