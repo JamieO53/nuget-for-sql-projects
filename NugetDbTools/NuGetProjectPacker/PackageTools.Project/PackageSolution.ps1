@@ -40,7 +40,7 @@ try {
 
 	('Project1','Project2','Project3','Project4', 'Project5') | % {
 		$projName = $_
-		if ($project.ContainsKey($projectName) {
+		if ($project.ContainsKey($projectName)) {
 			$projPath = $project[$projName]
 			$projDir = Split-Path $projPath
 			$projBinFolder = "$projDir\bin\$buildConfig"
@@ -55,14 +55,12 @@ try {
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
 		NuGet pack $nuspecPath -BasePath $nugetFolder -OutputDirectory $slnDir
-		Publish-NuGetPackage -PackagePath $nugetPackagePath
+		if ($env:USERNAME -EQ 'Builder') {
+			Publish-NuGetPackage -PackagePath $nugetPackagePath
+			Remove-NugetFolder $nugetFolder
+		}
 	}
 
-	Remove-NugetFolder $nugetFolder
-	if (Test-Path $nugetPackagePath)
-	{
-		del $nugetPackagePath
-	}
 	if ($loaded) {
 		Remove-Module NuGetProjectPacker -ErrorAction Ignore
 	}
