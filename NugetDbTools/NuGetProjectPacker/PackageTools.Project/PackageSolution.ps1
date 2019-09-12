@@ -40,7 +40,7 @@ try {
 
 	('Project1','Project2','Project3','Project4', 'Project5') | % {
 		$projName = $_
-		if ($project.ContainsKey($projectName)) {
+		if ($project.ContainsKey($projName)) {
 			$projPath = $project[$projName]
 			$projDir = Split-Path $projPath
 			$projBinFolder = "$projDir\bin\$buildConfig"
