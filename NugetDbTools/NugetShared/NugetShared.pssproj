@@ -27,6 +27,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Package.nuspec" />
+    <Content Include="Tests\PackageTools.root.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build.ps1" />
@@ -76,6 +77,7 @@
     <Compile Include="Tests\Get-NuGetLocalPushTimeout.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalSource.tests.ps1" />
     <Compile Include="Tests\Get-SqlProjects.tests.ps1" />
+    <Compile Include="Tests\Get-ToolsConfiguration.tests.ps1" />
     <Compile Include="Tests\Import-Extensions.tests.ps1" />
     <Compile Include="Tests\Test-NuGetVersionExists.tests.ps1" />
   </ItemGroup>
