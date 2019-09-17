@@ -15,7 +15,7 @@ function Test-NuGetVersionExists {
 		[string]$Version
 	)
 	$exists = $false
-	nuget List $Id -AllVersions -Source (Get-NuGetLocalSource) -PreRelease -NonInteractive | ? {
+	nuget List $Id -AllVersions -Source "$(Get-NuGetLocalSource)" -PreRelease -NonInteractive | ? {
 		$_.Equals("$Id $Version") 
 	} | % {
 		$exists = $true 

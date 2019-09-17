@@ -1,4 +1,7 @@
 function Get-NuGetLocalSource {
-	$config = Get-NuGetDbToolsConfig
-	$config.configuration.nugetLocalServer.add | ? { $_.key -eq 'Source' } | % { $_.value }
+	$result = ''
+	Get-NuGetDbToolsConfig | % {
+		$_ | ? { $_.tools.nuget.source } | % { $result = $_.tools.nuget.source }
+	}
+	iex "`"$result`"" # Expand embedded variables
 }

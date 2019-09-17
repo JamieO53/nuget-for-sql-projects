@@ -30,7 +30,6 @@ $toolConfigMissing = @"
 	}
 	mkdir $powerShellPath | Out-Null
 	mkdir $packageToolsPath | Out-Null
-	ls $PSScriptRoot
 	copy "$PSScriptRoot\..\bin\Debug\NugetShared\*" $powerShellPath
 	'function Extension1Function {}' | Out-File "$powerShellPath\extension1.psm1"
 	'function Extension2Function {}' | Out-File "$powerShellPath\extension2.psm1"

@@ -1,4 +1,7 @@
 function Get-NuGetContentFolder {
-	$config = Get-NuGetDbToolsConfig
-	$config.configuration.nugetLocalServer.add | ? { $_.key -eq 'ContentFolder' } | % { $_.value }
+	$result = ''
+	Get-NuGetDbToolsConfig | % {
+		$_ | ? { $_.tools.content.contentFolder } | % { $result = $_.tools.content.contentFolder }
+	}
+	$result
 }
