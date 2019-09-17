@@ -45,7 +45,7 @@
     <Compile Include="Scripts\Set-NuGetDependenciesInPkgProject.ps1" />
     <Compile Include="Scripts\Set-SqlProjectDependenciesInSolution.ps1" />
     <Compile Include="Scripts\Set-SqlProjectInSolution.ps1" />
-    <Compile Include="Tests\New-DbSolution.tests.ps1" />
+    <Compile Include="Tests\New-CiDbProject.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\" />
