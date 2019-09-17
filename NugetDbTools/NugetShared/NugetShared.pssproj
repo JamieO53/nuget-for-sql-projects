@@ -76,6 +76,7 @@
     <Compile Include="Tests\Get-NuGetLocalPushSource.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalPushTimeout.tests.ps1" />
     <Compile Include="Tests\Get-NuGetLocalSource.tests.ps1" />
+    <Compile Include="Tests\Get-NuGetPackageVersion.tests.ps1" />
     <Compile Include="Tests\Get-SqlProjects.tests.ps1" />
     <Compile Include="Tests\Get-ToolsConfiguration.tests.ps1" />
     <Compile Include="Tests\Import-Extensions.tests.ps1" />
