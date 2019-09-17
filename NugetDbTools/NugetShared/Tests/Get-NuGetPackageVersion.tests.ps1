@@ -2,7 +2,6 @@
 	if (-not (Get-Module TestUtils -All)) {
 		Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global -DisableNameChecking
 	}
-	Describe "Test-NuGetVersionExists" {
 		$config = @"
 <?xml version="1.0"?>
 <tools>
