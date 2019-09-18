@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>NuGetDbPacker</id>
-    <version>0.1.210</version>
+    <version>0.1.212-config</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -14,6 +14,9 @@
     <dependencies>
       <dependency id="NuGetSharedPacker" version="0.1.178" />
     </dependencies>
+    <packageTypes>
+      <packageType name="DacPac"/>
+    </packageTypes>
   </metadata>
   <files>
     <file src="content\PackageTools\*" target="PackageTools" />
