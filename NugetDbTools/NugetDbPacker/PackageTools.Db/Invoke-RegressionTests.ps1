@@ -1,4 +1,4 @@
-params(
+param(
 	[string]$databaseName = ''
 )
 $SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..").Path
