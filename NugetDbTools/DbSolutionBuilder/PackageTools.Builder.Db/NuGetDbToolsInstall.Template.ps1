@@ -10,41 +10,6 @@ $sampleSolutionName = '<<<<An example solution name>>>>'
 $sampleDatabaseName = '<<<<An example database name>>>>'
 $sampleDependencyId = '<<<<An example database reference in the form solutionName.databaseName>>>>'
 
-function Set-NuGetConfig {
-    $nugetConfigDir = "$env:APPDATA\JamieO53\NugetDbTools"
-    $nugetConfigPath = "$nugetConfigDir\NugetDbTools.config"
-    $configText = @"
-<?xml version=`"1.0`"?>
-<configuration>
-    <nugetLocalServer>
-        <add key=`"ApiKey`" value=`"$nugetApiKey`"/>
-        <add key=`"ContentFolder`" value=`"$contentFolder`"/>
-        <add key=`"Source`" value=`"$nugetSource`"/>
-        <add key=`"PushSource`" value=`"$nugetPushSource`"/>
-        <add key=`"PushTimeout`" value=`"900`"/> <!-- seconds -->
-    </nugetLocalServer>
-</configuration>
-"@
-
-    if (-not (Test-Path $nugetConfigDir)) {
-        mkdir $nugetConfigDir | Out-Null
-    }
-    if (Test-Path $nugetConfigPath) {
-        [xml]$nugetConfig = Get-Content $nugetConfigPath
-        $nugetConfig.configuration.nugetLocalServer.add | % {
-            $item = $_
-            if ($item.key -eq 'Source') {
-                $item.value = $nugetSource
-            } elseif ($item.key -eq 'ApiKey') {
-                $item.value = $nugetApiKey
-            }
-        }
-        $nugetConfig.Save($nugetConfigPath)
-    } else {
-        $configText | Set-Content $nugetConfigPath -Encoding UTF8
-    }
-}
-
 function Get-DbSolutionBuilder {
     $bootstrapFolder = "$Path\Bootstrap"
     if (Test-Path $BootstrapFolder) {
@@ -92,5 +57,4 @@ function Get-DbSolutionBuilder {
 	}
 }
 
-Set-NuGetConfig
 Get-DbSolutionBuilder
