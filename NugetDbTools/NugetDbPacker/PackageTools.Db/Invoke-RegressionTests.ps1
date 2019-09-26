@@ -49,23 +49,51 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 		[Environment]::SetEnvironmentVariable($name, $value, "Process")
 	}
 
-	$localSource = Get-NuGetLocalSource
+	
 	$packageContentFolder = "$SolutionFolder\PackageContent"
-	Invoke-Trap -Command "nuget install TSQLUnit -Source '$localSource' -OutputDirectory '$packageContentFolder' -ExcludeVersion" -Message "Retrieving TSQLUnit failed" -Fatal
-	$dacpacPath = "$SolutionFolder\PackageContent\TSQLUnit\Databases\TSQLUnit.dacpac"
-	$publishPath = "$SolutionFolder\PackageContent\TSQLUnit\Databases\TSQLUnit.publish.xml"
+	if (-not (Test-Path $packageContentFolder\tsqlunit)) {
+		mkdir $packageContentFolder | Out-Null
+		pushd $packageContentFolder
+		git clone https://github.com/aevdokimenko/tsqlunit.git
+		$hack = @"
+CREATE PROCEDURE dbo.tsu_AssertEquals
+	@Expected SQL_VARIANT,
+	@Actual SQL_VARIANT,
+	@Message NVARCHAR(MAX) = ''
+AS
+BEGIN
+    IF ((@Expected = @Actual) OR (@Actual IS NULL AND @Expected IS NULL))
+      RETURN 0;
 
-	$sqlPackageCmd = Find-SqlPackagePath
+    DECLARE @Msg NVARCHAR(MAX);
+    SELECT @Msg = 'Expected: <' + ISNULL(CAST(@Expected AS NVARCHAR(MAX)), 'NULL') + 
+                  '> Actual: <' + ISNULL(CAST(@Actual AS NVARCHAR(MAX)), 'NULL') + '>';
+    IF((COALESCE(@Message,'') <> '') AND (@Message NOT LIKE '% ')) SET @Message = @Message + ': ';
+    SET @Message = @Message + @Msg
+    EXEC tsu_failure @Message
+END;	
+"@
+		$hack | Out-File $packageContentFolder\hack.sql -Encoding utf8
+		popd
+	}
+
+	Import-Module SqlServer -DisableNameChecking -Global
 
 	$dbConn.Keys | % {
 		$dbName = $_
 		$cs = $dbConn[$dbName].ToString()
-		$db = "`/tcs:`"$cs`" `/p:CreateNewDatabase=False"
-		if (Test-Path $publishPath) {
-			$db += " `/pr:`"$publishPath`" $params"
-		}
-		Log "`"$sqlPackageCmd`" `/a:Publish `/sf:`"$dacpacPath`" $db"
-		Invoke-Trap -Command "& `"$sqlPackageCmd`" `/a:Publish `/sf:`"$dacpacPath`" $db" -Message "Deploying TSQLUnit failed to $dbName" -Fatal
+		if (-not (Invoke-Sqlcmd "select name from sys.tables where name = 'tsuActiveTest'" -ConnectionString "$cs")) {
+			$cmd = "Invoke-Sqlcmd -InputFile `"$packageContentFolder\tsqlunit\tsqlunit.sql`" -ConnectionString `"$cs`""
+			Log $cmd
+			Invoke-Trap `
+				-Command $cmd `
+				-Message "Adding TSqlUnit to $dbName failed"
+			$cmd = "Invoke-Sqlcmd -InputFile `"$packageContentFolder\hack.sql`" -ConnectionString `"$cs`""
+			Log $cmd
+			Invoke-Trap `
+				-Command $cmd `
+				-Message "Hacking TSqlUnit on $dbName failed"
+			}
     }
 
 	rd "$SolutionFolder\PackageContent" -Recurse -Force

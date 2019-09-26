@@ -29,7 +29,7 @@ Context "Exists" {
 		mkdir "$nugetFolder\content" | Out-Null
 		mkdir "$nugetFolder\content\Databases" | Out-Null
 		mkdir "$nugetFolder\build" | Out-Null
-		Compress-Package -NugetPath $nugetFolder
+		Compress-Package -NuspecPath $nugetFolder\Package.nuspec -NugetFolder $nugetFolder -PackageFolder $nugetFolder
 
 		$id = $nugetSettings.nugetSettings.id
 		$version = $nugetSettings.nugetSettings.version

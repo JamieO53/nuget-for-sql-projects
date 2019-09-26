@@ -54,7 +54,7 @@ try {
 	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
-		NuGet pack $nuspecPath -BasePath $nugetFolder -OutputDirectory $slnDir
+		Compress-Package -NuspecPath $nuspecPath -NugetFolder $nugetFolder -PackageFolder $slnDir
 		if ($env:USERNAME -EQ 'Builder') {
 			Publish-NuGetPackage -PackagePath $nugetPackagePath
 			Remove-NugetFolder $nugetFolder
