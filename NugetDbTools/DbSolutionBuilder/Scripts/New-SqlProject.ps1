@@ -37,7 +37,7 @@ function New-SqlProject {
 		$text = gc "$projectFolder\$projectFile" | Out-String
 		$text = $text.Replace('Template.DBProject', $ProjectName)
 		$text = $text.Replace('DBProject', $DbName)
-		$text | sc "$projectFolder\$projectFile" -Encoding UTF8
+		$text | Set-Content "$projectFolder\$projectFile" -Encoding UTF8
 	}
 	$cfgPath = [IO.Path]::ChangeExtension($projectPath, '.nuget.config')
 	[xml]$proj = gc $PkgProjectPath

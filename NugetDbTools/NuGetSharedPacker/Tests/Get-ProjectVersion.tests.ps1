@@ -37,7 +37,7 @@ Describe "Get-ProjectVersion" {
 		Push-Location 'TestDrive:\'
 		try {
 			git init
-			'Dummy' | sc "$projFolder\Dummy.txt" -Encoding UTF8
+			'Dummy' | Set-Content "$projFolder\Dummy.txt" -Encoding UTF8
 			git add .\proj\Dummy.txt
 			git commit -a -m Initial
 			git branch TestBranch

@@ -56,7 +56,7 @@ try {
 				$_
 			}
 		}
-		$lines | sc "NuGet\content\$contentType\$id.psd1"
+		$lines | Set-Content "NuGet\content\$contentType\$id.psd1"
 	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){

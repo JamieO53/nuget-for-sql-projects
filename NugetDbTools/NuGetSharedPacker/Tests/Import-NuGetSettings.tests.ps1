@@ -41,7 +41,7 @@ Describe "Import-NuGetSettings" {
 </configuration>
 '@
 	md $projFolder
-	$config | sc $configPath -Encoding UTF8
+	$config | Set-Content $configPath -Encoding UTF8
 
 	Context "Exists" {
 		It "Runs" { Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath | should not BeNullOrEmpty }

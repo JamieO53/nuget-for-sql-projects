@@ -23,7 +23,7 @@ Describe "Format-ProjectDatabaseParameters" {
 	}
 	Context "No profile specified" {
 		mkdir $dbFolder
-		'DacPac content' | sc -Path $dacpacPath
+		'DacPac content' | Set-Content -Path $dacpacPath
 		It "Only the dacpac is specified" {
 			(Format-ProjectDatabaseParameters -DacpacPath $dacpacPath).Trim() | should be '/tdn:"db"  /p:CreateNewDatabase=True'
 		}
@@ -36,8 +36,8 @@ Describe "Format-ProjectDatabaseParameters" {
 	}
 	Context "A Profile specified" {
 		mkdir $dbFolder
-		'DacPac content' | sc -Path $dacpacPath
-		'Profile content' | sc -Path $profilePath
+		'DacPac content' | Set-Content -Path $dacpacPath
+		'Profile content' | Set-Content -Path $profilePath
 		It "Existing dacpac and profile files are specified" {
 			(Format-ProjectDatabaseParameters -DacpacPath $dacpacPath -ProfilePath $profilePath).Trim() | should be "/pr:`"$ProfilePath`""
 		}
