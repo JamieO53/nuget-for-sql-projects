@@ -290,11 +290,16 @@ function Get-SqlProjects {
 function Get-ToolsConfiguration {
 	$configPath = "$PSScriptRoot\..\PackageTools\PackageTools.root.config"
 	if (-not (Test-Path $configPath)) {
-		## Testing - look in test scripts folder
-		$configPath = "$PSScriptRoot\..\..\..\Tests\PackageTools.root.config"
-		# $configPath = "$((Split-Path (Get-PSCallStack |
-		# 	? {$_.Command -like '*.test.ps1' } |
-		# 	select -Last 1).ScriptName))\PackageTools.root.config"
+		## Release - look parent folder
+		$configPath = "$PSScriptRoot\..\PackageTools.root.config"
+		if (-not (Test-Path $configPath)) {
+			## Testing - look in test scripts folder
+			$configPath = "$PSScriptRoot\..\..\..\Tests\PackageTools.root.config"
+			if (-not (Test-Path $configPath)) {
+				Log 'Unable to find Package Tools configuration: PackageTools.root.config' -Error
+				Throw 'Missing configuration'
+			}
+		}
 	}
 	$tools = @()
 	if (Test-Path $configPath) {
