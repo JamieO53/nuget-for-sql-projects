@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DbSolutionBuilder</id>
-    <version>0.1.198-config</version>
+    <version>0.1.196</version>
     <authors>joglethorpe</authors>
     <owners>Jamie Oglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -12,11 +12,8 @@
     <copyright>Copyright 2017</copyright>
     <tags>DbSolutionBuilder CI Migration</tags>
     <dependencies>
-      <dependency id="NuGetDbPacker" version="0.1.210" />
+      <dependency id="NuGetDbPacker" version="0.1.213" />
     </dependencies>
-    <packageTypes>
-      <packageType name="DacPac"/>
-    </packageTypes>
   </metadata>
   <files>
     <file src="content\PackageTools\*" target="PackageTools" />
