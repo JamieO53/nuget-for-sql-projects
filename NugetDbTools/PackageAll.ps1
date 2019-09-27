@@ -1,3 +1,4 @@
+[string]$Global:ConfigPath = "$PSScriptRoot\PackageTools\PackageTools.root.config"
 if (-not (Get-Module NuGetSharedPacker)) {
 	Import-Module "$PSScriptRoot\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1" -Global
 }
@@ -6,6 +7,7 @@ if (-not (Get-Module NuGetSharedPacker)) {
 # 	exit 1
 # }
 Remove-Variable * -ErrorAction SilentlyContinue
+[string]$Global:ConfigPath = "$PSScriptRoot\PackageTools\PackageTools.root.config"
 $solutionFolder = $PSScriptRoot
 $order = Import-PowerShellDataFile "$solutionFolder\PackageSequence.psd1"
 $nugetVersion = @{}
