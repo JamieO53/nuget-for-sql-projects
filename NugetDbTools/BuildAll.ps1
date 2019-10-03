@@ -8,4 +8,4 @@
 & "$PSScriptRoot\DbSolutionBuilder\Build.ps1"
 & "$PSScriptRoot\TestUtils\Build.ps1"
 
-copy $PSScriptRoot\PackageTools\* $PSScriptRoot\..\Template.DB\PackageTools
+Copy-Item $PSScriptRoot\PackageTools\* $PSScriptRoot\..\Template.DB\PackageTools

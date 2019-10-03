@@ -15,6 +15,6 @@ function Save-CSharpProject {
 		[string]$Path
 	)
 	Out-FormattedXml -Xml $Project -FilePath $Path
-	$text = gc $Path | ? { $_ -notlike '<`?*`?>'}
+	$text = Get-Content $Path | Where-Object { $_ -notlike '<`?*`?>'}
 	$text | Out-File $Path -Encoding utf8
 }

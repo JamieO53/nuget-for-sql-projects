@@ -1,6 +1,6 @@
 function Import-Extensions {
     $extensions = Get-ExtensionPaths
-    $extensions.Keys | % {
+    $extensions.Keys | ForEach-Object {
         $extension = $_
         $extensionPath = $extensions[$_]
         if (-not (Get-Module $extension -All)) {

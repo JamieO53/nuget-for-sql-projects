@@ -19,18 +19,18 @@ function Get-ProjectConfigurationProperty {
 		[string]$Platform
 	)
 	[string]$prop = ''
-	$proj.Project.PropertyGroup | % {
+	$proj.Project.PropertyGroup | ForEach-Object {
 		if ($_.Condition) {
 			[string]$cond = $_.Condition
 			$cond = $cond.Replace('$(Configuration)', $Configuration)
 			$cond = $cond.Replace('$(Platform)', $Platform)
 			$cond = $cond.Replace('==', '-eq')
-			[bool]$isCond = (iex $cond)
+			[bool]$isCond = (Invoke-Expression $cond)
 		} else {
-			[bool]$isCond = -not [string]::IsNullOrWhiteSpace((iex "`$_.$Property"))
+			[bool]$isCond = -not [string]::IsNullOrWhiteSpace((Invoke-Expression "`$_.$Property"))
 		}
 		if ($isCond) {
-			$prop = iex "`$_.$Property"
+			$prop = Invoke-Expression "`$_.$Property"
 			$prop = $prop.Trim()
 		}
 	}

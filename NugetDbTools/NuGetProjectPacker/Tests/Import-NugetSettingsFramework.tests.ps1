@@ -55,7 +55,7 @@ $pkgNspText = @'
 Describe "Import-NugetSettingsFramework" {
 	Context "Exists" {
 		It "Is in the module" {
-			Get-Command -Module NuGetProjectPacker | where { $_.Name -eq 'Import-NugetSettingsFramework' } | % {
+			Get-Command -Module NuGetProjectPacker | Where-Object { $_.Name -eq 'Import-NugetSettingsFramework' } | ForEach-Object {
 				$_.Name
 			} | 
 			should be 'Import-NugetSettingsFramework'

@@ -1,11 +1,11 @@
 function Get-NuGetLocalPushSource {
 	$result = ''
-	Get-NuGetDbToolsConfig | % {
-		$_ | ? { $_.tools.nuget.pushSource } | % { $result = $_.tools.nuget.pushSource }
+	Get-NuGetDbToolsConfig | ForEach-Object {
+		$_ | Where-Object { $_.tools.nuget.pushSource } | ForEach-Object { $result = $_.tools.nuget.pushSource }
 	}
 	if (-not $result) {
-		Get-NuGetDbToolsConfig | % {
-			$_ | ? { $_.tools.nuget.source } | % { $result = $_.tools.nuget.source }
+		Get-NuGetDbToolsConfig | ForEach-Object {
+			$_ | Where-Object { $_.tools.nuget.source } | ForEach-Object { $result = $_.tools.nuget.source }
 		}
 	}
 	$result

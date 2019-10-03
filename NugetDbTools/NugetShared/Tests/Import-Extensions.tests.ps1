@@ -26,11 +26,11 @@ $toolConfigMissing = @"
 		Remove-Module NugetShared
 	}
 	if (Test-Path $solutionPath) {
-		rmdir "$solutionPath*" -Force -Recurse
+		Remove-Item "$solutionPath*" -Force -Recurse
 	}
 	mkdir $powerShellPath | Out-Null
 	mkdir $packageToolsPath | Out-Null
-	copy "$PSScriptRoot\..\bin\Debug\NugetShared\*" $powerShellPath
+	Copy-Item "$PSScriptRoot\..\bin\Debug\NugetShared\*" $powerShellPath
 	'function Extension1Function {}' | Out-File "$powerShellPath\extension1.psm1"
 	'function Extension2Function {}' | Out-File "$powerShellPath\extension2.psm1"
 	Import-Module "$powerShellPath\NugetShared.psm1" -Global -DisableNameChecking
@@ -44,7 +44,7 @@ $toolConfigMissing = @"
 		Remove-Module extension1,extension2 -ErrorAction SilentlyContinue
 		$toolConfigExist | Out-File $toolConfigPath -Encoding utf8
 		Import-Extensions
-		'extension1','extension2' | % {
+		'extension1','extension2' | ForEach-Object {
 			$ext = $_
 			It "Extension $ext is installed" {
 				Get-Module $ext | should -Not -BeNullOrEmpty

@@ -19,11 +19,11 @@ function Get-ProjectDependencyVersion {
 	)
 	$version = $OldVersion
 	$slnFolder = Split-Path $SolutionPath
-	Get-PkgProjects -SolutionPath $SolutionPath | % {
+	Get-PkgProjects -SolutionPath $SolutionPath | ForEach-Object {
 		$projPath = [IO.Path]::Combine($slnFolder, $_.ProjectPath)
-		[xml]$proj = gc $projPath
-		$refs = $proj.Project.ItemGroup | ? { $_.PackageReference }
-		$refs.PackageReference | ? { $_.Include -eq $Dependency } | % {
+		[xml]$proj = Get-Content $projPath
+		$refs = $proj.Project.ItemGroup | Where-Object { $_.PackageReference }
+		$refs.PackageReference | Where-Object { $_.Include -eq $Dependency } | ForEach-Object {
 			$version = $_.Version
 		}
 	}

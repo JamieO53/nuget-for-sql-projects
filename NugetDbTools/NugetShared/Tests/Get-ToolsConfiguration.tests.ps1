@@ -9,7 +9,7 @@
 		}
 		$config = Get-ToolsConfiguration
 		It "Has content" {
-			$config | % {$_.rubbish} | should be 'junk'
+			$config | ForEach-Object {$_.rubbish} | should be 'junk'
 		}
 	}
 }

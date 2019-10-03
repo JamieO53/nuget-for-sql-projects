@@ -6,7 +6,7 @@ function New-DbSolution {
 
 	The result is the location of the new solution
 	.EXAMPLE
-	[xml]$params = gc .\DbSolution.xml
+	[xml]$params = Get-Content .\DbSolution.xml
 	New-DbSolution -Parameters $params
 	#>
     [CmdletBinding()]

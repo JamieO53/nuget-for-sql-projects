@@ -7,11 +7,11 @@ function Initialize-NuGetSharedConfig ($rootPath, $config) {
 		Remove-Module NugetShared
 	}
 	if (Test-Path $solutionPath) {
-		rmdir "$solutionPath*" -Force -Recurse
+		Remove-Item "$solutionPath*" -Force -Recurse
 	}
 	mkdir $powerShellPath | Out-Null
 	mkdir $packageToolsPath | Out-Null
-	copy "$rootPath\..\bin\Debug\NugetShared\*" $powerShellPath
+	Copy-Item "$rootPath\..\bin\Debug\NugetShared\*" $powerShellPath
 	$config | Set-Content -Path $toolConfigPath -Encoding UTF8
 	Import-Module "$powerShellPath\NugetShared.psm1" -Global -DisableNameChecking
 

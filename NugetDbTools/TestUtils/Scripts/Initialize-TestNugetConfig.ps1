@@ -29,7 +29,7 @@ function Initialize-TestNugetConfig {
 		'EcsShared.SupportRoles' = '[1.0)'
 	}
 	$nugetContents = @{}
-	$NugetContent.Split(',') | % {
+	$NugetContent.Split(',') | ForEach-Object {
 		$nugetContents[$_] = 'buildAction="none" copyToOutput="true"'
 	}
 	$expectedSettings = New-Object -TypeName PSObject -Property @{

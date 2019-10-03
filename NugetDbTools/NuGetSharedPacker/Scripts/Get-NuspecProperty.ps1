@@ -14,6 +14,6 @@ function Get-NuspecProperty {
 		# The property being queried
 		[string]$Property
 	)
-	[string]$prop = iex "`$spec.package.metadata.$Property"
+	[string]$prop = Invoke-Expression "`$spec.package.metadata.$Property"
 	return $prop.Trim()
 }

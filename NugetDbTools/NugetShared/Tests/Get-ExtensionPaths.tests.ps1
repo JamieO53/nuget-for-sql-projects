@@ -16,11 +16,11 @@
 		Remove-Module NugetShared
 	}
 	if (Test-Path $solutionPath) {
-		rmdir "$solutionPath*" -Force -Recurse
+		Remove-Item "$solutionPath*" -Force -Recurse
 	}
 	mkdir $powerShellPath | Out-Null
 	mkdir $packageToolsPath | Out-Null
-	copy "$PSScriptRoot\..\bin\Debug\NugetShared\*" $powerShellPath
+	Copy-Item "$PSScriptRoot\..\bin\Debug\NugetShared\*" $powerShellPath
 	'function Extension1Function {}' | Out-File "$powerShellPath\extension1.psm1"
 	'function Extension2Function {}' | Out-File "$powerShellPath\extension2.psm1"
 	Import-Module "$powerShellPath\NugetShared.psm1" -Global -DisableNameChecking
@@ -34,12 +34,12 @@
 		$toolConfigExist | Out-File $toolConfigPath -Encoding utf8
 		$extensions = Get-ExtensionPaths
 		$path = "$testDrive\solution\PowerShell"
-		'extension1','extension2' | % {
+		'extension1','extension2' | ForEach-Object {
 			It "Extension $_ is returned" {
 				$extensions[$_] | should be "$path\$_.psm1"
 			}
 		}
-		$extensions.Keys | sort | % {
+		$extensions.Keys | Sort-Object | ForEach-Object {
 			It "Extension $_ ($($extensions[$_])) exists" {
 				Test-Path $extensions[$_] | should -BeTrue
 			}

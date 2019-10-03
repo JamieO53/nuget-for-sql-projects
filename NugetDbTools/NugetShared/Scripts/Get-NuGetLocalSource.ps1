@@ -1,7 +1,7 @@
 function Get-NuGetLocalSource {
 	$result = ''
-	Get-NuGetDbToolsConfig | % {
-		$_ | ? { $_.tools.nuget.source } | % { $result = $_.tools.nuget.source }
+	Get-NuGetDbToolsConfig | ForEach-Object {
+		$_ | Where-Object { $_.tools.nuget.source } | ForEach-Object { $result = $_.tools.nuget.source }
 	}
-	iex "`"$result`"" # Expand embedded variables
+	Invoke-Expression "`"$result`"" # Expand embedded variables
 }

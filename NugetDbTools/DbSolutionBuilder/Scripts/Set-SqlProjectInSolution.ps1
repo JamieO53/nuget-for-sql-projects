@@ -6,7 +6,7 @@ function Set-SqlProjectInSolution {
 
 	The result is the updated solution file
 	.EXAMPLE
-	[xml]$params = gc .\DbSolution.xml
+	[xml]$params = Get-Content .\DbSolution.xml
 	$sln = Set-SqlProjectInSolution -Parameters $params -SolutionFile $sln
 	#>
     [CmdletBinding()]
@@ -42,7 +42,7 @@ EndProject
 	$slnName = $Parameters.dbSolution.parameters.name
 	$newSqlProjects = ''
 	$newSqlConfiguration = ''
-	$Parameters.dbSolution.databases.database.dbname | % {
+	$Parameters.dbSolution.databases.database.dbname | ForEach-Object {
 		$dbName = $_
 		$dbGuid = [Guid]::NewGuid().ToString().ToUpper()
 		$newSqlProjects += $templateSqlProject.Replace('Template.DBProject', "$slnName.$dbName").Replace($templateGuid, $dbGuid)

@@ -87,7 +87,7 @@ Describe "Import-ArtifactProject" {
 		$nugetSettings = Import-NugetSettingsFramework -NuspecPath $pkgNspPath -PackagesConfigPath $pkgCfgPath
 		Initialize-NuGetFolders -Path $nugetFolder
 		Initialize-NuGetSpec -Path $nugetFolder -setting $nugetSettings
-		[xml]$spec = gc "$nugetFolder\Package.nuspec"
+		[xml]$spec = Get-Content "$nugetFolder\Package.nuspec"
 
 		Remove-Item -Path $projFolder -Recurse -Force
 	}

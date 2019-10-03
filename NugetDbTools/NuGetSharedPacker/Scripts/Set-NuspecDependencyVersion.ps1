@@ -15,11 +15,11 @@ function Set-NuspecDependencyVersion {
 		[string]$Dependency
 	)
 
-	[xml]$spec = gc $Path
+	[xml]$spec = Get-Content $Path
 	$dependencies = $spec.package.metadata.dependencies
 	[xml.XmlElement]$dependencies = Get-GroupNode -ParentNode $spec.package.metadata -Id 'dependencies'
 	$newVersion = Get-NuGetPackageVersion $Dependency
-	$dep = $dependencies.dependency | ? { $_.id -eq $Dependency }
+	$dep = $dependencies.dependency | Where-Object { $_.id -eq $Dependency }
 	if ($dep) {
 		$dep.SetAttribute('version', $newVersion)
 	} else {

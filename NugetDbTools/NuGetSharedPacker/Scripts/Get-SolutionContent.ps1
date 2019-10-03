@@ -27,7 +27,7 @@ function Get-SolutionContent {
 	if (Test-Path $packageContentFolder) {
 		if (-not $global:testing)
 		{
-			del $packageContentFolder\* -Recurse -Force
+			Remove-Item $packageContentFolder\* -Recurse -Force
 		}
 	} else {
 		mkdir $packageContentFolder | Out-Null
@@ -36,26 +36,26 @@ function Get-SolutionContent {
 	Log "Get solution packages: $SolutionPath"
 	Get-SolutionPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
-	rmdir "$SolutionPath\Databases*" -Recurse -Force
-	ls $packageContentFolder -Directory | % {
-		ls $_.FullName -Directory | ? { (ls $_.FullName -Exclude _._).Count -ne 0 } | % {
+	Remove-Item "$SolutionPath\Databases*" -Recurse -Force
+	Get-ChildItem $packageContentFolder -Directory | ForEach-Object {
+		Get-ChildItem $_.FullName -Directory | Where-Object { (Get-ChildItem $_.FullName -Exclude _._).Count -ne 0 } | ForEach-Object {
 			if (-not (Test-Path "$SolutionFolder\$($_.Name)")) {
 				mkdir "$SolutionFolder\$($_.Name)" | Out-Null
 			}
-			copy "$($_.FullName)\*" "$SolutionFolder\$($_.Name)" -Recurse -Force
+			Copy-Item "$($_.FullName)\*" "$SolutionFolder\$($_.Name)" -Recurse -Force
 		}
 	}
 
-	del $packageContentFolder -Include '*' -Recurse -Force
+	Remove-Item $packageContentFolder -Include '*' -Recurse -Force
 
-	if ((Test-Path $packageFolder) -and (ls "$packageFolder\**\$contentFolder" -Recurse)) {
+	if ((Test-Path $packageFolder) -and (Get-ChildItem "$packageFolder\**\$contentFolder" -Recurse)) {
 		if (Test-Path $solutionContentFolder) {
-			rmdir $solutionContentFolder\* -Recurse -Force
+			Remove-Item $solutionContentFolder\* -Recurse -Force
 		} else {
 			mkdir $solutionContentFolder | Out-Null
 		}
-		ls "$packageFolder\**\$contentFolder" -Recurse | % {
-			copy "$($_.FullName)\*" $solutionContentFolder -Recurse -Force
+		Get-ChildItem "$packageFolder\**\$contentFolder" -Recurse | ForEach-Object {
+			Copy-Item "$($_.FullName)\*" $solutionContentFolder -Recurse -Force
 		}
 	}
 }

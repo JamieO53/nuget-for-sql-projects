@@ -17,21 +17,21 @@ if (-not (Test-Path $outputFolder)) {
 }
 
 if (Test-Path "$tgtFolder\master.dacpac") {
-	copy "$tgtFolder\master.dacpac" $outputFolder -Force
+	Copy-Item "$tgtFolder\master.dacpac" $outputFolder -Force
 }
-copy "$tgtFolder\$ProjectName.dacpac" $outputFolder
+Copy-Item "$tgtFolder\$ProjectName.dacpac" $outputFolder
 if ($CopyAssembly) {
-	copy "$tgtFolder\$AssemblyName.*" $outputFolder
+	Copy-Item "$tgtFolder\$AssemblyName.*" $outputFolder
 }
 if (Test-Path "$tgtFolder\$ProjectName.publish.xml") {
-	copy "$tgtFolder\$ProjectName.publish.xml" $outputFolder
+	Copy-Item "$tgtFolder\$ProjectName.publish.xml" $outputFolder
 }
 if (Test-Path "$tgtFolder\$ProjectName.*.publish.xml") {
-	copy "$tgtFolder\$ProjectName.*.publish.xml" $outputFolder
+	Copy-Item "$tgtFolder\$ProjectName.*.publish.xml" $outputFolder
 }
 
 if (Test-Path "$outputFolder\unzipped") {
-	rmdir $outputFolder\unzipped\* -Recurse -Force
+	Remove-Item $outputFolder\unzipped\* -Recurse -Force
 } else {
 	mkdir $outputFolder\unzipped | Out-Null
 }
@@ -44,7 +44,7 @@ if (-not (Get-Module Microsoft.PowerShell.Archive)) {
 	Write-Host 'Module Microsoft.PowerShell.Archive must be installed to use this functionality. See https://www.powershellgallery.com/packages/Microsoft.PowerShell.Archive/1.1.0.0'
 	Exit 1
 }
-Get-Module Microsoft.PowerShell.Archive | ? { $_.Version.ToString() -eq '1.0.1.0'} | % {
+Get-Module Microsoft.PowerShell.Archive | Where-Object { $_.Version.ToString() -eq '1.0.1.0'} | ForEach-Object {
 	if ($_.Version) {
 		$oldVersion = $true
 	}
@@ -61,8 +61,8 @@ if ($oldVersion) {
 	Expand-Archive -LiteralPath $outputFolder\$ProjectName.dacpac -DestinationPath $outputFolder\unzipped
 }
 
-ls $outputFolder\unzipped\*deploy.sql | % {
-	copy $_.FullName "$outputFolder\$ProjectName.dacpac.$($_.Name)"
+Get-ChildItem $outputFolder\unzipped\*deploy.sql | ForEach-Object {
+	Copy-Item $_.FullName "$outputFolder\$ProjectName.dacpac.$($_.Name)"
 }
 
-rmdir $outputFolder\unzipped* -Recurse -Force
+Remove-Item $outputFolder\unzipped* -Recurse -Force

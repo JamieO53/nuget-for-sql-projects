@@ -6,7 +6,7 @@ function New-DbSolutionDependencies {
 
 	The result is the location of the new solution
 	.EXAMPLE
-	[xml]$params = gc .\DbSolution.xml
+	[xml]$params = Get-Content .\DbSolution.xml
 	New-DbSolutionProjects -Parameters $params
 	#>
     [CmdletBinding()]
@@ -19,7 +19,7 @@ function New-DbSolutionDependencies {
 	)
 	Set-ProjectDependencyVersion -Path $pkgProjectPath -Dependency NuGetDbPacker
 	if ($Parameters.dbSolution.dependencies.dependency) {
-		$Parameters.dbSolution.dependencies.dependency | % {
+		$Parameters.dbSolution.dependencies.dependency | ForEach-Object {
 			Set-ProjectDependencyVersion -Path $pkgProjectPath -Dependency $_.Id
 		}
 	}

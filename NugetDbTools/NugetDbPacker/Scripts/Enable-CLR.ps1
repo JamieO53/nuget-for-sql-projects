@@ -25,7 +25,7 @@ function Enable-CLR{
 		Install-Module SqlServer
 	}
 	Import-Module SqlServer -Global -DisableNameChecking
-	[xml]$doc = gc $ProfilePath
+	[xml]$doc = Get-Content $ProfilePath
 	[string]$connectionString = $doc.Project.PropertyGroup.TargetConnectionString
 	$query = @'
 sp_configure 'show advanced options', 1;

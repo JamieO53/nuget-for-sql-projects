@@ -1,8 +1,8 @@
 function Set-NodeText ($parentNode, $id, [String]$text){
 		[xml.XmlNode]$childNode | Out-Null
 		$parentNode.SelectSingleNode($id) |
-			where { $_ } |
-			foreach {
+			Where-Object { $_ } |
+			ForEach-Object {
 				$childNode = $_
 			}
 		if (-not $childNode) {

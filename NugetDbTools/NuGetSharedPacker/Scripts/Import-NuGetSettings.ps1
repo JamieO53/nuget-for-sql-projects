@@ -20,8 +20,8 @@ function Import-NuGetSettings
 	$nugetSettings = New-NuGetSettings
 
 	if (Test-Path $NugetConfigPath) {
-        [xml]$cfg = gc $NugetConfigPath
-	    $cfg.configuration.nugetOptions.add | % {
+        [xml]$cfg = Get-Content $NugetConfigPath
+	    $cfg.configuration.nugetOptions.add | ForEach-Object {
 		    if ($_.key -eq 'majorVersion') {
 			    $nugetSettings.nugetOptions.majorVersion = $_.value
 		    } elseif ($_.key -eq 'minorVersion') {
@@ -30,16 +30,16 @@ function Import-NuGetSettings
 			    $nugetSettings.nugetOptions.contentFolders = $_.value
 		    }
 	    }
-	    $cfg.configuration.nugetSettings.add | ? { $_ } | % {
+	    $cfg.configuration.nugetSettings.add | Where-Object { $_ } | ForEach-Object {
 		    $nugetSettings.nugetSettings[$_.key] = $_.value
 	    }
 	    $projPath = Split-Path -LiteralPath $NugetConfigPath
 	    $nugetSettings.nugetSettings['version'] = Get-ProjectVersion -Path $projPath -MajorVersion $nugetSettings.nugetOptions.majorVersion -minorVersion $nugetSettings.nugetOptions.minorVersion
-	    $cfg.configuration.nugetDependencies.add | ? { $_ } | % {
+	    $cfg.configuration.nugetDependencies.add | Where-Object { $_ } | ForEach-Object {
 		    $version = Get-ProjectDependencyVersion -SolutionPath $SolutionPath -Dependency $_.key -OldVersion $_.value
 			$nugetSettings.nugetDependencies[$_.key] = $version
 	    }
-		$cfg.configuration.nugetContents.add | ? { $_ } | % {
+		$cfg.configuration.nugetContents.add | Where-Object { $_ } | ForEach-Object {
 			$nugetSettings.nugetContents[$_.key] = $_.value
 		}
     }

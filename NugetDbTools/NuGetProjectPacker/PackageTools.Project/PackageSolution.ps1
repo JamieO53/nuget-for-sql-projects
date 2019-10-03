@@ -6,12 +6,12 @@ $buildConfig='Debug'
 
 try {
 	$slnDir = (Get-Item "$PSScriptRoot").FullName
-	$slnPath = ls "$slnDir\*.sln" | select -First 1 | % { $_.FullName }
+	$slnPath = Get-ChildItem "$slnDir\*.sln" | Select-Item -First 1 | ForEach-Object { $_.FullName }
 
 	$nugetFolder = "$slnDir\NuGet"
 	$nuspecPath = "$slnDir\Package.nuspec"
 	$nugetBinFolder = "$nugetFolder\$contentType"
-	pushd $slnDir
+	Push-Location $slnDir
 
 	$loaded = $false
 	if (-not (Get-Module NuGetProjectPacker)) {
@@ -20,7 +20,7 @@ try {
 	}
 
 	$project = @{}
-	Get-CSharpProjects -SolutionPath $slnPath | % {
+	Get-CSharpProjects -SolutionPath $slnPath | ForEach-Object {
 		$project[$_.Project] = "$slnDir\$($_.ProjectPath)"
 	}
 
@@ -36,9 +36,9 @@ try {
 	}
 
 	Initialize-NuGetFolders -Path $nugetFolder
-	'lib' | % { mkdir $nugetFolder\$_ | Out-Null }
+	'lib' | ForEach-Object { mkdir $nugetFolder\$_ | Out-Null }
 
-	('Project1','Project2','Project3','Project4', 'Project5') | % {
+	('Project1','Project2','Project3','Project4', 'Project5') | ForEach-Object {
 		$projName = $_
 		if ($project.ContainsKey($projName)) {
 			$projPath = $project[$projName]
@@ -68,5 +68,5 @@ try {
 	Write-Host "$id packaging failed: $($_.Exception.Message)" -ForegroundColor Red
 	Exit 1
 } finally {
-	popd
+	Pop-Location
 }

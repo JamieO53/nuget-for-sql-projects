@@ -1,12 +1,12 @@
 function Get-AssetTargets($assets) {
     $targets = $assets.targets.'.NETStandard,Version=v1.4'
     $tgt = @{}
-    $targets | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % {
+    $targets | Get-Member | Where-Object { $_.MemberType -eq 'NoteProperty' } | ForEach-Object {
         $idVer = $_.Name
         $id = $idVer.Split('/')[0]
-        $info = iex "`$targets.'$idVer'"
+        $info = Invoke-Expression "`$targets.'$idVer'"
         if ($info.dependencies) {
-            $targetDependencies = $info.dependencies | ? { $_ } | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % {
+            $targetDependencies = $info.dependencies | Where-Object { $_ } | Get-Member | Where-Object { $_.MemberType -eq 'NoteProperty' } | ForEach-Object {
                 $_.Name
             }
             $tgt[$id] = $targetDependencies

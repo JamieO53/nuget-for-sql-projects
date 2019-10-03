@@ -8,7 +8,7 @@ try {
 	} else {
 		throw 'Package Release: Unable to find the solution file'
 	}
-	$slnPath = (Get-Item "$slnFolder\*.sln") | select -First 1 | % { $_.FullName }
+	$slnPath = (Get-Item "$slnFolder\*.sln") | Select-Item -First 1 | ForEach-Object { $_.FullName }
 	
 	if (-not (Get-Module NuGetProjectPacker)) {
 		Import-Module "$slnFolder\PowerShell\NuGetProjectPacker.psd1" -Global -DisableNameChecking
@@ -18,10 +18,10 @@ try {
 	if (-not (Test-Path $releaseConfigPath)) {
 		throw 'Unable to find the PackageRelease.config file in solution folder'
 	}
-	[xml]$config = gc $releaseConfigPath
+	[xml]$config = Get-Content $releaseConfigPath
 	$releaseFolder = "$slnFolder\$($config.package.metadata.releaseFolder)"
-	$contentFolders = $config.package.metadata.content.contentFolder | % { $_ }
-	$contentFiles = $config.package.metadata.content.contentFile | % { $_ }
+	$contentFolders = $config.package.metadata.content.contentFolder | ForEach-Object { $_ }
+	$contentFiles = $config.package.metadata.content.contentFile | ForEach-Object { $_ }
 	$releaseBinFolder = "$slnFolder\$($config.package.metadata.binaryReleaseFolder)"
 	$releaseContentFolder = "$releaseFolder\$content"
 	$releaseDbFolder = "$slnFolder\$($config.package.metadata.databaseReleaseFolder)"
@@ -29,15 +29,15 @@ try {
 	[bool]$includeBinary = $config.package.metadata.includeBinary -eq 'True'
 	[bool]$includeContent = $config.package.metadata.includeContent -eq 'True'
 
-	pushd $slnFolder
+	Push-Location $slnFolder
 
 	$csProject = @{}
-	Get-CSharpProjects -SolutionPath $slnPath | % {
+	Get-CSharpProjects -SolutionPath $slnPath | ForEach-Object {
 		$csProject[$_.Project] = "$slnFolder\$($_.ProjectPath)"
 	}
 
 	$dbProject = @{}
-	Get-SqlProjects -SolutionPath $slnPath | % {
+	Get-SqlProjects -SolutionPath $slnPath | ForEach-Object {
 		$dbProject[$_.Project] = "$slnFolder\$($_.ProjectPath)"
 	}
 
@@ -56,7 +56,7 @@ try {
 	}
 
 	if ($includeBinary) {
-		$config.package.metadata.projects.netProject | % {
+		$config.package.metadata.projects.netProject | ForEach-Object {
 			$projName = $_
 			if ($csProject.ContainsKey($projName)) {
 				$projPath = $csProject[$projName]
@@ -64,8 +64,8 @@ try {
 				$projBinFolder = "$projFolder\bin\$buildConfig"
 
 				Import-ArtifactProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -ArtifactBinFolder $releaseBinFolder -DefaultAssemblyName $projName
-				move $releaseBinFolder\content\* $releaseBinFolder\ -Force
-				rmdir $releaseBinFolder\content
+				Move-Item $releaseBinFolder\content\* $releaseBinFolder\ -Force
+				Remove-Item $releaseBinFolder\content
 			} else {
 				throw "Project $projName is not in the solution"
 			}
@@ -73,46 +73,46 @@ try {
 	}
 
 	if ($includeContent) {
-		copy $contentFolder\* $releaseContentFolder\ -Recurse -Force
-		$config.package.metadata.projects.netProject | % {
+		Copy-Item $contentFolder\* $releaseContentFolder\ -Recurse -Force
+		$config.package.metadata.projects.netProject | ForEach-Object {
 			$projName = $_
 			if ($csProject.ContainsKey($projName)) {
 				$projPath = $csProject[$projName]
 				$projFolder = Split-Path $projPath
 				$projContentFolder = "$projFolder\$content"
 				if (Test-Path $projContentFolder) {
-					copy $projContentFolder\* $releaseContentFolder\ -Recurse -Force
+					Copy-Item $projContentFolder\* $releaseContentFolder\ -Recurse -Force
 				}
 			}
 		}
 	}
 
 	if (Test-Path "$slnFolder\Databases") {
-		copy "$slnFolder\**\Databases\*" $releaseDbFolder\ -Recurse -Force
-		copy "$slnFolder\Databases\*" $releaseDbFolder\ -Recurse -Force
+		Copy-Item "$slnFolder\**\Databases\*" $releaseDbFolder\ -Recurse -Force
+		Copy-Item "$slnFolder\Databases\*" $releaseDbFolder\ -Recurse -Force
 	}
 
-	$contentFolders | % {
+	$contentFolders | ForEach-Object {
 		if (Test-Path "$slnFolder\$_") {
 			if (-not (Test-Path "$releaseFolder\$_")) {
 				mkdir "$releaseFolder\$_"
 			}
-			copy "$slnFolder\$_\*" "$releaseFolder\$_\" -Recurse -Force
+			Copy-Item "$slnFolder\$_\*" "$releaseFolder\$_\" -Recurse -Force
 		}
 	}
-	$contentFiles | % {
+	$contentFiles | ForEach-Object {
 		if (Test-Path "$slnFolder\$_") {
-			copy "$slnFolder\$_" $releaseFolder -Force
+			Copy-Item "$slnFolder\$_" $releaseFolder -Force
 		}
 	}
 
-	$config.package.metadata.projects.dbProject | % {
+	$config.package.metadata.projects.dbProject | ForEach-Object {
 		$projName = $_
 		if ($dbProject.ContainsKey($projName)) {
 			$projPath = $dbProject[$projName]
 			$projFolder = Split-Path $projPath
-			copy "$projFolder\Databases\*" $releaseDbFolder\ -Recurse
-			copy "$projFolder\*.publish.xml" $releaseDbFolder\
+			Copy-Item "$projFolder\Databases\*" $releaseDbFolder\ -Recurse
+			Copy-Item "$projFolder\*.publish.xml" $releaseDbFolder\
 		} else {
 			throw "Database project $projName is not in the solution"
 		}
@@ -123,5 +123,5 @@ try {
 	Write-Host $_.Exception.StackTrace
 	Exit 1
 } finally {
-	popd
+	Pop-Location
 }

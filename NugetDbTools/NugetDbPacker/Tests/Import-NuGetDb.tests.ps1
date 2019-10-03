@@ -18,10 +18,10 @@ Describe "Import-NuGetDb" {
 	Context "Files setting in nuget spec" {
 		Initialize-TestDbProject -ProjectPath $projPath
 		Initialize-NuGetFolders -Path $nugetFolder
-		md $nugetDbFolder
+		mkdir $nugetDbFolder
 		Initialize-NuGetSpec -Path $nugetFolder -setting $nugetSettings
 		Import-NuGetDb -ProjectPath $projPath -ProjDbFolder $projDbFolder -NugetDbFolder $nugetDbFolder -NugetSpecPath $nugetSpecPath
-		[xml]$spec = gc "$nugetFolder\Package.nuspec"
+		[xml]$spec = Get-Content "$nugetFolder\Package.nuspec"
 
 		It "Files group should exist" { $spec.package.SelectNodes('files') | should not BeNullOrEmpty }
 		It "File node should exist" { $spec.package.files.SelectNodes('file') | should not BeNullOrEmpty }
@@ -36,7 +36,7 @@ Describe "Import-NuGetDb" {
 	Context "Import project build files" {
 		Initialize-TestDbProject -ProjectPath $projPath
 		Initialize-NuGetFolders -Path $nugetFolder
-		md $nugetDbFolder
+		mkdir $nugetDbFolder
 		Initialize-NuGetSpec -Path $nugetFolder -setting $nugetSettings
 		Import-NuGetDb -ProjectPath $projPath -ProjDbFolder $projDbFolder -NugetDbFolder $nugetDbFolder -NugetSpecPath $nugetSpecPath
 		

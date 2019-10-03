@@ -20,13 +20,13 @@ if (Test-Path "$PSScriptRoot\PowerShell\NugetDbPacker.psd1") {
 
 if (Test-Path "$PSScriptRoot\..\Release\PackageDeploy.config") {
 	$deployRoot = "$PSScriptRoot\..\Release"
-	[xml]$config = gc "$deployRoot\PackageDeploy.config"
+	[xml]$config = Get-Content "$deployRoot\PackageDeploy.config"
 } elseif (Test-Path "$PSScriptRoot\..\PackageDeploy.config") {
 	$deployRoot = "$PSScriptRoot\.."
-	[xml]$config = gc "$deployRoot\PackageDeploy.config"
+	[xml]$config = Get-Content "$deployRoot\PackageDeploy.config"
 } elseif (Test-Path "$PSScriptRoot\PackageDeploy.config") {
 	$deployRoot = $PSScriptRoot
-	[xml]$config = gc "$deployRoot\PackageDeploy.config"
+	[xml]$config = Get-Content "$deployRoot\PackageDeploy.config"
 } else {
 	Write-Host "PackageDeploy.config file could not be located" -ForegroundColor Red
 	exit 1
@@ -37,7 +37,7 @@ $dbPath = "$deployRoot\$($config.package.paths.dbPath)"
 $ssasPath = "$deployRoot\$($config.package.paths.ssasPath)"
 $ssasDBPath = "$ssasPath\Databases"
 
-$config.package.deployChannels.deployChannel | ? { $_.name -eq $deployChannel } | % {
+$config.package.deployChannels.deployChannel | Where-Object { $_.name -eq $deployChannel } | ForEach-Object {
 	$targetServerName = $_.targetServerName
 }
 
@@ -46,7 +46,7 @@ if (-not $targetServerName) {
 	exit 1
 }
 
-$config.package.databases.database | % {
+$config.package.databases.database | ForEach-Object {
 	$dbName = $_.name
 	$dacpacPath = "$dbPath\$dbName.dacpac"
 	if (-not (Test-Path $dacpacPath)) {
@@ -62,7 +62,7 @@ $config.package.databases.database | % {
 	if ($params) {
 		$params = $params.Replace('"', '`"')
 		$params = '"{0}"' -F $params
-		$parameters = iex $params
+		$parameters = Invoke-Expression $params
 	} else {
 		$parameters = ''
 	}
@@ -81,7 +81,7 @@ $config.package.databases.database | % {
 	}
 }
 
-$config.package.cubes.cube | % {
+$config.package.cubes.cube | ForEach-Object {
 	$cubeName = $_.name
 	$cubeFolder = $_.folder
 	$databaseName = $_.databaseName

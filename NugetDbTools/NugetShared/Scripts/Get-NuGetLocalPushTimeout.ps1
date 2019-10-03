@@ -1,7 +1,7 @@
 function Get-NuGetLocalPushTimeout {
 	$result = ''
-	Get-NuGetDbToolsConfig | % {
-		$_ | ? { $_.tools.nuget.pushTimeout } | % { $result = $_.tools.nuget.pushTimeout }
+	Get-NuGetDbToolsConfig | ForEach-Object {
+		$_ | Where-Object { $_.tools.nuget.pushTimeout } | ForEach-Object { $result = $_.tools.nuget.pushTimeout }
 	}
 	if (-not $result) {
 		$result = '900'

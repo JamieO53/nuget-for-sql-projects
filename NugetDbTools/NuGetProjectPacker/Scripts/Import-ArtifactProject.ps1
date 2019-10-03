@@ -1,6 +1,6 @@
 function Import-ArtifactProject {
 	<#.Synopsis
-	Copy the build files to the Artifact lib folder
+	Copy-Item the build files to the Artifact lib folder
 	.DESCRIPTION
 	Copies the binary debug and config files to the Artifact lib folder
 	.EXAMPLE

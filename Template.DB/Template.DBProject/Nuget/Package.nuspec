@@ -1,0 +1,21 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Template.DBProject</id>
+    <version>1.0.0-content</version>
+    <authors>joglethorpe</authors>
+    <owners>Jamie Oglethorpe</owners>
+    <projectUrl>https://epsdev.visualstudio.com/Backoffice</projectUrl>
+    <description>Template.DBProject</description>
+    <releaseNotes>First testing release</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <dependencies>
+      <dependency id="NugetDbPackerDb.Root" version="0.2.26" />
+      <dependency id="NuGetDbPacker" version="0.1.213" />
+    </dependencies>
+    <contentFiles />
+  </metadata>
+  <files>
+    <file src="content\Databases\**" target="Databases" />
+  </files>
+</package>

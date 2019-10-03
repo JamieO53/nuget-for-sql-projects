@@ -21,7 +21,7 @@ function Measure-ProjectVersion {
 	)
 	if (-not $oldVersion) {
 		if (Test-Path $Path) {
-			[xml]$cfg = gc $Path
+			[xml]$cfg = Get-Content $Path
 			$OldVersion = $cfg.package.metadata.version
 			if (-not $oldVersion) {
 				$oldVersion = '1.0.0'

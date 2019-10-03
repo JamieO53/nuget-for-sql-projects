@@ -26,7 +26,7 @@ function Initialize-NuGetRuntime {
 		}
 		if (Test-Path $projectFolder\$contentFolder) {
 			Log "Copying $projectFolder\$contentFolder\* to $nugetContentFolder"
-			copy $projectFolder\$contentFolder\* $nugetContentFolder -Recurse -Force
+			Copy-Item $projectFolder\$contentFolder\* $nugetContentFolder -Recurse -Force
 		}
 	}
 }

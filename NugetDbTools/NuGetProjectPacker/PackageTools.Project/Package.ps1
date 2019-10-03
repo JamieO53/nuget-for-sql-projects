@@ -11,7 +11,7 @@ try {
 	$nugetFolder = "$projDir\NuGet"
 	$nuspecPath = "$projDir\Package.nuspec"
 	$nugetBinFolder = "$nugetFolder\$contentType"
-	pushd $projDir
+	Push-Location $projDir
 
 	$loaded = $false
 	if (-not (Get-Module NuGetProjectPacker)) {
@@ -27,12 +27,12 @@ try {
 	$nugetPackagePath = "$projDir\$id.$version.nupkg"
 
 	if (Test-Path $nugetFolder) {
-		del $nugetFolder\* -Recurse -Force
-		rmdir $nugetFolder
+		Remove-Item $nugetFolder\* -Recurse -Force
+		Remove-Item $nugetFolder
 	}
 
-	md "$nugetFolder" | Out-Null
-	'content\PackageTools', "content\$contentType" | % { mkdir $nugetFolder\$_ | Out-Null }
+	mkdir "$nugetFolder" | Out-Null
+	'content\PackageTools', "content\$contentType" | ForEach-Object { mkdir $nugetFolder\$_ | Out-Null }
 
 	Import-ArtifactProject -ProjectPath $projPath -ProjBinFolder $projBinFolder -ArtifactBinFolder $nugetBinFolder -DefaultAssemblyName $projName
 
@@ -44,7 +44,7 @@ try {
 	Remove-NugetFolder $nugetFolder
 	if (Test-Path $nugetPackagePath)
 	{
-		del $nugetPackagePath
+		Remove-Item $nugetPackagePath
 	}
 	if ($loaded) {
 		Remove-Module NuGetProjectPacker -ErrorAction Ignore
@@ -53,5 +53,5 @@ try {
 	Write-Host "$id packaging failed: $($_.Exception.Message)" -ForegroundColor Red
 	Exit 1
 } finally {
-	popd
+	Pop-Location
 }

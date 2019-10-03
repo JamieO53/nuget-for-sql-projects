@@ -13,28 +13,28 @@ $sampleDependencyId = '<<<<An example database reference in the form solutionNam
 function Get-DbSolutionBuilder {
     $bootstrapFolder = "$Path\Bootstrap"
     if (Test-Path $BootstrapFolder) {
-        del $BootstrapFolder\* -Recurse -Force
+        Remove-Item $BootstrapFolder\* -Recurse -Force
     } else {
         mkdir $BootstrapFolder | Out-Null
     }
 
     nuget install DbSolutionBuilder -Source $nugetSource -OutputDirectory $bootstrapFolder -ExcludeVersion
 
-    ls $BootstrapFolder -Directory | % {
-        ls $_.FullName -Directory | % {
+    Get-ChildItem $BootstrapFolder -Directory | ForEach-Object {
+        Get-ChildItem $_.FullName -Directory | ForEach-Object {
             if (-not (Test-Path "$Path\$($_.Name)")) {
                 mkdir "$Path\$($_.Name)" | Out-Null
             }
-            copy "$($_.FullName)\*" "$Path\$($_.Name)"
+            Copy-Item "$($_.FullName)\*" "$Path\$($_.Name)"
         }
     }
 
-    del $BootstrapFolder -Include '*' -Recurse
+    Remove-Item $BootstrapFolder -Include '*' -Recurse
 
-    'New-CiDbProject.ps1' | % {
+    'New-CiDbProject.ps1' | ForEach-Object {
         $filePath = "$Path\PackageTools\$_"
         if (Test-Path $filePath) {
-            copy $filePath $Path
+            Copy-Item $filePath $Path
         }
     }
 	$dbTemplatePath = "$Path\DbTemplate.xml"

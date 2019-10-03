@@ -11,11 +11,11 @@ Remove-Variable * -ErrorAction SilentlyContinue
 $solutionFolder = $PSScriptRoot
 $order = Import-PowerShellDataFile "$solutionFolder\PackageSequence.psd1"
 $nugetVersion = @{}
-$order.PackageOrder | % {
+$order.PackageOrder | ForEach-Object {
 	$nugetVersion[$_] = (Get-NuGetPackageVersion -PackageName $_)
 }
 $sourceVersion = @{}
-$order.PackageOrder | % {
+$order.PackageOrder | ForEach-Object {
 	$projectFolder = "$solutionFolder\$_"
 	$nuspecPath = "$projectFolder\Package.nuspec"
 	$sourceVersion[$_] = (Measure-ProjectVersion -Path $nuspecPath -ProjectFolder $projectFolder)
@@ -23,21 +23,21 @@ $order.PackageOrder | % {
 $sourceIsUpdated = @{}
 $order.PackageOrder |  ? {
 	$nugetVersion[$_] -ne $sourceVersion[$_]
-} | ? {
+} | Where-Object {
 	-not $sourceIsUpdated[$_]
-} | % {
+} | ForEach-Object {
 	$sourceIsUpdated[$_] = $true
 }
 $upVersion = @{}
-$order.PackageOrder | % {
+$order.PackageOrder | ForEach-Object {
 	$upVersion[$_] = $false
 }
-$order.PackageOrder | % {
+$order.PackageOrder | ForEach-Object {
 	if ($sourceIsUpdated[$_]) {
 		$projectFolder = "$solutionFolder\$_"
 		$buildConfigPath = "$projectFolder\BuildConfig.psd1"
 		$buildConfig = Import-PowerShellDataFile $buildConfigPath
-		$buildConfig.Dependents | ? { -not $sourceIsUpdated[$_] } | % {
+		$buildConfig.Dependents | Where-Object { -not $sourceIsUpdated[$_] } | ForEach-Object {
 			$sourceIsUpdated[$_] = $true
 			$upVersion[$_] = $true
 		}
@@ -45,11 +45,11 @@ $order.PackageOrder | % {
 }
 
 try {
-	$order.PackageOrder | ? { $sourceIsUpdated[$_] } | % {
-		pushd "$solutionFolder\$_"
+	$order.PackageOrder | Where-Object { $sourceIsUpdated[$_] } | ForEach-Object {
+		Push-Location "$solutionFolder\$_"
 		#powershell.exe -command '.\Package.ps1; exit $LASTEXITCODE'
 		.\Package.ps1 -UpVersion $upVersion[$_]
-		popd
+		Pop-Location
 		if ($LASTEXITCODE) {
 			throw "Package of $_ failed"
 		}
@@ -58,5 +58,5 @@ try {
 	Write-Host $_.Exception.Message -ForegroundColor Red
 	exit 1
 } finally {
-	popd
+	Pop-Location
 }

@@ -1,8 +1,8 @@
 function Get-ExtensionPaths {
 	$extensions = @{}
-	Get-ToolsConfiguration | % {
+	Get-ToolsConfiguration | ForEach-Object {
 		$tools = $_
-		$tools.extensions.extension | % {
+		$tools.extensions.extension | ForEach-Object {
 			$extensions[$_.name] = "$PSScriptRoot\$($_.path)"
 		}
 	}

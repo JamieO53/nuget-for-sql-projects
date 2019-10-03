@@ -3,9 +3,9 @@ function Test-IsRunningBuildAgent {
 		$true
 	} else {
 		$buildAgent = (
-			get-service | ? {
+			get-service | Where-Object {
 				($_.Status -eq 'Running') -and ($_.Name -like 'vstsagent.*')
-			} | % {
+			} | ForEach-Object {
 				$_.Name
 			}
 		)

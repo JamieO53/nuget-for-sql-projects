@@ -15,9 +15,9 @@ function Set-ProjectDependencyVersion {
 		[string]$Dependency
 	)
 	$newVersion = Get-NuGetPackageVersion $Dependency
-	[xml]$proj = gc $Path
-	$refs = $proj.Project.ItemGroup | ? { $_.PackageReference }
-	$ref = $refs.PackageReference | ? { $_.Include -eq $Dependency }
+	[xml]$proj = Get-Content $Path
+	$refs = $proj.Project.ItemGroup | Where-Object { $_.PackageReference }
+	$ref = $refs.PackageReference | Where-Object { $_.Include -eq $Dependency }
 	if ($ref) {
 		$ref.Version = $newVersion
 	} else {

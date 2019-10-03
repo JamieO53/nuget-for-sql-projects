@@ -14,7 +14,7 @@ function Get-NuGetPackageVersion {
 		[string]$PackageName
 	)
 	$version = ''
-	iex "nuget list $PackageName -Source '$(Get-NuGetLocalSource)'" | % {
+	Invoke-Expression "nuget list $PackageName -Source '$(Get-NuGetLocalSource)'" | ForEach-Object {
 		$nameVersion = $_ -split ' '
 		if ($nameVersion[0] -eq $PackageName) {
 			$version = $nameVersion[1]

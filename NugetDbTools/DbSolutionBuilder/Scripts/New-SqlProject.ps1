@@ -30,18 +30,18 @@ function New-SqlProject {
 	$slnName = $Parameters.dbSolution.parameters.name
 	$slnPath = "$SolutionFolder\$slnName.sln"
 	mkdir $projectFolder | Out-Null
-	ls "$TemplateFolder\NuGetDbPacker.DbTemplate\Template\Template.DBProject\*" | % {
+	Get-ChildItem "$TemplateFolder\NuGetDbPacker.DbTemplate\Template\Template.DBProject\*" | ForEach-Object {
 		$templateFile = $_
 		$projectFile = $templateFile.Name.Replace('Template.DBProject', "$ProjectName")
-		copy $templateFile.FullName "$projectFolder\$projectFile"
-		$text = gc "$projectFolder\$projectFile" | Out-String
+		Copy-Item $templateFile.FullName "$projectFolder\$projectFile"
+		$text = Get-Content "$projectFolder\$projectFile" | Out-String
 		$text = $text.Replace('Template.DBProject', $ProjectName)
 		$text = $text.Replace('DBProject', $DbName)
 		$text | Set-Content "$projectFolder\$projectFile" -Encoding UTF8
 	}
 	$cfgPath = [IO.Path]::ChangeExtension($projectPath, '.nuget.config')
-	[xml]$proj = gc $PkgProjectPath
-	$proj.Project.ItemGroup.PackageReference | % {
+	[xml]$proj = Get-Content $PkgProjectPath
+	$proj.Project.ItemGroup.PackageReference | ForEach-Object {
 		$package = $_.Include
 		$version = $_.Version
 		Set-NuGetProjectDependencyVersion -NugetConfigPath $cfgPath -SolutionPath $slnPath -Dependency $_.Include -Version $_.Version

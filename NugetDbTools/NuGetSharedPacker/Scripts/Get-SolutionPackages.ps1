@@ -21,7 +21,7 @@ function Get-SolutionPackages {
 
 	Log "Get solution dependencies"
 	$reference = Get-SolutionDependencies $SolutionPath
-	$reference.Keys | sort | % {
+	$reference.Keys | Sort-Object | ForEach-Object {
 		$package = $_
 		$version = $reference[$package]
 		if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {

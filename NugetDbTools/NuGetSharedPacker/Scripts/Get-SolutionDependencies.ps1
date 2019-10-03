@@ -16,14 +16,14 @@ function Get-SolutionDependencies {
 	$slnFolder = Split-Path -Path $SolutionPath
 	nuget restore $SolutionPath | Out-Null
 
-	Get-PkgProjects $SolutionPath | % {
+	Get-PkgProjects $SolutionPath | ForEach-Object {
 		$projPath = "$slnFolder\$($_.ProjectPath)"
 		$projFolder = Split-Path $projPath
 		$assetPath = "$projFolder\obj\project.assets.json"
 
 		nuget restore $projPath -Source (Get-NuGetLocalSource) | Out-Null
 
-		$assets = ConvertFrom-Json (gc $assetPath | Out-String)
+		$assets = ConvertFrom-Json (Get-Content $assetPath | Out-String)
 		$dep = Get-AssetDependencies($assets)
 		$lib = Get-AssetLibraries($assets)
 		$tgt = Get-AssetTargets($assets)
@@ -32,11 +32,11 @@ function Get-SolutionDependencies {
 		while ($deps.Count -gt 0) {
 			$refs = $deps
 			$deps = @{}
-			$refs.Keys | % {
+			$refs.Keys | ForEach-Object {
 				if (-not $reference[$_]) {
 					$reference[$_] = $lib[$_]
 					if ($tgt[$_]) {
-						$tgt[$_] | ? { -not $reference[$_] } | % {
+						$tgt[$_] | Where-Object { -not $reference[$_] } | ForEach-Object {
 							$deps[$_] = $lib[$_]
 						}
 					}
