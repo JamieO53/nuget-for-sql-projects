@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <package>
   <metadata>
     <id>NuGetShared</id>
-    <version>0.1.174</version>
+    <version>0.1.176</version>
     <authors>joglethorpe</authors>
     <owners>Jamie Oglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -11,9 +11,6 @@
     <releaseNotes>Initial release</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>NuGetShared Common</tags>
-    <packageTypes>
-      <packageType name="DacPac" />
-    </packageTypes>
   </metadata>
   <files>
     <file src="content\PowerShell\*" target="PowerShell" />
