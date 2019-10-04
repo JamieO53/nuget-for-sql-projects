@@ -21,7 +21,7 @@ $order.PackageOrder | ForEach-Object {
 	$sourceVersion[$_] = (Measure-ProjectVersion -Path $nuspecPath -ProjectFolder $projectFolder)
 }
 $sourceIsUpdated = @{}
-$order.PackageOrder |  ? {
+$order.PackageOrder |  Where-Object {
 	$nugetVersion[$_] -ne $sourceVersion[$_]
 } | Where-Object {
 	-not $sourceIsUpdated[$_]

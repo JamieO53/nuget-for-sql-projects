@@ -18,7 +18,7 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 		$s.Split('=')[1]
 	}
 	$sqlcmdFolder = ls $toolsPath | ? { $_.name -eq 'sqlcmd.exe' } | % { $_.FullName }
-	if (-not (Test-Path $sqlcmdFolder)) {
+	if (-not ($sqlcmdFolder) -or -not (Test-Path $sqlcmdFolder)) {
 		Log 'Unable to find SQLCMD.EXE' -Error
 		exit 1
 	}
