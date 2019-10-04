@@ -14,7 +14,7 @@ function Get-SolutionContent {
 	)
 	$solutionFolder = Split-Path $SolutionPath
 	$packageContentFolder = "$SolutionFolder\PackageContent"
-	$packageFolder = "$SolutionFolder\Packages"
+	$packageFolder = "$SolutionFolder\packages"
 	$contentFolder = Get-NuGetContentFolder
 	$solutionContentFolder = "$SolutionFolder\$contentFolder"
 
@@ -42,20 +42,35 @@ function Get-SolutionContent {
 			if (-not (Test-Path "$SolutionFolder\$($_.Name)")) {
 				mkdir "$SolutionFolder\$($_.Name)" | Out-Null
 			}
-			Copy-Item "$($_.FullName)\*" "$SolutionFolder\$($_.Name)" -Recurse -Force
+			Copy-Item "$($_.FullName)\*" "$SolutionFolder\$($_.Name)\" -Recurse -Force
 		}
 	}
 
 	Remove-Item $packageContentFolder -Include '*' -Recurse -Force
 
+	$csPackage = @{}
+	Get-ChildItem .\**\packages.config | ForEach-Object {
+		[xml]$pc = Get-Content $_
+		$pc.packages.package | ForEach-Object {
+			New-Object -TypeName PSCustomObject -Property @{ id=$_.id; version=$_.version }
+		}
+	} | Sort-Object -Property id,version -Unique | ForEach-Object {
+		$csPackage[$_.id] = $_.version
+	}
+	
 	if ((Test-Path $packageFolder) -and (Get-ChildItem "$packageFolder\**\$contentFolder" -Recurse)) {
 		if (Test-Path $solutionContentFolder) {
 			Remove-Item $solutionContentFolder\* -Recurse -Force
 		} else {
 			mkdir $solutionContentFolder | Out-Null
 		}
-		Get-ChildItem "$packageFolder\**\$contentFolder" -Recurse | ForEach-Object {
-			Copy-Item "$($_.FullName)\*" $solutionContentFolder -Recurse -Force
+		$csPackage.Keys | Sort-Object | ForEach-Object {
+			$id = $_
+			$version = $csPackage[$id]
+			$idContentFolder = "$packageFolder\$id.$version\content\$contentFolder"
+			if (Test-Path $idContentFolder) {
+				Copy-Item "$idContentFolder\*" "$solutionContentFolder\" -Recurse -Force
+			}
 		}
 	}
 }
