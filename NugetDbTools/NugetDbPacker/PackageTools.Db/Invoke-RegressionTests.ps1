@@ -82,7 +82,7 @@ END;
 	$dbConn.Keys | ForEach-Object {
 		$dbName = $_
 		$cs = $dbConn[$dbName].ToString()
-		if (-not (Invoke-Sqlcmd "Select-Object name from sys.tables where name = 'tsuActiveTest'" -ConnectionString "$cs")) {
+		if (-not (Invoke-Sqlcmd "Select name from sys.tables where name = 'tsuActiveTest'" -ConnectionString "$cs")) {
 			$cmd = "Invoke-Sqlcmd -InputFile `"$packageContentFolder\tsqlunit\tsqlunit.sql`" -ConnectionString `"$cs`""
 			Log $cmd
 			Invoke-Trap `
