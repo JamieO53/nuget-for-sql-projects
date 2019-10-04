@@ -11,6 +11,18 @@ if (-not (Get-Module NugetDbPacker)) {
 
 $rtFolder = "$SolutionFolder\RegressionTests\Commands"
 if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
+	$toolsPath = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\*\Tools\ClientSetup' | % {
+		($_ | Get-Member) | ? { $_.Name -eq 'ODBCToolsPath' }
+	} | Select-Object -Last 1 | % {
+		[string]$s = $_.Definition
+		$s.Split('=')[1]
+	}
+	$sqlcmdFolder = ls $toolsPath | ? { $_.name -eq 'sqlcmd.exe' } | % { $_.FullName }
+	if (-not (Test-Path $sqlcmdFolder)) {
+		Log 'Unable to find SQLCMD.EXE' -Error
+		exit 1
+	}
+	$env:Path += ";$toolsPath"
 	$sqlVars = @{}
 	$dbServer = @{}
 	$dbConn = @{}
