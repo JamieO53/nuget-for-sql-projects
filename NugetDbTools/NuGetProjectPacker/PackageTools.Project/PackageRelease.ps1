@@ -8,7 +8,7 @@ try {
 	} else {
 		throw 'Package Release: Unable to find the solution file'
 	}
-	$slnPath = (Get-Item "$slnFolder\*.sln") | Select-Item -First 1 | ForEach-Object { $_.FullName }
+	$slnPath = (Get-Item "$slnFolder\*.sln") | Select-Object -First 1 | ForEach-Object { $_.FullName }
 	
 	if (-not (Get-Module NuGetProjectPacker)) {
 		Import-Module "$slnFolder\PowerShell\NuGetProjectPacker.psd1" -Global -DisableNameChecking

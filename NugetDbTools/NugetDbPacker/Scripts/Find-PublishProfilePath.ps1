@@ -39,7 +39,7 @@ function Find-PublishProfilePath {
 		[IO.Path]::ChangeExtension($ProjectPath, ".$_.publish.xml")
 	} | Where-Object {
 		Test-Path $_
-	} | Select-Item -First 1 | ForEach-Object {
+	} | Select-Object -First 1 | ForEach-Object {
 		$path = $_
 	}
 	$path

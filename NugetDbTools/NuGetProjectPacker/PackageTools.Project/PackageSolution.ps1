@@ -6,7 +6,7 @@ $buildConfig='Debug'
 
 try {
 	$slnDir = (Get-Item "$PSScriptRoot").FullName
-	$slnPath = Get-ChildItem "$slnDir\*.sln" | Select-Item -First 1 | ForEach-Object { $_.FullName }
+	$slnPath = Get-ChildItem "$slnDir\*.sln" | Select-Object -First 1 | ForEach-Object { $_.FullName }
 
 	$nugetFolder = "$slnDir\NuGet"
 	$nuspecPath = "$slnDir\Package.nuspec"

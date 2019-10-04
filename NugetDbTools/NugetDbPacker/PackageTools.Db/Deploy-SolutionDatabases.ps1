@@ -4,7 +4,7 @@ if ( Get-Module NugetDbPacker -All) {
 Import-Module "$PSScriptRoot\..\PowerShell\NugetDbPacker.psd1" -Global -DisableNameChecking
 
 $slnFolder = Get-ParentSubFolder "$PSScriptRoot" '*.sln'
-$slnPath = Get-ChildItem "$slnFolder\*.sln" | Select-Item -First 1 | ForEach-Object { $_.FullName }
+$slnPath = Get-ChildItem "$slnFolder\*.sln" | Select-Object -First 1 | ForEach-Object { $_.FullName }
 $branch = Get-Branch $slnFolder
 
 Get-SqlProjects -SolutionPath $slnPath | ForEach-Object {

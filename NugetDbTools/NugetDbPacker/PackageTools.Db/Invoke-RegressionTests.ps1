@@ -66,7 +66,7 @@ BEGIN
       RETURN 0;
 
     DECLARE @Msg NVARCHAR(MAX);
-    Select-Item @Msg = 'Expected: <' + ISNULL(CAST(@Expected AS NVARCHAR(MAX)), 'NULL') + 
+    Select-Object @Msg = 'Expected: <' + ISNULL(CAST(@Expected AS NVARCHAR(MAX)), 'NULL') + 
                   '> Actual: <' + ISNULL(CAST(@Actual AS NVARCHAR(MAX)), 'NULL') + '>';
     IF((COALESCE(@Message,'') <> '') AND (@Message NOT LIKE '% ')) SET @Message = @Message + ': ';
     SET @Message = @Message + @Msg
@@ -82,7 +82,7 @@ END;
 	$dbConn.Keys | ForEach-Object {
 		$dbName = $_
 		$cs = $dbConn[$dbName].ToString()
-		if (-not (Invoke-Sqlcmd "Select-Item name from sys.tables where name = 'tsuActiveTest'" -ConnectionString "$cs")) {
+		if (-not (Invoke-Sqlcmd "Select-Object name from sys.tables where name = 'tsuActiveTest'" -ConnectionString "$cs")) {
 			$cmd = "Invoke-Sqlcmd -InputFile `"$packageContentFolder\tsqlunit\tsqlunit.sql`" -ConnectionString `"$cs`""
 			Log $cmd
 			Invoke-Trap `
