@@ -14,7 +14,7 @@ function Get-SolutionDependencies {
 	)
 	$reference = @{}
 	$slnFolder = Split-Path -Path $SolutionPath
-	nuget restore $SolutionPath | Out-Null
+	# nuget restore $SolutionPath | Out-Null
 
 	Get-PkgProjects $SolutionPath | ForEach-Object {
 		$projPath = "$slnFolder\$($_.ProjectPath)"
