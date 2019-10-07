@@ -65,8 +65,11 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 	$packageContentFolder = "$SolutionFolder\PackageContent"
 	if (-not (Test-Path $packageContentFolder\tsqlunit)) {
 		mkdir $packageContentFolder | Out-Null
-		Push-Location $packageContentFolder
-		git clone https://github.com/aevdokimenko/tsqlunit.git
+		$path = "$packageContentFolder\tsqlunit"
+		$cmd = "$env:ProgramFiles\Git\bin\git.exe"
+		$params =  'clone', '--single-branch', '--progress', '-b', 'master', 'https://github.com/aevdokimenko/tsqlunit.git', $path
+		Write-Host "$cmd $params"
+		& $cmd $params
 		$hack = @"
 CREATE PROCEDURE dbo.tsu_AssertEquals
 	@Expected SQL_VARIANT,
@@ -86,7 +89,6 @@ BEGIN
 END;	
 "@
 		$hack | Out-File $packageContentFolder\hack.sql -Encoding utf8
-		Pop-Location
 	}
 
 	Import-Module SqlServer -DisableNameChecking -Global
