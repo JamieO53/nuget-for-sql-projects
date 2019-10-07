@@ -81,7 +81,7 @@ BEGIN
       RETURN 0;
 
     DECLARE @Msg NVARCHAR(MAX);
-    Select-Object @Msg = 'Expected: <' + ISNULL(CAST(@Expected AS NVARCHAR(MAX)), 'NULL') + 
+    SELECT @Msg = 'Expected: <' + ISNULL(CAST(@Expected AS NVARCHAR(MAX)), 'NULL') + 
                   '> Actual: <' + ISNULL(CAST(@Actual AS NVARCHAR(MAX)), 'NULL') + '>';
     IF((COALESCE(@Message,'') <> '') AND (@Message NOT LIKE '% ')) SET @Message = @Message + ': ';
     SET @Message = @Message + @Msg
