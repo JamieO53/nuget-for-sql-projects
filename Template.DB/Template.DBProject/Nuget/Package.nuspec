@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Template.DBProject</id>
-    <version>1.0.0-content</version>
+    <version>1.0.0</version>
     <authors>joglethorpe</authors>
     <owners>Jamie Oglethorpe</owners>
     <projectUrl>https://epsdev.visualstudio.com/Backoffice</projectUrl>
