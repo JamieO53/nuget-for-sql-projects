@@ -4,7 +4,7 @@ function Get-SolutionContent {
 	.DESCRIPTION
     Gets the content of all the solution's NuGet dependencies and updates the SQL projects' NuGet versions for each dependency
 	.EXAMPLE
-	Get-SolutionPackages -SolutionPath C:\VSTS\Batch\Batch.sln
+	Get-SolutionContent -SolutionPath C:\VSTS\Batch\Batch.sln
 	#>
     [CmdletBinding()]
     param
