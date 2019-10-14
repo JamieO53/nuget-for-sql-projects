@@ -21,13 +21,17 @@ try {
 		Import-Module "$slnDir\NugetSharedPacker\bin\Debug\NugetSharedPacker\NugetSharedPacker.psd1" -Global -DisableNameChecking
 	}
 
+	$branch = Get-Branch
+	if ($branch -eq 'master') {
+		$branch = ''
+	}
 	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir -UpVersion $upVersion
 	if ($version -like '*.0'){
 		throw "Invalid version $version"
 	}
 
 	$dependencies | ForEach-Object {
-		Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency $_
+		Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency $_ -Branch $branch
 	}
 
 	if (Test-Path $projDir\NuGet) {

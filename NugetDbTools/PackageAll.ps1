@@ -44,20 +44,21 @@ $order.PackageOrder | ForEach-Object {
 	}
 }
 
-try {
-	$order.PackageOrder | Where-Object { $sourceIsUpdated[$_] } | ForEach-Object {
-		Push-Location "$solutionFolder\$_"
-		#powershell.exe -command '.\Package.ps1; exit $LASTEXITCODE'
-		.\Package.ps1 -UpVersion $upVersion[$_]
-		Pop-Location
-		if ($LASTEXITCODE) {
-			throw "Package of $_ failed"
-		}
-	}
-} catch {
-	Write-Host $_.Exception.Message -ForegroundColor Red
-	exit 1
-} finally {
-	Pop-Location
-}
-Remove-Variable * -ErrorAction SilentlyContinue
+# try {
+# 	$order.PackageOrder | Where-Object { $sourceIsUpdated[$_] } | ForEach-Object {
+# 		Push-Location "$solutionFolder\$_"
+# 		#powershell.exe -command '.\Package.ps1; exit $LASTEXITCODE'
+# 		.\Package.ps1 -UpVersion $upVersion[$_]
+# 		Pop-Location
+# 		if ($LASTEXITCODE) {
+# 			throw "Package of $_ failed"
+# 		}
+# 	}
+# } catch {
+# 	Write-Host $_.Exception.Message -ForegroundColor Red
+# 	exit 1
+# } finally {
+# 	Pop-Location
+# }
+# Remove-Variable * -ErrorAction SilentlyContinue
+$upVersion

@@ -11,14 +11,35 @@ function Get-NuGetPackageVersion {
     param
     (
 		# The NuGet package name
-		[string]$PackageName
+		[string]$PackageName,
+		# The optional Branch - Prerelease label
+		[string]$Branch = $null
 	)
-	$version = ''
-	Invoke-Expression "nuget list $PackageName -Source '$(Get-NuGetLocalSource)'" | ForEach-Object {
-		$nameVersion = $_ -split ' '
-		if ($nameVersion[0] -eq $PackageName) {
-			$version = $nameVersion[1]
+	$cmd = "nuget list $PackageName -Source '$(Get-NuGetLocalSource)'"
+	if ($Branch) {
+		$cmd += ' -Prerelease -AllVersions'
+	}
+	$nameVersions = Invoke-Expression $cmd | Where-Object { $_.StartsWith("$PackageName ") } | ForEach-Object {
+		[string[]]$nameVersion = $_.Split(' ')
+		[string[]]$versionBranch = $nameVersion[1].Split('-', 2)
+		New-Object -TypeName PSCustomObject -Property @{
+			name = $nameVersion[0]
+			versionBranch = $nameVersion[1]
+			version = $versionBranch[0]
+			branch = $versionBranch[1]
 		}
 	}
-	return $version
+	if ($Branch) {
+		$selection = $nameVersions | Where-Object { $_.branch -eq $Branch } | Select-Object -First 1
+		if (-not $selection) {
+			$selection = $nameVersions | Where-Object { -not $_.branch } | Select-Object -First 1
+		}
+	} else {
+		$selection = $nameVersions | Where-Object { -not $_.branch } | Select-Object -First 1
+	}
+	if ($selection) {
+		return $selection.versionBranch
+	} else {
+		return ''
+	}
 }
