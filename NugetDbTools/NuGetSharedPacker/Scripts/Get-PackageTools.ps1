@@ -16,10 +16,18 @@ function Get-PackageTools {
 	$solutionFolder = Split-Path $SolutionPath
 	$packageContentFolder = "$SolutionFolder\PackageContent"
 
+	if (Test-Path $packageContentFolder) {
+		if (-not $global:testing)
+		{
+			Remove-Item $packageContentFolder\* -Recurse -Force
+		}
+	} else {
+		mkdir $packageContentFolder | Out-Null
+	}
+
     Log "Get tool packages: $SolutionPath"
 	Get-PackageToolsPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
-	Remove-Item "$SolutionPath\Databases*" -Recurse -Force
 	Get-ChildItem $packageContentFolder -Directory | ForEach-Object {
 		Get-ChildItem $_.FullName -Directory | Where-Object { (Get-ChildItem $_.FullName -Exclude _._).Count -ne 0 } | ForEach-Object {
 			if (-not (Test-Path "$SolutionFolder\$($_.Name)")) {
