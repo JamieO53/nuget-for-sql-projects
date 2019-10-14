@@ -56,7 +56,8 @@ try {
 	if (Test-Path "NuGet\content\$contentType\$id.psd1") {
 		$lines = Get-Content "NuGet\content\$contentType\$id.psd1" | ForEach-Object {
 			if ( $_.StartsWith('ModuleVersion = ')) {
-				"ModuleVersion = '$version'"
+				$moduleVersion = $version.Split('-')[0]
+				"ModuleVersion = '$moduleVersion'"
 			} else {
 				$_
 			}

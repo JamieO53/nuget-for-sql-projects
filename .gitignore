@@ -275,3 +275,4 @@ commands.json
 CallGraph_*
 /NugetDbTools/NugetDbPacker/Tests/errors.txt
 /PushToNuGetCache.ps1
+/NugetDbTools/Testing
