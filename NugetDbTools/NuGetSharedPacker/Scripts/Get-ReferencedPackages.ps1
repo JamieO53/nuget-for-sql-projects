@@ -18,6 +18,11 @@ function Get-ReferencedPackages {
 		[string]$ContentFolder
 	)
 
+	if (Test-Path $packageContentFolder) {
+		Remove-Item $packageContentFolder -Include '*' -Recurse -Force
+	}
+	mkdir $packageContentFolder | Out-Null
+
 	$localSources = [string]::Join("' -Source '",(Get-NuGetCachePaths))
 	$reference.Keys | Sort-Object | ForEach-Object {
 		$package = $_

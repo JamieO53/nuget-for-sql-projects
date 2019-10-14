@@ -24,15 +24,6 @@ function Get-SolutionContent {
 		exit 1
 	}
 
-	if (Test-Path $packageContentFolder) {
-		if (-not $global:testing)
-		{
-			Remove-Item $packageContentFolder\* -Recurse -Force
-		}
-	} else {
-		mkdir $packageContentFolder | Out-Null
-	}
-
 	Log "Get solution packages: $SolutionPath"
 	Get-SolutionPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 

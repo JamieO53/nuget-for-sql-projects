@@ -16,15 +16,6 @@ function Get-PackageTools {
 	$solutionFolder = Split-Path $SolutionPath
 	$packageContentFolder = "$SolutionFolder\PackageContent"
 
-	if (Test-Path $packageContentFolder) {
-		if (-not $global:testing)
-		{
-			Remove-Item $packageContentFolder\* -Recurse -Force
-		}
-	} else {
-		mkdir $packageContentFolder | Out-Null
-	}
-
     Log "Get tool packages: $SolutionPath"
 	Get-PackageToolsPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
