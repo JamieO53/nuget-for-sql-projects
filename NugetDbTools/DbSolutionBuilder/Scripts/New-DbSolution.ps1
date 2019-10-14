@@ -27,6 +27,8 @@ function New-DbSolution {
 
 	New-DbSolutionDependencies -Parameters $Parameters -PkgProjectPath $pkgProjectPath
 
+	Invoke-Trap "nuget restore $pkgProjectPath" "Unable to restore $slnPkg"
+
 	Get-SolutionContent -SolutionPath $slnPath
 
 	New-DbSolutionProjects -Parameters $Parameters -SolutionFolder $slnFolder -TemplateFolder $templateFolder -SolutionPath $slnPath -PkgProjectPath $pkgProjectPath
