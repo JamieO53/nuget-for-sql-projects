@@ -11,6 +11,12 @@ if (-not (Get-Module NugetSharedPacker)) {
 }
 Log "Configuration path: $(Get-NuGetDbToolsConfigPath)"
 try {
+	Log 'Update package tools'
+	Get-PackageTools -SolutionPath $slnPath
+
+	Remove-Module Nuget*,*Extension
+	Import-Module "$SolutionFolder\PowerShell\NugetSharedPacker.psd1"
+
 	Log 'Get solution content'
 	Get-SolutionContent -SolutionPath $slnPath
 } catch {
