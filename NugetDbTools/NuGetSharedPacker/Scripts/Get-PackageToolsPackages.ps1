@@ -18,5 +18,5 @@ function Get-PackageToolsPackages {
 
 	Log "Get package tools dependencies"
     $reference = Get-PackageToolDependencies $SolutionPath
-	Get-ReferencedPackages -SolutionPath $SolutionPath -Reference $reference
+	Get-ReferencedPackages -SolutionPath $SolutionPath -Reference $reference -ContentFolder $ContentFolder
 }

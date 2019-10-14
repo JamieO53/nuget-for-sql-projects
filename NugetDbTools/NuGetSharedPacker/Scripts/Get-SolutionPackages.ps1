@@ -18,5 +18,5 @@ function Get-SolutionPackages {
 
 	Log "Get solution dependencies"
 	$reference = Get-SolutionDependencies $SolutionPath
-	Get-ReferencedPackages -SolutionPath $SolutionPath -Reference $reference
+	Get-ReferencedPackages -SolutionPath $SolutionPath -Reference $reference -ContentFolder $ContentFolder
 }
