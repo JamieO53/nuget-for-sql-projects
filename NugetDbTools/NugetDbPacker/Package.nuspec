@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>NuGetDbPacker</id>
-    <version>0.1.231-TP61092</version>
+    <version>0.1.232-TP61092</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -12,7 +12,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>NuGetDbPacker 'CI tools'</tags>
     <dependencies>
-      <dependency id="NuGetSharedPacker" version="0.1.201-TP61092" />
+      <dependency id="NuGetSharedPacker" version="0.1.202-TP61092" />
     </dependencies>
   </metadata>
   <files>
