@@ -28,5 +28,5 @@ function Get-PackageTools {
 		}
 	}
 
-	Remove-Item $packageContentFolder -Include '*' -Recurse -Force
+	Remove-Item $packageContentFolder* -Recurse -Force
 }

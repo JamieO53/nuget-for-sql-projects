@@ -37,7 +37,7 @@ function Get-SolutionContent {
 		}
 	}
 
-	Remove-Item $packageContentFolder -Include '*' -Recurse -Force
+	Remove-Item $packageContentFolder* -Recurse -Force
 
 	$csPackage = @{}
 	Get-ChildItem .\**\packages.config | ForEach-Object {

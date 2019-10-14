@@ -19,7 +19,7 @@ function Get-ReferencedPackages {
 	)
 
 	if (Test-Path $packageContentFolder) {
-		Remove-Item $packageContentFolder -Include '*' -Recurse -Force
+		Remove-Item $packageContentFolder* -Recurse -Force
 	}
 	mkdir $packageContentFolder | Out-Null
 
