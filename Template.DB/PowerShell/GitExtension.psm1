@@ -5,11 +5,11 @@ function Get-Branch {
         # The project folder
 		[string]$Path
 	)
-	# Note: use Invoke-Expression (iex) so that git calls can be mocked in tests
+	# Note: use Invoke-Expression (Invoke-Expression) so that git calls can be mocked in tests
 	try {
 		Push-Location $Path
 		if (Test-PathIsInGitRepo -Path (Get-Location)) {
-			$branch = iex 'git branch' | ? { $_.StartsWith('* ') } | % { $_.Replace('* ', '') }
+			$branch = Invoke-Expression 'git branch' | Where-Object { $_.StartsWith('* ') } | ForEach-Object { $_.Replace('* ', '') }
 			# Check VSTS build agent branch
 			if ($branch -like '(HEAD detached at *)') {
 				if (Test-IsRunningBuildAgent) {
@@ -35,11 +35,11 @@ function Get-RevisionCount {
         # The project folder
 		[string]$Path
 	)
-	# Note: use Invoke-Expression (iex) so that git calls can be mocked in tests
+	# Note: use Invoke-Expression (Invoke-Expression) so that git calls can be mocked in tests
 	try {
 		Push-Location $Path
 		if (Test-PathIsInGitRepo -Path (Get-Location)) {
-			[int]$revisions = (iex "git rev-list HEAD -- `"$Path\*`"").Count
+			[int]$revisions = (Invoke-Expression "git rev-list HEAD -- `"$Path\*`"").Count
 		}
 		else {
 			[int]$revisions = 0
@@ -61,7 +61,7 @@ function Remove-Repository {
 	if (Test-Path $Folder) {
 		Log "Removing repository $Folder"
 		if (Test-Path "$Folder\.git") {
-			ls $Folder\.git | % {
+			Get-ChildItem $Folder\.git | ForEach-Object {
 				if ($_.Mode.StartsWith('d')) {
 					Remove-Item $_.FullName -Recurse -Force
 				} else {
@@ -91,10 +91,10 @@ function Test-PathIsCommitted {
 		[string]$Path
 	)
 	try {
-		pushd $Path
-		(Test-PathIsInGitRepo -Path .) -and ([string]::IsNullOrEmpty((iex 'git status --porcelain')))
+		Push-Location $Path
+		(Test-PathIsInGitRepo -Path .) -and ([string]::IsNullOrEmpty((Invoke-Expression 'git status --porcelain')))
 	} finally {
-		popd
+		Pop-Location
 	}
 }
 

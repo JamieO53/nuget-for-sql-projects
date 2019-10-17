@@ -36,7 +36,7 @@ function Enable-CLR{
 		Install-Module SqlServer
 	}
 	Import-Module SqlServer -Global -DisableNameChecking
-	[xml]$doc = gc $ProfilePath
+	[xml]$doc = Get-Content $ProfilePath
 	[string]$connectionString = $doc.Project.PropertyGroup.TargetConnectionString
 	$query = @'
 sp_configure 'show advanced options', 1;
@@ -90,13 +90,13 @@ function Find-PublishProfilePath {
 	$path = [IO.Path]::ChangeExtension($ProjectPath, '.publish.xml')
 	
 	$overrides = @($Override, $Host.Name, $hostType, (Get-Branch))
-	$overrides | ? {
+	$overrides | Where-Object {
 		-not [string]::IsNullOrEmpty($_) 
-	} | % {
+	} | ForEach-Object {
 		[IO.Path]::ChangeExtension($ProjectPath, ".$_.publish.xml")
-	} | ? {
+	} | Where-Object {
 		Test-Path $_
-	} | select -First 1 | % {
+	} | Select-Object -First 1 | ForEach-Object {
 		$path = $_
 	}
 	$path
@@ -104,22 +104,22 @@ function Find-PublishProfilePath {
 
 function Find-SqlPackagePath {
 	[IO.FileInfo]$info
-	ls "$env:ProgramFiles*\Microsoft Visual Studio\*\*\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\*\SqlPackage.exe" |
-		sort -Property FullName -Descending |
-		select -First 1 | % {
+	Get-ChildItem "$env:ProgramFiles*\Microsoft Visual Studio\*\*\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\*\SqlPackage.exe" |
+		Sort-Object -Property FullName -Descending |
+		Select-Object -First 1 | ForEach-Object {
 			$info = $_
 		}
 	if ($info -eq $null)  {
-		ls "$env:ProgramFiles*\Microsoft SQL Server\*\DAC\bin\SqlPackage.exe" |
-			sort -Property FullName -Descending |
-			select -First 1 | % {
+		Get-ChildItem "$env:ProgramFiles*\Microsoft SQL Server\*\DAC\bin\SqlPackage.exe" |
+			Sort-Object -Property FullName -Descending |
+			Select-Object -First 1 | ForEach-Object {
 			$info = $_
 		}
 	}
 	if ($info -eq $null)  {
-		ls "$env:ProgramFiles*\Microsoft Visual Studio*\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\*\SqlPackage.exe" |
-			sort -Property FullName -Descending |
-			select -First 1 | % {
+		Get-ChildItem "$env:ProgramFiles*\Microsoft Visual Studio*\Common7\IDE\Extensions\Microsoft\SQLDB\DAC\*\SqlPackage.exe" |
+			Sort-Object -Property FullName -Descending |
+			Select-Object -First 1 | ForEach-Object {
 			$info = $_
 		}
 	}
@@ -184,7 +184,7 @@ function Format-ProjectDatabaseParameters {
 
 function Import-NuGetDb {
 	<#.Synopsis
-	Copy the build files to the NuGet content folder
+	Copy-Item the build files to the NuGet content folder
 	.DESCRIPTION
 	Copies the dacpac and CLR assembly files to the NuGet content folder
 	.EXAMPLE
@@ -208,7 +208,7 @@ function Import-NuGetDb {
 	[xml]$proj = Get-Content $ProjectPath
 	[string]$dacpac = Get-ProjectProperty -Proj $proj -Property DacApplicationName
 	if ($dacpac -eq '') {
-		$dacpac = ([string]($proj.Project.PropertyGroup.Name | ? { $_ -ne 'PropertyGroup'})).Trim()
+		$dacpac = ([string]($proj.Project.PropertyGroup.Name | Where-Object { $_ -ne 'PropertyGroup'})).Trim()
 	}
 	[string]$assembly = Get-ProjectProperty -Proj $proj -Property AssemblyName
 
@@ -216,15 +216,15 @@ function Import-NuGetDb {
 		Copy-Item "$ProjDbFolder\$dacpac.dacpac" $NugetDbFolder
 	}
 	Copy-Item "$ProjDbFolder\*.*" $NugetDbFolder
-	ls $ProjDbFolder -Directory | % {
+	Get-ChildItem $ProjDbFolder -Directory | ForEach-Object {
 		$dir = $_.Name
-		md "$NugetDbFolder\$dir"  | Out-Null
+		mkdir "$NugetDbFolder\$dir"  | Out-Null
 		if (Test-Path "$ProjDbFolder\$dir\$dacpac.dacpac") {
 			Copy-Item "$ProjDbFolder\$dir\$dacpac.dacpac" "$NugetDbFolder\$dir"
 		}
 		Copy-Item "$ProjDbFolder\$dir\*.dll" "$NugetDbFolder\$dir"
 	}
-	[xml]$spec = gc $NugetSpecPath
+	[xml]$spec = Get-Content $NugetSpecPath
 	Add-DbFileNode -parentNode $spec.package
 	Out-FormattedXml -Xml $spec -FilePath $NugetSpecPath
 }
@@ -251,13 +251,14 @@ function Publish-DbPackage {
     $configPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
     $projFolder = Split-Path $ProjectPath -Resolve
     $nugetFolder = [IO.Path]::Combine($projFolder, 'NuGet')
+	$solutionFolder = Split-Path $SolutionPath
     if (Test-Path $configPath)
     {
         $settings = Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $SolutionPath
         $id = $settings.nugetSettings.Id
         $version = $settings.nugetSettings.version
         if (-not (Test-NuGetVersionExists -Id $id -Version $version)) {
-            $nugetPackage = [IO.Path]::Combine($nugetFolder, "$id.$version.nupkg")
+            $nugetPackage = [IO.Path]::Combine($solutionFolder, "$id.$version.nupkg")
             Initialize-DbPackage -ProjectPath $ProjectPath -SolutionPath $SolutionPath
             if ($env:USERNAME -EQ 'Builder') {
 				Publish-NuGetPackage -PackagePath $nugetPackage
@@ -321,7 +322,7 @@ function Publish-SolutionDbPackages {
 	)
     $solutionFolder = Split-Path -Path $SolutionPath
 
-    Get-SqlProjects -SolutionPath $SolutionPath | % {
+    Get-SqlProjects -SolutionPath $SolutionPath | ForEach-Object {
         [string]$projectPath = [IO.Path]::Combine($solutionFolder, $_.ProjectPath)
         Publish-DbPackage -ProjectPath $projectPath -SolutionPath $SolutionPath
     }

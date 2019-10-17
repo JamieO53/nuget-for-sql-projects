@@ -2,8 +2,8 @@ param(
 	[string]$databaseName = ''
 )
 $SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..").Path
-[string]$slnPath=ls $SolutionFolder\*.sln | ? { $_ } | % { $_.FullName }
-cd $SolutionFolder
+[string]$slnPath=Get-ChildItem $SolutionFolder\*.sln | Where-Object { $_ } | ForEach-Object { $_.FullName }
+Set-Location $SolutionFolder
 
 if (-not (Get-Module NugetDbPacker)) {
 	Import-Module "$SolutionFolder\PowerShell\NugetDbPacker.psd1" -Global -DisableNameChecking
@@ -11,16 +11,28 @@ if (-not (Get-Module NugetDbPacker)) {
 
 $rtFolder = "$SolutionFolder\RegressionTests\Commands"
 if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
+	$toolsPath = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Microsoft SQL Server\*\Tools\ClientSetup' | % {
+		($_ | Get-Member) | ? { $_.Name -eq 'ODBCToolsPath' }
+	} | Select-Object -Last 1 | % {
+		[string]$s = $_.Definition
+		$s.Split('=')[1]
+	}
+	$sqlcmdFolder = ls $toolsPath | ? { $_.name -eq 'sqlcmd.exe' } | % { $_.FullName }
+	if (-not ($sqlcmdFolder) -or -not (Test-Path $sqlcmdFolder)) {
+		Log 'Unable to find SQLCMD.EXE' -Error
+		exit 1
+	}
+	$env:Path += ";$toolsPath"
 	$sqlVars = @{}
 	$dbServer = @{}
 	$dbConn = @{}
-	$profilePaths = Get-SqlProjects -SolutionPath $slnPath | ? { -not $databaseName -or ($databaseName -eq $_.Project) } | % {
+	$profilePaths = Get-SqlProjects -SolutionPath $slnPath | Where-Object { -not $databaseName -or ($databaseName -eq $_.Project) } | ForEach-Object {
 		$projPath = "$SolutionFolder\$($_.ProjectPath)"
 		Find-PublishProfilePath -ProjectPath $projPath
-	} | ? { Test-Path $_ }
+	} | Where-Object { Test-Path $_ }
 
-	$profilePaths | % {
-		[xml]$xml = gc $_
+	$profilePaths | ForEach-Object {
+		[xml]$xml = Get-Content $_
 		$dbName = $xml.Project.PropertyGroup.TargetDatabaseName
 		[Data.SqlClient.SqlConnectionStringBuilder]$csBuilder = New-Object Data.SqlClient.SqlConnectionStringBuilder($xml.Project.PropertyGroup.TargetConnectionString)
 		$dbServer[$dbName] = $csBuilder.DataSource
@@ -28,10 +40,10 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 		$dbConn[$dbName] = $csBuilder
 	}
 
-	$profilePaths | % {
+	$profilePaths | ForEach-Object {
 		$profilePath = $_
-		[xml]$xml = gc $profilePath
-		$xml.Project.ItemGroup.SqlCmdVariable | % {
+		[xml]$xml = Get-Content $profilePath
+		$xml.Project.ItemGroup.SqlCmdVariable | ForEach-Object {
 			if ($_) {
 				$sqlVars[$_.Include] = $_.Value
 				if ($dbServer.ContainsKey($_.Value)) {
@@ -43,7 +55,7 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 		}
 	}
 
-	$sqlVars.Keys | % {
+	$sqlVars.Keys | ForEach-Object {
 		$name = $_
 		$value = $sqlVars[$name]
 		[Environment]::SetEnvironmentVariable($name, $value, "Process")
@@ -53,8 +65,11 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 	$packageContentFolder = "$SolutionFolder\PackageContent"
 	if (-not (Test-Path $packageContentFolder\tsqlunit)) {
 		mkdir $packageContentFolder | Out-Null
-		pushd $packageContentFolder
-		git clone https://github.com/aevdokimenko/tsqlunit.git
+		$path = "$packageContentFolder\tsqlunit"
+		$cmd = "$env:ProgramFiles\Git\bin\git.exe"
+		$params =  'clone', '--single-branch', '--progress', '-b', 'master', 'https://github.com/aevdokimenko/tsqlunit.git', $path
+		Write-Host "$cmd $params"
+		& $cmd $params
 		$hack = @"
 CREATE PROCEDURE dbo.tsu_AssertEquals
 	@Expected SQL_VARIANT,
@@ -74,15 +89,14 @@ BEGIN
 END;	
 "@
 		$hack | Out-File $packageContentFolder\hack.sql -Encoding utf8
-		popd
 	}
 
 	Import-Module SqlServer -DisableNameChecking -Global
 
-	$dbConn.Keys | % {
+	$dbConn.Keys | ForEach-Object {
 		$dbName = $_
 		$cs = $dbConn[$dbName].ToString()
-		if (-not (Invoke-Sqlcmd "select name from sys.tables where name = 'tsuActiveTest'" -ConnectionString "$cs")) {
+		if (-not (Invoke-Sqlcmd "Select name from sys.tables where name = 'tsuActiveTest'" -ConnectionString "$cs")) {
 			$cmd = "Invoke-Sqlcmd -InputFile `"$packageContentFolder\tsqlunit\tsqlunit.sql`" -ConnectionString `"$cs`""
 			Log $cmd
 			Invoke-Trap `
@@ -96,10 +110,10 @@ END;
 			}
     }
 
-	rd "$SolutionFolder\PackageContent" -Recurse -Force
+	Remove-Item "$SolutionFolder\PackageContent" -Recurse -Force
 	
-	@('Setup', 'Execute', 'Teardown') | % {
-		ls "$rtFolder\$($_)_*_RegressionTests.cmd" | % {
+	@('Setup', 'Execute', 'Teardown') | ForEach-Object {
+		Get-ChildItem "$rtFolder\$($_)_*_RegressionTests.cmd" | ForEach-Object {
             try {
                 Invoke-Trap -Command "& `"$($_.FullName)`"" -Message "Regression test command failed: $($_.Name)" -Fatal
                 if ($LASTEXITCODE) {
