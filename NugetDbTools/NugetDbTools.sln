@@ -51,6 +51,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools", "PackageTool
 		PackageTools\Get-PackageContent.ps1 = PackageTools\Get-PackageContent.ps1
 		PackageTools\GetPackageContent.cmd = PackageTools\GetPackageContent.cmd
 		PackageTools\PackageTools.root.config = PackageTools\PackageTools.root.config
+		PackageTools\SetSolutionVersionVariable.ps1 = PackageTools\SetSolutionVersionVariable.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PackageTools.Builder.Db", "PackageTools.Builder.Db", "{4DE504AA-C602-457A-9875-2546CD0969DA}"

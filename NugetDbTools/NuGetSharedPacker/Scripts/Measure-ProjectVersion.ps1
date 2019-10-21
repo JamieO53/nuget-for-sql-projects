@@ -15,7 +15,7 @@ function Measure-ProjectVersion {
 		# The folder for version calculations
 		[string]$ProjectFolder,
 		# The previous version to be updated with the new revision number
-		[string]$OldVersion,
+		[string]$OldVersion = $null,
 		# Increase the version by 1
 		[bool]$UpVersion = $false
 	)
