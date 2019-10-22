@@ -80,7 +80,6 @@
     <Compile Include="Tests\Get-SqlProjects.tests.ps1" />
     <Compile Include="Tests\Get-ToolsConfiguration.tests.ps1" />
     <Compile Include="Tests\Import-Extensions.tests.ps1" />
-    <Compile Include="Tests\Test-NuGetVersionExists.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\" />
