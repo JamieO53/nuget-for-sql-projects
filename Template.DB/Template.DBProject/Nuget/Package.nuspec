@@ -10,8 +10,8 @@
     <releaseNotes>First testing release</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <dependencies>
-      <dependency id="NugetDbPackerDb.Root" version="0.2.27" />
-      <dependency id="NuGetDbPacker" version="0.1.237" />
+      <dependency id="NugetDbPackerDb.Root" version="0.2.26" />
+      <dependency id="NuGetDbPacker" version="0.1.213" />
     </dependencies>
     <contentFiles />
   </metadata>

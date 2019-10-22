@@ -80,7 +80,6 @@
     <Compile Include="Tests\Initialize-NuGetRuntime.tests.ps1" />
     <Compile Include="Tests\Initialize-NuGetSpec.tests.ps1" />
     <Compile Include="Tests\Step-Version.tests.ps1" />
-    <Compile Include="Tests\Test-NuGetVersionExists.tests.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests\" />
