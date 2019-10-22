@@ -12,10 +12,17 @@ function Test-NuGetVersionExists {
     (
 		# The package being tested
 		[string]$Id,
-		[string]$Version
+		# The version being tested
+		[string]$Version,
+		# The optional Branch - Prerelease label
+		[string]$Branch = $null
 	)
 	$exists = $false
-	nuget List $Id -AllVersions -Source "$(Get-NuGetLocalSource)" -PreRelease -NonInteractive | Where-Object {
+	$cmd = "nuget List $Id -AllVersions -Source '$(Get-NuGetLocalSource)'"
+	if ($Branch) {
+		$cmd += ' -Prerelease -AllVersions'
+	}
+	Invoke-Expression $cmd | Where-Object {
 		$_.Equals("$Id $Version") 
 	} | ForEach-Object {
 		$exists = $true 
