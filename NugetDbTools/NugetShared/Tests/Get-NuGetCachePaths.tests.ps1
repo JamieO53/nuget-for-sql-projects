@@ -18,7 +18,7 @@ Describe "Get-NuGetCachePaths" {
 		}
 	}
 	Context "Contains NuGet packages" {
-		Get-NuGetCachePaths | ForEach-Object {
+		Get-NuGetCachePaths | Where-Object { $_ -like "$env:UserProfile\.nuget*" } | ForEach-Object {
 			$source = $_
 			It "$source contains nuget" {
 				nuget list -Source "$source" | Where-Object { $_ -like 'nuget*' } | should -Not -BeNullOrEmpty
