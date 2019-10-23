@@ -27,7 +27,7 @@ function Get-SolutionContent {
 	Log "Get solution packages: $SolutionPath"
 	Get-SolutionPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
-	Remove-Item "$SolutionPath\Databases\*" -Recurse -Force -Exclude NugetDbPackerDb.Root.dacpac,master.dacpac
+	Remove-Item "$solutionFolder\Databases\*" -Recurse -Force -Exclude NugetDbPackerDb.Root.dacpac,master.dacpac
 	Get-ChildItem $packageContentFolder -Directory | ForEach-Object {
 		Get-ChildItem $_.FullName -Directory | Where-Object { (Get-ChildItem $_.FullName -Exclude _._).Count -ne 0 } | ForEach-Object {
 			if (-not (Test-Path "$SolutionFolder\$($_.Name)")) {
