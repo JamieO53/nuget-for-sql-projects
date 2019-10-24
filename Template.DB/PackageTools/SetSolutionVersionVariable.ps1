@@ -16,12 +16,12 @@ if ($versionBranch.Count -eq 2) {
     $assemblyVersion += '.0'
 }
 Log "Semantic version: $semanticVersion"
-Write-Host  "##vso[task.setvariable variable=SemanticVersion;]$semanticVersion"
+Write-Host  "##vso[task.setvariable variable=SemanticVersion; isOutput=true;]$semanticVersion"
 if (-not $env:SemanticVersion) {
 	Set-Item -Path Env:SemanticVersion -Value $semanticVersion
 }
 Log "Assembly version: $assemblyVersion"
-Write-Host  "##vso[task.setvariable variable=AssemblyVersion;]$assemblyVersion"
+Write-Host  "##vso[task.setvariable variable=AssemblyVersion; isOutput=true;]$assemblyVersion"
 if (-not $env:AssemblyVersion) {
 	Set-Item -Path Env:AssemblyVersion -Value $assemblyVersion
 }
