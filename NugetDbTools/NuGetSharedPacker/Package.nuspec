@@ -12,7 +12,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>NuGetSharedPacker 'CI tools'</tags>
     <dependencies>
-      <dependency id="NuGetShared" version="0.1.189" />
+      <dependency id="NuGetShared" version="0.1.191" />
     </dependencies>
   </metadata>
   <files>

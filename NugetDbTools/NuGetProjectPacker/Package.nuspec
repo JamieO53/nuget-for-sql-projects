@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>NuGetProjectPacker</id>
-    <version>0.1.169</version>
+    <version>0.1.170</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
