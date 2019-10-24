@@ -19,11 +19,13 @@ function Test-NuGetVersionExists {
 	)
 	$exists = $false
 	$cmd = "nuget List $Id -AllVersions -Source '$(Get-NuGetLocalSource)'"
+	$filter = "$Id $Version"
 	if ($Branch) {
 		$cmd += ' -Prerelease -AllVersions'
+		$filter += "-$Branch"
 	}
 	Invoke-Expression $cmd | Where-Object {
-		$_.Equals("$Id $Version") 
+		$_.Equals($filter) 
 	} | ForEach-Object {
 		$exists = $true 
 	}
