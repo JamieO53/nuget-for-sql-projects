@@ -37,10 +37,11 @@ function Get-SolutionContent {
 		}
 	}
 
-	Remove-Item $packageContentFolder* -Recurse -Force
+	Remove-Item $packageContentFolder\* -Recurse -Force
+	Remove-Item $packageContentFolder -Recurse -Force
 
 	$csPackage = @{}
-	Get-ChildItem .\**\packages.config | ForEach-Object {
+	Get-ChildItem $solutionFolder\**\packages.config | ForEach-Object {
 		[xml]$pc = Get-Content $_
 		$pc.packages.package | ForEach-Object {
 			New-Object -TypeName PSCustomObject -Property @{ id=$_.id; version=$_.version }
