@@ -9,5 +9,5 @@ $prjFolder = $ProjectDir.TrimEnd("\")
 $outputFolder = "$prjFolder\Databases"
 
 if (Test-Path "$outputFolder") {
-	rmdir $outputFolder* -Recurse -Force
+	Remove-Item $outputFolder* -Recurse -Force
 }

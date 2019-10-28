@@ -1,10 +1,10 @@
 ﻿if ( Get-Module NuGetSharedPacker) {
 	Remove-Module NuGetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1" -Global -DisableNameChecking
 
 if (-not (Get-Module TestUtils)) {
-	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global -DisableNameChecking
 }
 
 Describe "Import-NuGetSettings" {
@@ -13,7 +13,7 @@ Describe "Import-NuGetSettings" {
 	$projFolder = "$slnFolder\proj"
 	$configPath = "$projFolder\proj.nuget.config"
 	$expectedSettings = Initialize-TestNugetConfig -Content 'Database' -NugetContent 'content/Databases/*'
-	$expectedOptions = $expectedSettings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
+	$expectedOptions = $expectedSettings.nugetOptions | Get-Member | Where-Object { $_.MemberType -eq 'NoteProperty' } | ForEach-Object { $_.Name }
 	$config = @'
 <?xml version="1.0"?>
 <configuration>
@@ -40,8 +40,8 @@ Describe "Import-NuGetSettings" {
 	</nugetContents>
 </configuration>
 '@
-	md $projFolder
-	$config | sc $configPath -Encoding UTF8
+	mkdir $projFolder
+	$config | Set-Content $configPath -Encoding UTF8
 
 	Context "Exists" {
 		It "Runs" { Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath | should not BeNullOrEmpty }
@@ -51,25 +51,25 @@ Describe "Import-NuGetSettings" {
 		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- `"$projFolder\*`"" } -ModuleName GitExtension
 		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName GitExtension
 		$content = Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath
-		$options = $content.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
+		$options = $content.nugetOptions | Get-Member | Where-Object { $_.MemberType -eq 'NoteProperty' } | ForEach-Object { $_.Name }
 		It "Options count" { $options.Length | Should Be $expectedOptions.Length }
-		$expectedOptions | % {
+		$expectedOptions | ForEach-Object {
 			$field = $_
 			It "$field content is as expected" {
-				iex "`$content.nugetOptions.$field" |
-				should be (iex "`$expectedSettings.nugetOptions.$field") 
+				Invoke-Expression "`$content.nugetOptions.$field" |
+				should be (Invoke-Expression "`$expectedSettings.nugetOptions.$field") 
 			}
 		}
 		It "Settings count" { $content.nugetSettings.Count | Should Be $expectedSettings.nugetSettings.Count }
-		$content.nugetSettings.Keys | % {
+		$content.nugetSettings.Keys | ForEach-Object {
 			It "$_ content is as expected" { $content.nugetSettings[$_] | should be $expectedSettings.nugetSettings[$_] }
 		}
 		It "Dependencies count" { $content.nugetDependencies.Count | should be $expectedSettings.nugetDependencies.Count }
-		$content.nugetDependencies.Keys | % {
+		$content.nugetDependencies.Keys | ForEach-Object {
 			It "Content dependency $_" { $content.nugetDependencies[$_] | should be $expectedSettings.nugetDependencies[$_] }
 		}
 		It "Content count" { $content.nugetContents.Count | should be $expectedSettings.nugetContents.Count }
-		$content.nugetContents.Keys | % {
+		$content.nugetContents.Keys | ForEach-Object {
 			It "Content file $_" { $content.nugetContents[$_] | should be $expectedSettings.nugetContents[$_] }
 		}
 	}

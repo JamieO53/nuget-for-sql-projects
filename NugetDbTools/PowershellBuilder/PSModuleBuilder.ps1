@@ -20,7 +20,7 @@ function Get-ProjectFunctionText {
 		[xml]$proj
 	)
 	[string]$body = ''
-	Get-ProjectFunctionIncludes -proj $proj | % {
+	Get-ProjectFunctionIncludes -proj $proj | ForEach-Object {
 			[string]$fn = Get-Content "$path\$project\$($_.Include)" | Out-String
 			$body += "$fn
 "

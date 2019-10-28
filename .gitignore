@@ -274,3 +274,5 @@ commands.json
 *.dacpac
 CallGraph_*
 /NugetDbTools/NugetDbPacker/Tests/errors.txt
+/PushToNuGetCache.ps1
+/NugetDbTools/Testing

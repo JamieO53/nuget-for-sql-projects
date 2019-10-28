@@ -33,13 +33,13 @@ function Find-PublishProfilePath {
 	$path = [IO.Path]::ChangeExtension($ProjectPath, '.publish.xml')
 	
 	$overrides = @($Override, $Host.Name, $hostType, (Get-Branch))
-	$overrides | ? {
+	$overrides | Where-Object {
 		-not [string]::IsNullOrEmpty($_) 
-	} | % {
+	} | ForEach-Object {
 		[IO.Path]::ChangeExtension($ProjectPath, ".$_.publish.xml")
-	} | ? {
+	} | Where-Object {
 		Test-Path $_
-	} | select -First 1 | % {
+	} | Select-Object -First 1 | ForEach-Object {
 		$path = $_
 	}
 	$path

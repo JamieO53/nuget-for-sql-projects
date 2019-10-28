@@ -1,14 +1,20 @@
 function Get-NuGetDbToolsConfigPath {
-	if ($Global:testing) {
-		"TestDrive:\Configuration\NugetDbTools.config"
+	if ($Global:ConfigPath -and (Test-Path $Global:ConfigPath)) {
+		$configPath = $Global:ConfigPath
 	} else {
-		if (Test-Path "$PSScriptRoot\..\JamieO53\NugetDBTools\NugetDbTools.config") {
-			"$PSScriptRoot\..\JamieO53\NugetDBTools\NugetDbTools.config"
-		} elseif (Test-Path "$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config") {
-			"$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config"
-		} else {
-			Log "Unable to find NuGetDbTools configuration"
+		$configPath = "$PSScriptRoot\..\PackageTools\PackageTools.root.config"
+		if (-not (Test-Path $configPath)) {
+			## Release - look parent folder
+			$configPath = "$PSScriptRoot\..\PackageTools.root.config"
+			if (-not (Test-Path $configPath)) {
+				## Testing - look in test scripts folder
+				$configPath = "$PSScriptRoot\..\..\..\Tests\PackageTools.root.config"
+				if (-not (Test-Path $configPath)) {
+					Log 'Unable to find Package Tools configuration: PackageTools.root.config' -Error
+					Throw 'Missing configuration'
+				}
+			}
 		}
 	}
+	$configPath
 }
-

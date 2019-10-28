@@ -44,9 +44,9 @@ function Get-CSharpProjects {
     .DESCRIPTION
         Examines the Solution file and extracts a list of the project names and their locations relative to the solution
     .EXAMPLE
-        Get-CSharpProjects -SolutionPath .\EcsShared | % {
+        Get-CSharpProjects -SolutionPath .\EcsShared | ForEach-Object {
             $projName = $_.Project
-            [xml]$proj = gc $_.ProjectPath
+            [xml]$proj = Get-Content $_.ProjectPath
         }
     #>
     [CmdletBinding()]
@@ -59,6 +59,17 @@ function Get-CSharpProjects {
     Get-ProjectsByType -SolutionPath $SolutionPath -ProjId $csProjId
     $newCsProjId = '{9A19103F-16F7-4668-BE54-9A1E7A4F7556}'
     Get-ProjectsByType -SolutionPath $SolutionPath -ProjId $newCsProjId
+}
+
+function Get-ExtensionPaths {
+	$extensions = @{}
+	Get-ToolsConfiguration | ForEach-Object {
+		$tools = $_
+		$tools.extensions.extension | ForEach-Object {
+			$extensions[$_.name] = "$PSScriptRoot\$($_.path)"
+		}
+	}
+	return $extensions
 }
 
 function Get-GroupNode ($parentNode, $id) {
@@ -77,9 +88,22 @@ function Get-LogPath {
 	)
 	$logFolder = "$(Split-Path $MyInvocation.PSScriptRoot)\Logs"
 	if (-not (Test-Path $logFolder)) {
-		md $logFolder | Out-Null
+		mkdir $logFolder | Out-Null
 	}
 	"$logFolder\$Name-$((Get-Date).ToString('yyyy-MM-dd-HH-mm-ss-fff')).log"
+}
+
+function Get-NuGetCachePaths {
+	[string[]]$paths = @("$env:userprofile\.nuget\packages", 'Microsoft Visual Studio Offline Packages')
+	$paths
+}
+
+function Get-NuGetContentFolder {
+	$result = ''
+	Get-NuGetDbToolsConfig | ForEach-Object {
+		$_ | Where-Object { $_.tools.content.contentFolder } | ForEach-Object { $result = $_.tools.content.contentFolder }
+	}
+	$result
 }
 
 function Get-NuGetDbToolsConfig {
@@ -88,31 +112,64 @@ function Get-NuGetDbToolsConfig {
 }
 
 function Get-NuGetDbToolsConfigPath {
-	if ($Global:testing) {
-		"TestDrive:\Configuration\NugetDbTools.config"
+	if ($Global:ConfigPath -and (Test-Path $Global:ConfigPath)) {
+		$configPath = $Global:ConfigPath
 	} else {
-		"$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config"
+		$configPath = "$PSScriptRoot\..\PackageTools\PackageTools.root.config"
+		if (-not (Test-Path $configPath)) {
+			## Release - look parent folder
+			$configPath = "$PSScriptRoot\..\PackageTools.root.config"
+			if (-not (Test-Path $configPath)) {
+				## Testing - look in test scripts folder
+				$configPath = "$PSScriptRoot\..\..\..\Tests\PackageTools.root.config"
+				if (-not (Test-Path $configPath)) {
+					Log 'Unable to find Package Tools configuration: PackageTools.root.config' -Error
+					Throw 'Missing configuration'
+				}
+			}
+		}
 	}
+	$configPath
 }
 
-
 function Get-NuGetLocalApiKey {
-	$config = Get-NuGetDbToolsConfig
-	$config.configuration.nugetLocalServer.add | ? { $_.key -eq 'ApiKey' } | % { $_.value }
+	$result = ''
+	Get-NuGetDbToolsConfig | ForEach-Object {
+		$_ | Where-Object { $_.tools.nuget.apiKey } | ForEach-Object { $result = $_.tools.nuget.apiKey }
+	}
+	$result
 }
 
 function Get-NuGetLocalPushSource {
-	$config = Get-NuGetDbToolsConfig
-	$source = $config.configuration.nugetLocalServer.add | ? { $_.key -eq 'PushSource' } | % { $_.value }
-	if ([string]::IsNullOrEmpty($source)) {
-		$source = $config.configuration.nugetLocalServer.add | ? { $_.key -eq 'Source' } | % { $_.value }
+	$result = ''
+	Get-NuGetDbToolsConfig | ForEach-Object {
+		$_ | Where-Object { $_.tools.nuget.pushSource } | ForEach-Object { $result = $_.tools.nuget.pushSource }
 	}
-	$source
+	if (-not $result) {
+		Get-NuGetDbToolsConfig | ForEach-Object {
+			$_ | Where-Object { $_.tools.nuget.source } | ForEach-Object { $result = $_.tools.nuget.source }
+		}
+	}
+	$result
+}
+
+function Get-NuGetLocalPushTimeout {
+	$result = ''
+	Get-NuGetDbToolsConfig | ForEach-Object {
+		$_ | Where-Object { $_.tools.nuget.pushTimeout } | ForEach-Object { $result = $_.tools.nuget.pushTimeout }
+	}
+	if (-not $result) {
+		$result = '900'
+	}
+	$result
 }
 
 function Get-NuGetLocalSource {
-	$config = Get-NuGetDbToolsConfig
-	$config.configuration.nugetLocalServer.add | ? { $_.key -eq 'Source' } | % { $_.value }
+	$result = ''
+	Get-NuGetDbToolsConfig | ForEach-Object {
+		$_ | Where-Object { $_.tools.nuget.source } | ForEach-Object { $result = $_.tools.nuget.source }
+	}
+	Invoke-Expression "`"$result`"" # Expand embedded variables
 }
 
 function Get-NuGetPackageVersion {
@@ -128,16 +185,37 @@ function Get-NuGetPackageVersion {
     param
     (
 		# The NuGet package name
-		[string]$PackageName
+		[string]$PackageName,
+		# The optional Branch - Prerelease label
+		[string]$Branch = $null
 	)
-	$version = ''
-	iex "nuget list $PackageName -Source $(Get-NuGetLocalSource)" | % {
-		$nameVersion = $_ -split ' '
-		if ($nameVersion[0] -eq $PackageName) {
-			$version = $nameVersion[1]
+	$cmd = "nuget list $PackageName -Source '$(Get-NuGetLocalSource)'"
+	if ($Branch) {
+		$cmd += ' -Prerelease -AllVersions'
+	}
+	$nameVersions = Invoke-Expression $cmd | Where-Object { $_.StartsWith("$PackageName ") } | ForEach-Object {
+		[string[]]$nameVersion = $_.Split(' ')
+		[string[]]$versionBranch = $nameVersion[1].Split('-', 2)
+		New-Object -TypeName PSCustomObject -Property @{
+			name = $nameVersion[0]
+			versionBranch = $nameVersion[1]
+			version = $versionBranch[0]
+			branch = $versionBranch[1]
 		}
 	}
-	return $version
+	if ($Branch) {
+		$selection = $nameVersions | Where-Object { $_.branch -eq $Branch } | Select-Object -First 1
+		if (-not $selection) {
+			$selection = $nameVersions | Where-Object { -not $_.branch } | Select-Object -First 1
+		}
+	} else {
+		$selection = $nameVersions | Where-Object { -not $_.branch } | Select-Object -First 1
+	}
+	if ($selection) {
+		return $selection.versionBranch
+	} else {
+		return ''
+	}
 }
 
 function Get-ParentSubfolder
@@ -176,9 +254,9 @@ function Get-PowerShellProjects {
     .DESCRIPTION
         Examines the Solution file and extracts a list of the project names and their locations relative to the solution
     .EXAMPLE
-        Get-PowerShellProjects -SolutionPath .\EcsShared | % {
+        Get-PowerShellProjects -SolutionPath .\EcsShared | ForEach-Object {
             $projName = $_.Project
-            [xml]$proj = gc $_.ProjectPath
+            [xml]$proj = Get-Content $_.ProjectPath
         }
     #>
     [CmdletBinding()]
@@ -197,9 +275,9 @@ function Get-ProjectsByType {
     .DESCRIPTION
         Examines the Solution file and extracts a list of the project names and their locations relative to the solution
     .EXAMPLE
-        Get-ProjectsByType -SolutionPath .\EcsShared -ProjId '{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}' | % {
+        Get-ProjectsByType -SolutionPath .\EcsShared -ProjId '{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}' | ForEach-Object {
             $projName = $_.Project
-            [xml]$proj = gc $_.ProjectPath
+            [xml]$proj = Get-Content $_.ProjectPath
         }
     #>
     [CmdletBinding()]
@@ -210,7 +288,7 @@ function Get-ProjectsByType {
         # The project type ID
         [string]$ProjId
     )
-    [string]$sln=if ($SolutionPath -and (Test-Path $SolutionPath)) {gc $SolutionPath | Out-String} else {''}
+    [string]$sln=if ($SolutionPath -and (Test-Path $SolutionPath)) {Get-Content $SolutionPath | Out-String} else {''}
 
     $nameGrouping = '(?<name>[^"]+)'
     $pathGrouping = '(?<path>[^"]+)'
@@ -218,7 +296,7 @@ function Get-ProjectsByType {
     $regex = "\r\nProject\(`"$ProjId`"\)\s*=\s*`"$nameGrouping`"\s*,\s*`"$pathGrouping`",\s*`"\{$guidGrouping\}`".*"
     $matches = ([regex]$regex).Matches($sln)
 
-    $matches | % {
+    $matches | ForEach-Object {
 		$projName = $_.Groups['name'].Value
         $projPath = $_.Groups['path'].Value
         $projGuid = $_.Groups['guid'].Value
@@ -236,9 +314,9 @@ function Get-SqlProjects {
     .DESCRIPTION
         Examines the Solution file and extracts a list of the project names and their locations relative to the solution
     .EXAMPLE
-        Get-SqlProjects -SolutionPath .\EcsShared | % {
+        Get-SqlProjects -SolutionPath .\EcsShared | ForEach-Object {
             $projName = $_.Project
-            [xml]$proj = gc $_.ProjectPath
+            [xml]$proj = Get-Content $_.ProjectPath
         }
     #>
     [CmdletBinding()]
@@ -251,6 +329,33 @@ function Get-SqlProjects {
     Get-ProjectsByType -SolutionPath $SolutionPath -ProjId $sqlProjId
 }
 
+function Get-ToolsConfiguration {
+	$configPath = Get-NuGetDbToolsConfigPath
+	$tools = @()
+	if (Test-Path $configPath) {
+		[xml]$config = Get-Content $configPath
+		if ($config.tools) {
+			$tools += $config.tools
+		}
+	}
+	$tools
+}
+
+function Import-Extensions {
+    $extensions = Get-ExtensionPaths
+    $extensions.Keys | ForEach-Object {
+        $extension = $_
+        $extensionPath = $extensions[$_]
+        if (-not (Get-Module $extension -All)) {
+            if (Test-Path $extensionPath) {
+                Import-Module $extensionPath -Global -DisableNameChecking
+            } else {
+                throw "Unable to import extension $extension"
+            }
+        }
+    }
+}
+
 function Invoke-Trap {
     [CmdletBinding()]
 	param (
@@ -259,12 +364,12 @@ function Invoke-Trap {
 		[switch]$Fatal
 	)
 	try {
-		iex "$Command 2> .\errors.txt"
+		Invoke-Expression "$Command 2> .\errors.txt"
 		if ($LASTEXITCODE -ne 0) {
 			$caller = Get-Caller
 			Log $Message -Error -taskStep $caller
-			$errors = gc .\errors.txt
-			$errors | % {
+			$errors = Get-Content .\errors.txt
+			$errors | ForEach-Object {
 				Log $_ -Error -taskStep $caller -allowLayout
 			}
 			if ($Fatal) {
@@ -360,7 +465,8 @@ function Publish-NuGetPackage {
 		nuget add $PackagePath -Source $localSource -NonInteractive
 	} else {
 		$apiKey = Get-NuGetLocalApiKey
-		nuget push $PackagePath $apiKey -Source $localSource
+		$timeout = Get-NuGetLocalPushTimeout
+		Invoke-Trap "nuget push $PackagePath -ApiKey `"$apiKey`" -Source $localSource -Timeout $timeout" -Message "Unable to push $(Split-Path $PackagePath -Leaf)" -Fatal
 	}
 }
 
@@ -386,15 +492,15 @@ function Save-CSharpProject {
 		[string]$Path
 	)
 	Out-FormattedXml -Xml $Project -FilePath $Path
-	$text = gc $Path | ? { $_ -notlike '<`?*`?>'}
+	$text = Get-Content $Path | Where-Object { $_ -notlike '<`?*`?>'}
 	$text | Out-File $Path -Encoding utf8
 }
 
 function Set-NodeText ($parentNode, $id, [String]$text){
 		[xml.XmlNode]$childNode | Out-Null
 		$parentNode.SelectSingleNode($id) |
-			where { $_ } |
-			foreach {
+			Where-Object { $_ } |
+			ForEach-Object {
 				$childNode = $_
 			}
 		if (-not $childNode) {
@@ -424,9 +530,9 @@ function Set-ProjectDependencyVersion {
 		[string]$Dependency
 	)
 	$newVersion = Get-NuGetPackageVersion $Dependency
-	[xml]$proj = gc $Path
-	$refs = $proj.Project.ItemGroup | ? { $_.PackageReference }
-	$ref = $refs.PackageReference | ? { $_.Include -eq $Dependency }
+	[xml]$proj = Get-Content $Path
+	$refs = $proj.Project.ItemGroup | Where-Object { $_.PackageReference }
+	$ref = $refs.PackageReference | Where-Object { $_.Include -eq $Dependency }
 	if ($ref) {
 		$ref.Version = $newVersion
 	} else {
@@ -454,9 +560,9 @@ function Test-NuGetVersionExists {
 		[string]$Version
 	)
 	$exists = $false
-	nuget List $Id -AllVersions -Source (Get-NuGetLocalSource) -PreRelease -NonInteractive | ? {
+	nuget List $Id -AllVersions -Source "$(Get-NuGetLocalSource)" -PreRelease -NonInteractive | Where-Object {
 		$_.Equals("$Id $Version") 
-	} | % {
+	} | ForEach-Object {
 		$exists = $true 
 	}
 	return $exists

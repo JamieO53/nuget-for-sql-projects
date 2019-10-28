@@ -6,7 +6,7 @@ function Initialize-TestDbProject {
 	$projFolder = Split-Path $ProjectPath
 	$projDbFolder = [IO.Path]::Combine($projFolder, 'Databases')
 	$configPath = [IO.Path]::ChangeExtension($ProjectPath, '.nuget.config')
-	md $projDbFolder
+	mkdir $projDbFolder
 	Initialize-TestProject -ProjectPath $ProjectPath 
 	
 	if ($NoDependencies) {

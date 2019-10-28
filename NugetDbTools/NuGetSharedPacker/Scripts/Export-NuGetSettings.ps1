@@ -14,11 +14,11 @@ function Export-NuGetSettings {
 		# The values to be set in the NuGet spec
 		[PSObject]$Settings
 	)
-	$options = $Settings.nugetOptions | Get-Member | ? { $_.MemberType -eq 'NoteProperty' } | % { $_.Name }
+	$options = $Settings.nugetOptions | Get-Member | Where-Object { $_.MemberType -eq 'NoteProperty' } | ForEach-Object { $_.Name }
 	$optionItems = ''
-	$options | % {
+	$options | ForEach-Object {
 		$field = $_
-		$value = (iex "`$Settings.nugetOptions.$field")
+		$value = (Invoke-Expression "`$Settings.nugetOptions.$field")
 		$optionItems += @"
 
 		<add key=`"$field`" value=`"$value`"/>
@@ -37,7 +37,7 @@ $optionItems
 
 	if ($Settings.nugetSettings.Keys.Count -gt 0) {
 		$settingsNode = Add-Node -parentNode $parentNode -id nugetSettings
-		$Settings.nugetSettings.Keys | % {
+		$Settings.nugetSettings.Keys | ForEach-Object {
 			$settingKey = $_
 			$settingValue = $Settings.nugetSettings[$_]
 			Add-DictionaryNode -parentNode $settingsNode -key $settingKey -value $settingValue
@@ -46,7 +46,7 @@ $optionItems
 
 	if ($Settings.nugetDependencies.Keys.Count -gt 0) {
 		$dependenciesNode = Add-Node -parentNode $parentNode -id nugetDependencies
-		$Settings.nugetDependencies.Keys | % {
+		$Settings.nugetDependencies.Keys | ForEach-Object {
 			$dependencyKey = $_
 			$dependencyValue = $Settings.nugetDependencies[$_]
 			Add-DictionaryNode -parentNode $dependenciesNode -key $dependencyKey -value $dependencyValue

@@ -6,7 +6,7 @@ function Set-SqlProjectDependenciesInSolution {
 
 	The result is the updated solution file
 	.EXAMPLE
-	[xml]$params = gc .\DbSolution.xml
+	[xml]$params = Get-Content .\DbSolution.xml
 	$sln = Set-SqlProjectInSolution -Parameters $params -SolutionFile $sln
 	#>
     [CmdletBinding()]
@@ -17,7 +17,7 @@ function Set-SqlProjectDependenciesInSolution {
 		[string]$SolutionPath
 	)
 	$slnDir = Split-Path $SolutionPath
-	Get-SqlProjects -SolutionPath $SolutionPath | % {
+	Get-SqlProjects -SolutionPath $SolutionPath | ForEach-Object {
 		$projectName = $_.Project
 		$projectPath = "$slnDir\$($_.ProjectPath)"
 		Set-DbReferencesInProject -SolutionFolder $SolutionFolder -ProjectPath $projectPath

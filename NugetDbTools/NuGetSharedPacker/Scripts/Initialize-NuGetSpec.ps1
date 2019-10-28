@@ -17,30 +17,30 @@ function Initialize-NuGetSpec {
 
 	if (-not (Test-Path $nuGetSpecPath)) {
 		$id = $setting.nugetSettings['id']
-		pushd $Path
+		Push-Location $Path
 		nuget spec $id
 		Rename-Item "$Path\$id.nuspec" 'Package.nuspec'
-		popd
+		Pop-Location
 	}
 	[xml]$specDoc = Get-Content $nuGetSpecPath
     $metadata = $specDoc.package.metadata
 
 	$nodes = @()
-	$metadata.ChildNodes | where { -not $setting.nugetSettings.Contains($_.Name) } | % { $nodes += $_.Name }
-	$nodes | % {
+	$metadata.ChildNodes | Where-Object { -not $setting.nugetSettings.Contains($_.Name) } | ForEach-Object { $nodes += $_.Name }
+	$nodes | ForEach-Object {
 		$name = $_
 		Remove-Node -parentNode $metadata -id $name
 	}
 	if ($metadata.dependencies) {
 		Remove-Node -parentnode $metadata -id 'dependencies'
 	}
-	$setting.nugetSettings.Keys | % {
+	$setting.nugetSettings.Keys | ForEach-Object {
 		$name = $_
 		$value = $setting.nugetSettings[$name]
 		Set-NodeText -parentNode $metadata -id $name -text $value
 	}
 	$depsNode = Add-Node -parentNode $metadata -id dependencies
-	$setting.nugetDependencies.Keys | % {
+	$setting.nugetDependencies.Keys | ForEach-Object {
 		$dep = $_
 		$ver = $setting.nugetDependencies[$dep]
 		$depNode = Add-Node -parentNode $depsNode -id dependency
@@ -48,7 +48,7 @@ function Initialize-NuGetSpec {
 		$depNode.SetAttribute('version', $ver)
 	}
 	$contFilesNode = Add-Node -parentNode $metadata -id contentFiles
-	$setting.nugetContents.Keys | % {
+	$setting.nugetContents.Keys | ForEach-Object {
 		$files = $_
 		$attrs = $setting.nugetContents[$files]
 		[xml]$node = "<files include=`"$files`" $attrs/>"

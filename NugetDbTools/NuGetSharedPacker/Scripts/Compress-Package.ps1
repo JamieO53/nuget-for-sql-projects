@@ -9,10 +9,12 @@ function Compress-Package {
     [CmdletBinding()]
     param
     (
-        # The location of the NuGet data
-        [string]$NugetPath
+        # The NuGet package specification path
+		[string]$NuspecPath,
+		# The location of the NuGet data
+        [string]$NugetFolder,
+		# The folder where the package is created
+		[string]$PackageFolder 
 	)
-	Push-Location -LiteralPath $NugetPath
-	NuGet pack -BasePath $NugetPath
-	Pop-Location
+	NuGet pack $NuspecPath -BasePath $NugetFolder -OutputDirectory $PackageFolder
 }

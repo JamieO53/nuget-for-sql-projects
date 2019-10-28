@@ -6,21 +6,21 @@ $buildConfig='Debug'
 
 try {
 	$slnDir = (Get-Item "$PSScriptRoot").FullName
-	$slnPath = ls "$slnDir\*.sln" | select -First 1 | % { $_.FullName }
+	$slnPath = Get-ChildItem "$slnDir\*.sln" | Select-Object -First 1 | ForEach-Object { $_.FullName }
 
 	$nugetFolder = "$slnDir\NuGet"
 	$nuspecPath = "$slnDir\Package.nuspec"
 	$nugetBinFolder = "$nugetFolder\$contentType"
-	pushd $slnDir
+	Push-Location $slnDir
 
 	$loaded = $false
 	if (-not (Get-Module NuGetProjectPacker)) {
 		$loaded = $true
-		Import-Module "$slnDir\PowerShell\NuGetProjectPacker.psm1"
+		Import-Module "$slnDir\PowerShell\NuGetProjectPacker.psm1" -Global -DisableNameChecking
 	}
 
 	$project = @{}
-	Get-CSharpProjects -SolutionPath $slnPath | % {
+	Get-CSharpProjects -SolutionPath $slnPath | ForEach-Object {
 		$project[$_.Project] = "$slnDir\$($_.ProjectPath)"
 	}
 
@@ -36,11 +36,11 @@ try {
 	}
 
 	Initialize-NuGetFolders -Path $nugetFolder
-	'lib' | % { mkdir $nugetFolder\$_ | Out-Null }
+	'lib' | ForEach-Object { mkdir $nugetFolder\$_ | Out-Null }
 
-	('Project1','Project2','Project3','Project4', 'Project5') | % {
+	('Project1','Project2','Project3','Project4', 'Project5') | ForEach-Object {
 		$projName = $_
-		if ($project.ContainsKey($projectName) {
+		if ($project.ContainsKey($projName)) {
 			$projPath = $project[$projName]
 			$projDir = Split-Path $projPath
 			$projBinFolder = "$projDir\bin\$buildConfig"
@@ -54,15 +54,13 @@ try {
 	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
-		NuGet pack $nuspecPath -BasePath $nugetFolder -OutputDirectory $slnDir
-		Publish-NuGetPackage -PackagePath $nugetPackagePath
+		Compress-Package -NuspecPath $nuspecPath -NugetFolder $nugetFolder -PackageFolder $slnDir
+		if ($env:USERNAME -EQ 'Builder') {
+			Publish-NuGetPackage -PackagePath $nugetPackagePath
+			Remove-NugetFolder $nugetFolder
+		}
 	}
 
-	Remove-NugetFolder $nugetFolder
-	if (Test-Path $nugetPackagePath)
-	{
-		del $nugetPackagePath
-	}
 	if ($loaded) {
 		Remove-Module NuGetProjectPacker -ErrorAction Ignore
 	}
@@ -70,5 +68,5 @@ try {
 	Write-Host "$id packaging failed: $($_.Exception.Message)" -ForegroundColor Red
 	Exit 1
 } finally {
-	popd
+	Pop-Location
 }

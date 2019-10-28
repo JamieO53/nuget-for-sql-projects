@@ -17,17 +17,16 @@ function Initialize-NuGetRuntime {
 		# The location of the NuGet folders
 		[string]$Path
 	)
-	$paths = @()
-	$solutionFolder = Split-Path $SolutionPath
 	$projectFolder = Split-Path $ProjectPath
 	$contentFolder = Get-NuGetContentFolder
 	$nugetContentFolder = "$Path\content\$contentFolder"
-	if ((Test-Path $solutionFolder\$contentFolder) -or (Test-Path $projectFolder\$contentFolder)) {
+	if ($contentFolder -and (Test-Path $projectFolder\$contentFolder)) {
 		if (-not (Test-Path $nugetContentFolder)) {
 			mkdir $nugetContentFolder
 		}
 		if (Test-Path $projectFolder\$contentFolder) {
-			copy $projectFolder\$contentFolder\* $nugetContentFolder -Recurse
+			Log "Copying $projectFolder\$contentFolder\* to $nugetContentFolder"
+			Copy-Item $projectFolder\$contentFolder\* $nugetContentFolder -Recurse -Force
 		}
 	}
 }

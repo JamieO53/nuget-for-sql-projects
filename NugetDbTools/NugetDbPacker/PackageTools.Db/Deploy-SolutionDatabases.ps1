@@ -1,20 +1,20 @@
 if ( Get-Module NugetDbPacker -All) {
 	Remove-Module NugetDbPacker
 }
-Import-Module "$PSScriptRoot\..\PowerShell\NugetDbPacker.psd1" -DisableNameChecking
+Import-Module "$PSScriptRoot\..\PowerShell\NugetDbPacker.psd1" -Global -DisableNameChecking
 
 $slnFolder = Get-ParentSubFolder "$PSScriptRoot" '*.sln'
-$slnPath = ls "$slnFolder\*.sln" | select -First 1 | % { $_.FullName }
+$slnPath = Get-ChildItem "$slnFolder\*.sln" | Select-Object -First 1 | ForEach-Object { $_.FullName }
 $branch = Get-Branch $slnFolder
 
-Get-SqlProjects -SolutionPath $slnPath | % {
+Get-SqlProjects -SolutionPath $slnPath | ForEach-Object {
 	$projName = $_.Project
 	$projPath = "$slnFolder\$($_.ProjectPath)"
 	$projFolder = Split-Path $projPath
 	$dacpacName = "$projName.dacpac"
 	$dacpacPath = "$slnFolder\Databases\$dacpacName"
 	$projectDacpacPath = "$projFolder\Databases\$dacpacName"
-	copy $projectDacpacPath* $slnFolder\Databases
+	Copy-Item $projectDacpacPath* $slnFolder\Databases
 	$profilePath = Find-PublishProfilePath -ProjectPath $projPath
 	if (Test-Path $profilePath) {
 		if (Test-Path $dacpacPath) {

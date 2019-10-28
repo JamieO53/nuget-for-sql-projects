@@ -17,8 +17,7 @@ function Set-NuGetDependencyVersion {
 		[string]$Version
 	)
     $solutionFolder = Split-Path -Path $SolutionPath
-    Get-SqlProjects -SolutionPath $SolutionPath | % {
-        $project = $_.Project
+    Get-SqlProjects -SolutionPath $SolutionPath | ForEach-Object {
         [string]$projectPath = [IO.Path]::Combine($solutionFolder, $_.ProjectPath)
 		$cfgPath = [IO.Path]::ChangeExtension($projectPath, '.nuget.config')
 		if (Test-Path $cfgPath) {

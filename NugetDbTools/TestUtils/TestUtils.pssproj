@@ -30,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build.ps1" />
+    <Compile Include="Scripts\Initialize-NuGetSharedConfig.ps1" />
     <Compile Include="Scripts\Initialize-TestDbProject.ps1" />
     <Compile Include="Scripts\Initialize-TestNugetConfig.ps1" />
     <Compile Include="Scripts\Initialize-TestProject.ps1" />

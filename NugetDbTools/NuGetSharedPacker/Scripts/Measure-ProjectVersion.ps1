@@ -15,13 +15,13 @@ function Measure-ProjectVersion {
 		# The folder for version calculations
 		[string]$ProjectFolder,
 		# The previous version to be updated with the new revision number
-		[string]$OldVersion,
+		[string]$OldVersion = $null,
 		# Increase the version by 1
 		[bool]$UpVersion = $false
 	)
 	if (-not $oldVersion) {
 		if (Test-Path $Path) {
-			[xml]$cfg = gc $Path
+			[xml]$cfg = Get-Content $Path
 			$OldVersion = $cfg.package.metadata.version
 			if (-not $oldVersion) {
 				$oldVersion = '1.0.0'

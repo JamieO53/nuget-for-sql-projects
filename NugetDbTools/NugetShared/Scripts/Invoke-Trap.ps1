@@ -6,12 +6,12 @@ function Invoke-Trap {
 		[switch]$Fatal
 	)
 	try {
-		iex "$Command 2> .\errors.txt"
+		Invoke-Expression "$Command 2> .\errors.txt"
 		if ($LASTEXITCODE -ne 0) {
 			$caller = Get-Caller
 			Log $Message -Error -taskStep $caller
-			$errors = gc .\errors.txt
-			$errors | % {
+			$errors = Get-Content .\errors.txt
+			$errors | ForEach-Object {
 				Log $_ -Error -taskStep $caller -allowLayout
 			}
 			if ($Fatal) {

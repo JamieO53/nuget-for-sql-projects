@@ -12,21 +12,18 @@ function Publish-ProjectDatabase {
         # The location of .dacpac file being published
 		[string]$DacpacPath,
         # The location of the profile (.publish.xml file being) with deployment options
-        [string]$ProfilePath
+        [string]$ProfilePath,
+		# Parameters overriding profile settings
+		# Format according to SqlPackage CLI https://docs.microsoft.com/en-us/sql/tools/sqlpackage?view=sql-server-2017
+		[string[]]$Parameters
 	)
 	[string]$cmd = Find-SqlPackagePath
 	if ($cmd) {
 		try {
-	
-			if ($ProfilePath -and (Test-Path $ProfilePath)) {
-				[string]$db = "/pr:`"$ProfilePath`""
-			} else {
-				$projectName = [IO.Path]::GetFileNameWithoutExtension($DacpacPath)
-				[string]$db = "/tdn:`"$projectName`" /p:CreateNewDatabase=True"
-			}
+			$params = Format-ProjectDatabaseParameters -DacpacPath $DacpacPath -ProfilePath $ProfilePath -Parameters $Parameters
 	
 			Log "Publishing $DacpacPath using $ProfilePath"
-			Invoke-Trap -Command "& `"$cmd`" /a:Publish /sf:`"$DacpacPath`" $db" -Message "Deploying database failed" -Fatal
+			Invoke-Trap -Command "& `"$cmd`" /a:Publish /sf:`"$DacpacPath`" $params" -Message "Deploying database failed" -Fatal
 		} catch {
 			Log "SqlPackage.exe failed: $_" -Error
 			exit 1

@@ -1,43 +1,39 @@
-﻿if (Get-Module NugetShared) {
-	Remove-Module NugetShared
+﻿if (-not (Get-Module TestUtils -All)) {
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global -DisableNameChecking
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
 
-$Global:testing = $true
 $oldConfig = @"
 <?xml version="1.0"?>
-<configuration>
-	<nugetLocalServer>
-		<add key="ApiKey" value="Test Key"/>
-		<add key="Source" value="Local Server"/>
-	</nugetLocalServer>
-</configuration>
+<tools>
+	<nuget>
+		<source>Local Server</source>
+		<pushTimeout>900</pushTimeout>
+		<apiKey>Test Key</apiKey>
+	</nuget>
+</tools>
 "@
 $config = @"
 <?xml version="1.0"?>
-<configuration>
-	<nugetLocalServer>
-		<add key="ApiKey" value="Test Key"/>
-		<add key="Source" value="Local Server"/>
-		<add key="PushSource" value="Local Server Push"/>
-	</nugetLocalServer>
-</configuration>
+<tools>
+	<nuget>
+		<source>Local Server</source>
+		<pushTimeout>900</pushTimeout>
+		<apiKey>Test Key</apiKey>
+		<pushSource>Local Server Push</pushSource>
+	</nuget>
+</tools>
 "@
 Describe "Get-NuGetLocalPushSource" {
-	$path = Get-NuGetDbToolsConfigPath
-	$folder = Split-Path $path
-	mkdir $folder
-	$oldConfig | Set-Content -Path $path
 	Context "No Push Source" {
+		Initialize-NuGetSharedConfig $PSScriptRoot $oldConfig
 		It "Default to Source" {
 			Get-NuGetLocalPushSource | should be 'Local Server'
 		}
 	}
-	$config | Set-Content -Path $path
 	Context "Push Source" {
-		It "Default to Source" {
+		Initialize-NuGetSharedConfig $PSScriptRoot $config
+		It "Use PushSource" {
 			Get-NuGetLocalPushSource | should be 'Local Server Push'
 		}
 	}
 }
-$Global:testing = $false

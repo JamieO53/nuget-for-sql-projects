@@ -12,5 +12,5 @@ function Get-PkgProjects {
         # The location of .sln file of the solution being updated
         [string]$SolutionPath
 	)
-	return (Get-CSharpProjects -SolutionPath $SolutionPath | ? { $_.Project.EndsWith('Pkg') })
+	return (Get-CSharpProjects -SolutionPath $SolutionPath | Where-Object { $_.Project.EndsWith('Pkg') })
 }

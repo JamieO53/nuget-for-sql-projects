@@ -4,9 +4,9 @@ function Get-SqlProjects {
     .DESCRIPTION
         Examines the Solution file and extracts a list of the project names and their locations relative to the solution
     .EXAMPLE
-        Get-SqlProjects -SolutionPath .\EcsShared | % {
+        Get-SqlProjects -SolutionPath .\EcsShared | ForEach-Object {
             $projName = $_.Project
-            [xml]$proj = gc $_.ProjectPath
+            [xml]$proj = Get-Content $_.ProjectPath
         }
     #>
     [CmdletBinding()]

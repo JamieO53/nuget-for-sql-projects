@@ -14,7 +14,7 @@ function Get-ProjectProperty {
 		# The property being queried
 		[string]$Property
 	)
-	[string]$prop = iex "`$proj.Project.PropertyGroup.$Property"
+	[string]$prop = Invoke-Expression "`$proj.Project.PropertyGroup.$Property"
 	$prop = $prop.Trim()
 	return $prop
 }

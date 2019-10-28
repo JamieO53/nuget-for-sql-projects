@@ -1,9 +1,16 @@
-﻿if ( Get-Module NugetShared) {
-	Remove-Module NugetShared
+﻿if (-not (Get-Module TestUtils -All)) {
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global -DisableNameChecking
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
-
 Describe "Test-NuGetVersionExists" {
+	$config = @"
+<?xml version="1.0"?>
+<tools>
+	<nuget>
+	    <source>$env:USERPROFILE\.nuget\packages</source>
+	</nuget>
+</tools>
+"@
+	Initialize-NuGetSharedConfig $PSScriptRoot $config
 	Context "Package Existance" {
 		$version = Get-NuGetPackageVersion -PackageName NuGetShared
 		It "Exists" {

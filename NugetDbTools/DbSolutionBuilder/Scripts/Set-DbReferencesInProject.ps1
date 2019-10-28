@@ -17,14 +17,14 @@ function Set-DbReferencesInProject {
 		# The DB Project file path
 		[string]$ProjectPath
 	)
-	[xml]$proj = gc $ProjectPath | Out-String
-	$group = $proj.Project.ItemGroup | ? { $_.ArtifactReference }
+	[xml]$proj = Get-Content $ProjectPath | Out-String
+	$group = $proj.Project.ItemGroup | Where-Object { $_.ArtifactReference }
 	
 	if (Test-Path $SolutionFolder\Databases)
 	{
-		ls "$SolutionFolder\Databases\*.dacpac" | % {
+		Get-ChildItem "$SolutionFolder\Databases\*.dacpac" | ForEach-Object {
 			$ref = [IO.Path]::ChangeExtension($_.Name, '')
-			$exists = ($group.ArtifactReference | ? { $_.Include -eq "..\Databases\$($ref)dacpac" }) -ne $null
+			$exists = ($group.ArtifactReference | Where-Object { $_.Include -eq "..\Databases\$($ref)dacpac" }) -ne $null
 			if (-not $exists) {
 				$refNode = Add-Node -parentNode $group -id ArtifactReference
 				$refNode.SetAttribute('Include', "..\Databases\$($ref)dacpac")

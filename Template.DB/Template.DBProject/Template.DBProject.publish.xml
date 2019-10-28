@@ -19,66 +19,6 @@
     <ExcludeLinkedServerLogins>True</ExcludeLinkedServerLogins>
     <ExcludeSecurityPolicies>True</ExcludeSecurityPolicies>
     <ExcludeUsers>True</ExcludeUsers>
-    <DropObjectsNotInSource>True</DropObjectsNotInSource>
-    <DoNotDropCertificates>True</DoNotDropCertificates>
-    <DoNotDropBrokerPriorities>True</DoNotDropBrokerPriorities>
-    <DoNotDropAudits>True</DoNotDropAudits>
-    <DoNotDropAsymmetricKeys>True</DoNotDropAsymmetricKeys>
-    <DoNotDropColumnEncryptionKeys>True</DoNotDropColumnEncryptionKeys>
-    <DoNotDropColumnMasterKeys>True</DoNotDropColumnMasterKeys>
-    <DoNotDropContracts>True</DoNotDropContracts>
-    <DoNotDropCredentials>True</DoNotDropCredentials>
-    <DoNotDropCryptographicProviders>True</DoNotDropCryptographicProviders>
-    <DoNotDropDatabaseAuditSpecifications>True</DoNotDropDatabaseAuditSpecifications>
-    <DoNotDropDatabaseRoles>True</DoNotDropDatabaseRoles>
-    <DoNotDropDatabaseScopedCredentials>True</DoNotDropDatabaseScopedCredentials>
-    <DoNotDropDatabaseTriggers>True</DoNotDropDatabaseTriggers>
-    <DoNotDropDefaults>True</DoNotDropDefaults>
-    <DoNotDropEndpoints>True</DoNotDropEndpoints>
-    <DoNotDropErrorMessages>True</DoNotDropErrorMessages>
-    <DoNotDropEventNotifications>True</DoNotDropEventNotifications>
-    <DoNotDropEventSessions>True</DoNotDropEventSessions>
-    <DoNotDropExtendedProperties>True</DoNotDropExtendedProperties>
-    <DoNotDropExternalDataSources>True</DoNotDropExternalDataSources>
-    <DoNotDropExternalFileFormats>True</DoNotDropExternalFileFormats>
-    <DoNotDropExternalTables>True</DoNotDropExternalTables>
-    <DoNotDropFileTables>True</DoNotDropFileTables>
-    <DoNotDropFilegroups>True</DoNotDropFilegroups>
-    <DoNotDropFullTextCatalogs>True</DoNotDropFullTextCatalogs>
-    <DoNotDropFullTextStoplists>True</DoNotDropFullTextStoplists>
-    <DoNotDropLinkedServerLogins>True</DoNotDropLinkedServerLogins>
-    <DoNotDropLinkedServers>True</DoNotDropLinkedServers>
-    <DoNotDropLogins>True</DoNotDropLogins>
-    <DoNotDropMessageTypes>True</DoNotDropMessageTypes>
-    <DoNotDropPartitionFunctions>True</DoNotDropPartitionFunctions>
-    <DoNotDropPartitionSchemes>True</DoNotDropPartitionSchemes>
-    <DoNotDropPermissions>True</DoNotDropPermissions>
-    <DoNotDropQueues>True</DoNotDropQueues>
-    <DoNotDropRemoteServiceBindings>True</DoNotDropRemoteServiceBindings>
-    <DoNotDropRoleMembership>True</DoNotDropRoleMembership>
-    <DoNotDropRoutes>True</DoNotDropRoutes>
-    <DoNotDropRules>True</DoNotDropRules>
-    <DoNotDropSecurityPolicies>True</DoNotDropSecurityPolicies>
-    <DoNotDropSearchPropertyLists>True</DoNotDropSearchPropertyLists>
-    <DoNotDropSequences>True</DoNotDropSequences>
-    <DoNotDropServerAuditSpecifications>True</DoNotDropServerAuditSpecifications>
-    <DoNotDropServerRoleMembership>True</DoNotDropServerRoleMembership>
-    <DoNotDropServerRoles>True</DoNotDropServerRoles>
-    <DoNotDropServerTriggers>True</DoNotDropServerTriggers>
-    <DoNotDropServices>True</DoNotDropServices>
-    <DoNotDropSignatures>True</DoNotDropSignatures>
-    <DoNotDropSymmetricKeys>True</DoNotDropSymmetricKeys>
-    <DoNotDropSynonyms>True</DoNotDropSynonyms>
-    <DoNotDropUserDefinedDataTypes>False</DoNotDropUserDefinedDataTypes>
-    <DoNotDropUserDefinedTableTypes>False</DoNotDropUserDefinedTableTypes>
-    <DoNotDropUsers>True</DoNotDropUsers>
-    <DoNotDropXmlSchemaCollections>True</DoNotDropXmlSchemaCollections>
-    <DoNotDropTables>True</DoNotDropTables>
-    <DoNotDropApplicationRoles>True</DoNotDropApplicationRoles>
-    <TreatVerificationErrorsAsWarnings>True</TreatVerificationErrorsAsWarnings>
-    <DropExtendedPropertiesNotInSource>False</DropExtendedPropertiesNotInSource>
-    <DropIndexesNotInSource>False</DropIndexesNotInSource>
-    <DropDmlTriggersNotInSource>False</DropDmlTriggersNotInSource>
-    <DropConstraintsNotInSource>False</DropConstraintsNotInSource>
+    <DropObjectsNotInSource>False</DropObjectsNotInSource>
   </PropertyGroup>
 </Project>

@@ -1,23 +1,16 @@
-$nugetConfigDir = "$PSScriptRoot\..\JamieO53\NugetDbTools"
-$nugetConfigPath = "$nugetConfigDir\NugetDbTools.config"
-
-$configText = @"
-<?xml version=`"1.0`"?>
-<configuration>
-    <nugetLocalServer>
-        <add key="ApiKey" value="ApiKey" />
-		<add key=`"ContentFolder`" value=`"Runtime`"/>
-        <add key=`"Source`" value=`"https://pkgs.dev.azure.com/epsdev/_packaging/EpsNuGet/nuget/v3/index.json`"/>
-        <add key=`"PushTimeout`" value=`"900`"/> <!-- seconds -->
-    </nugetLocalServer>
-</configuration>
-"@
-if (-not (Test-Path $nugetConfigDir)) {
-	mkdir $nugetConfigDir
-}
-if (-not (Test-Path $nugetConfigPath)) {
-	$configText | Set-Content $nugetConfigPath -Encoding UTF8 -Force
-	Write-Host "Set up $nugetConfigPath"
-}
-
 sqllocaldb create ecentric
+
+if (-not (Get-Module NuGetSharedPacker)) {
+	Import-Module "$PSScriptRoot\..\PowerShell\NugetSharedPacker.psd1" -Global -DisableNameChecking
+}
+
+& $PSScriptRoot\SetSolutionVersionVariable.ps1
+
+$slnFolder = Get-ParentSubFolder "$PSScriptRoot" '*.sln'
+$slnPath = Get-ChildItem "$slnFolder\*.sln" | Select-Object -First 1 | ForEach-Object { $_.FullName }
+$nuspecPath = "$slnFolder\Package.nuspec"
+
+if (Test-Path $nuspecPath) {
+	Set-CSharpProjectVersion -SolutionPath $slnPath -Version $env:AssemblyVersion
+}
+Set-SqlProjectVersion -SolutionPath $slnPath -Version $env:AssemblyVersion

@@ -1,7 +1,7 @@
 ﻿if ( Get-Module NugetSharedPacker) {
 	Remove-Module NugetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetSharedPacker\NugetSharedPacker.psm1" -Global -DisableNameChecking
 
 [xml]$proj = @"
 <?xml version=`"1.0`" encoding=`"utf-8`"?>

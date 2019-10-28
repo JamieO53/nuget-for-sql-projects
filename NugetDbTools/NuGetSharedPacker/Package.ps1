@@ -12,52 +12,57 @@ $extensions=$cfg.Extensions
 $projDir = (Get-Item "$(Split-Path -Path $MyInvocation.MyCommand.Path)").FullName
 $slnDir = (Get-Item "$projDir\..").FullName
 
-pushd $projDir
+Push-Location $projDir
 try {
 
 	$loaded = $false
 	if (-not (Get-Module NugetSharedPacker)) {
 		$loaded = $true
-		Import-Module "$slnDir\NugetSharedPacker\bin\Debug\NugetSharedPacker\NugetSharedPacker.psd1"
+		Import-Module "$slnDir\NugetSharedPacker\bin\Debug\NugetSharedPacker\NugetSharedPacker.psd1" -Global -DisableNameChecking
 	}
 
+	$branch = Get-Branch
+	if ($branch -eq 'master') {
+		$branch = ''
+	}
 	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir -UpVersion $upVersion
 	if ($version -like '*.0'){
 		throw "Invalid version $version"
 	}
 
-	$dependencies | % {
-		Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency $_
+	$dependencies | ForEach-Object {
+		Set-NuspecDependencyVersion -Path $projDir\Package.nuspec -Dependency $_ -Branch $branch
 	}
 
 	if (Test-Path $projDir\NuGet) {
-		del $projDir\NuGet\* -Recurse -Force
-		rmdir $projDir\NuGet
+		Remove-Item $projDir\NuGet\* -Recurse -Force
+		Remove-Item $projDir\NuGet
 	}
 
-	md "$projDir\NuGet" | Out-Null
-	'content\PackageTools', "content\$contentType" | % { mkdir $projDir\NuGet\$_ | Out-Null }
+	mkdir "$projDir\NuGet" | Out-Null
+	'content\PackageTools', "content\$contentType" | ForEach-Object { mkdir $projDir\NuGet\$_ | Out-Null }
 
-	copy "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
-	$extensions | % {
-		copy "bin\Debug\$id\$_.ps*1" "NuGet\content\$contentType\"
+	Copy-Item "bin\Debug\$id\$id.ps*1" "NuGet\content\$contentType\"
+	$extensions | ForEach-Object {
+		Copy-Item "bin\Debug\$id\$_.ps*1" "NuGet\content\$contentType\"
 	}
 	if ($projectType){
-		copy "$slnDir\PackageTools\*" "$projDir\NuGet\content\PackageTools\"
-		copy "$projDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\" -Force
+		Copy-Item "$slnDir\PackageTools\*" "$projDir\NuGet\content\PackageTools\"
+		Copy-Item "$projDir\PackageTools.$projectType\*" "$projDir\NuGet\content\PackageTools\" -Force
 		"powershell -Command `".\Bootstrap.ps1`" -ProjectType $projectType" |
 			Set-Content "$projDir\NuGet\content\PackageTools\Bootstrap.cmd" -Encoding Ascii
 	}
 
 	if (Test-Path "NuGet\content\$contentType\$id.psd1") {
-		$lines = gc "NuGet\content\$contentType\$id.psd1" | % {
+		$lines = Get-Content "NuGet\content\$contentType\$id.psd1" | ForEach-Object {
 			if ( $_.StartsWith('ModuleVersion = ')) {
-				"ModuleVersion = '$version'"
+				$moduleVersion = $version.Split('-')[0]
+				"ModuleVersion = '$moduleVersion'"
 			} else {
 				$_
 			}
 		}
-		$lines | sc "NuGet\content\$contentType\$id.psd1"
+		$lines | Set-Content "NuGet\content\$contentType\$id.psd1"
 	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
@@ -68,7 +73,7 @@ try {
 	Remove-NugetFolder $projDir\NuGet
 	if (Test-Path "$projDir\$id.$version.nupkg")
 	{
-		del "$projDir\$id.$version.nupkg"
+		Remove-Item "$projDir\$id.$version.nupkg"
 	}
 	if ($loaded) {
 		Remove-Module NugetShared -ErrorAction Ignore
@@ -77,5 +82,5 @@ try {
 	Write-Host "$id packaging failed: $($_.Exception.Message)" -ForegroundColor Red
 	Exit 1
 } finally {
-	popd
+	Pop-Location
 }

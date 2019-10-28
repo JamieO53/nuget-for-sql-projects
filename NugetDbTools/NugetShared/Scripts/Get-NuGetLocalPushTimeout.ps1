@@ -1,8 +1,10 @@
 function Get-NuGetLocalPushTimeout {
-	$config = Get-NuGetDbToolsConfig
-	$source = $config.configuration.nugetLocalServer.add | ? { $_.key -eq 'PushTimeout' } | % { $_.value }
-	if ([string]::IsNullOrEmpty($source)) {
-		$source = 900
+	$result = ''
+	Get-NuGetDbToolsConfig | ForEach-Object {
+		$_ | Where-Object { $_.tools.nuget.pushTimeout } | ForEach-Object { $result = $_.tools.nuget.pushTimeout }
 	}
-	$source
+	if (-not $result) {
+		$result = '900'
+	}
+	$result
 }

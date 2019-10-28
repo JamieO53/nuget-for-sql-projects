@@ -1,22 +1,20 @@
-﻿if (Get-Module NugetShared) {
-	Remove-Module NugetShared
+﻿if (-not (Get-Module TestUtils -All)) {
+	Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global -DisableNameChecking
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
-
 Describe "Get-NuGetDbToolsConfigPath" {
-	Context "Non Debug" {
-		if (Test-Path variable:\global:testing) {
-			$Global:testing = $false
-		}
-		It "Runs" {
-			Get-NuGetDbToolsConfigPath | should be "$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config"
-		}
-	}
+	$toolConfigPath = "$TestDrive\solution\Powershell\..\PackageTools\PackageTools.root.config"
+	$config = @"
+	<?xml version="1.0"?>
+	<tools>
+		<junk>
+			<trash>rubbish</trash>
+		</junk>
+	</tools>
+"@
+	Initialize-NuGetSharedConfig $PSScriptRoot $config
 	Context "Debug" {
-		$Global:testing = $true
 		It "Runs" {
-			Get-NuGetDbToolsConfigPath | should be "TestDrive:\Configuration\NugetDbTools.config"
+			Get-NuGetDbToolsConfigPath | should -Be $toolConfigPath
 		}
 	}
 }
-$Global:testing = $false

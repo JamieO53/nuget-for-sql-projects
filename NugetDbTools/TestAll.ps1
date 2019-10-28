@@ -1,20 +1,20 @@
 $SolutionFolder = Split-Path -Path $MyInvocation.MyCommand.Path
-$SolutionPath = ls "$SolutionFolder\*.sln"
+$SolutionPath = Get-ChildItem "$SolutionFolder\*.sln"
 $modules = @{
 	GitExtension="$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\GitExtension.psd1"
 	VSTSExtension="$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\VSTSExtension.psd1"
-	NuGetShared="$SolutionFolder\NugetShared\bin\Debug\NuGetShared\NuGetShared.psd1"
+	NuGetShared="$SolutionFolder\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetShared.psd1"
 	NuGetSharedPacker="$SolutionFolder\NugetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1"
 	NuGetDbPacker="$SolutionFolder\NuGetDbPacker\bin\Debug\NuGetDbPacker\NuGetDbPacker.psd1"
 	NuGetProjectPacker="$SolutionFolder\NuGetProjectPacker\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psd1"
 	DbSolutionBuilder="$SolutionFolder\DbSolutionBuilder\bin\Debug\DbSolutionBuilder\DbSolutionBuilder.psd1"
 }
 if (-not (Get-Module NuGetShared)) {
-	Import-Module $modules['NuGetShared']
+	Import-Module $modules['NuGetShared'] -Global -DisableNameChecking
 }
 
 if (Test-Path "$SolutionFolder\TestResults") {
-	rmdir "$SolutionFolder\TestResults\*" -Recurse -Force
+	Remove-Item "$SolutionFolder\TestResults\*" -Recurse -Force
 }
 mkdir "$SolutionFolder\TestResults\HTML" | Out-Null
 
@@ -23,19 +23,19 @@ $statistics = @()
 $failCount = 0
 $renderHtml = $true
 
-Get-PowerShellProjects -SolutionPath $SolutionPath | % {
+Get-PowerShellProjects -SolutionPath $SolutionPath | ForEach-Object {
 	Remove-Module Nuget*,*Extension,TestUtils,DbSolutionBuilder -ErrorAction SilentlyContinue
-	"GitExtension","VSTSExtension","NuGetShared","NuGetSharedPacker" | % {
-		Import-Module "$($modules[$_])"
+	"GitExtension","VSTSExtension","NuGetShared","NuGetSharedPacker" | ForEach-Object {
+		Import-Module "$($modules[$_])" -Global -DisableNameChecking
 	}
 	$projectFolder = Split-Path "$SolutionFolder\$($_.ProjectPath)"
 	$testName = $_.Project
 	if (Test-Path "$projectFolder\Tests")
 	{
-		pushd "$projectFolder\Tests"
+		Push-Location "$projectFolder\Tests"
 		$testResult = Invoke-Pester "$projectFolder\Tests" -OutputFile "$SolutionFolder\TestResults\$($_.Project).xml" -OutputFormat NUnitXml -PassThru -EnableExit
 		$failCount = $failCount + $testResult.FailedCount
-		popd
+		Pop-Location
 		$statistic = New-Object -TypeName PSObject -Property @{
 			Name=$testName;
 			TotalCount=$testResult.TotalCount;
@@ -75,7 +75,7 @@ Get-PowerShellProjects -SolutionPath $SolutionPath | % {
 }
 $total = @{Name='Total'}
 $statistics |
-	Measure-Object -Property TotalCount,PassedCount,FailedCount,SkippedCount,PendingCount,InconclusiveCount,TimeTicks -sum | % {
+	Measure-Object -Property TotalCount,PassedCount,FailedCount,SkippedCount,PendingCount,InconclusiveCount,TimeTicks -sum | ForEach-Object {
 		$total[$_.Property] = $_.Sum
 	}
 $total['Time'] = [timespan]::new($total['TimeTicks'])
@@ -122,7 +122,7 @@ $links
 "@
 $allTests | Out-File "$SolutionFolder\TestResults\HTML\TestResults.html" -Force
 if ($renderHtml) {
-	iex "$SolutionFolder\TestResults\HTML\TestResults.html"
+	Invoke-Expression "$SolutionFolder\TestResults\HTML\TestResults.html"
 }
 $statistics | Format-Table -Property Name,TotalCount,PassedCount,FailedCount,SkippedCount,PendingCount,InconclusiveCount,Time
 Write-Host "Fail count: $failCount"

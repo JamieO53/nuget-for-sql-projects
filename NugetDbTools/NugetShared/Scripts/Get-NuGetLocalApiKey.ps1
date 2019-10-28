@@ -1,4 +1,7 @@
 function Get-NuGetLocalApiKey {
-	$config = Get-NuGetDbToolsConfig
-	$config.configuration.nugetLocalServer.add | ? { $_.key -eq 'ApiKey' } | % { $_.value }
+	$result = ''
+	Get-NuGetDbToolsConfig | ForEach-Object {
+		$_ | Where-Object { $_.tools.nuget.apiKey } | ForEach-Object { $result = $_.tools.nuget.apiKey }
+	}
+	$result
 }

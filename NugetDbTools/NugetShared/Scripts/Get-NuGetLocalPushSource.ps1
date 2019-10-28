@@ -1,8 +1,12 @@
 function Get-NuGetLocalPushSource {
-	$config = Get-NuGetDbToolsConfig
-	$source = $config.configuration.nugetLocalServer.add | ? { $_.key -eq 'PushSource' } | % { $_.value }
-	if ([string]::IsNullOrEmpty($source)) {
-		$source = $config.configuration.nugetLocalServer.add | ? { $_.key -eq 'Source' } | % { $_.value }
+	$result = ''
+	Get-NuGetDbToolsConfig | ForEach-Object {
+		$_ | Where-Object { $_.tools.nuget.pushSource } | ForEach-Object { $result = $_.tools.nuget.pushSource }
 	}
-	$source
+	if (-not $result) {
+		Get-NuGetDbToolsConfig | ForEach-Object {
+			$_ | Where-Object { $_.tools.nuget.source } | ForEach-Object { $result = $_.tools.nuget.source }
+		}
+	}
+	$result
 }

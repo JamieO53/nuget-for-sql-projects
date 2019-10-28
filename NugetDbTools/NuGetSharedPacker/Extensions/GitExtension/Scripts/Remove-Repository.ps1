@@ -8,7 +8,7 @@ function Remove-Repository {
 	if (Test-Path $Folder) {
 		Log "Removing repository $Folder"
 		if (Test-Path "$Folder\.git") {
-			ls $Folder\.git | % {
+			Get-ChildItem $Folder\.git | ForEach-Object {
 				if ($_.Mode.StartsWith('d')) {
 					Remove-Item $_.FullName -Recurse -Force
 				} else {

@@ -1,7 +1,7 @@
 ﻿if ( Get-Module NuGetProjectPacker) {
 	Remove-Module NuGetProjectPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psm1" -Global -DisableNameChecking
 
 $projText = @"
 <?xml version=`"1.0`" encoding=`"utf-8`"?>
@@ -55,7 +55,7 @@ $pkgNspText = @'
 Describe "Import-NugetSettingsFramework" {
 	Context "Exists" {
 		It "Is in the module" {
-			Get-Command -Module NuGetProjectPacker | where { $_.Name -eq 'Import-NugetSettingsFramework' } | % {
+			Get-Command -Module NuGetProjectPacker | Where-Object { $_.Name -eq 'Import-NugetSettingsFramework' } | ForEach-Object {
 				$_.Name
 			} | 
 			should be 'Import-NugetSettingsFramework'

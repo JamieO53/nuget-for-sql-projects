@@ -1,17 +1,25 @@
-$SolutionFolder = (Resolve-Path "$(Split-Path -Path $MyInvocation.MyCommand.Path)\..").Path
-[string]$slnPath=ls $SolutionFolder\*.sln | ? { $_ } | % { $_.FullName }
+if ( Get-Module NugetSharedPacker -All) {
+	Remove-Module NugetSharedPacker
+}
+Import-Module "$PSScriptRoot\..\PowerShell\NugetSharedPacker.psd1" -Global -DisableNameChecking
+
+$SolutionFolder = Get-ParentSubFolder "$PSScriptRoot" '*.sln'
+[string]$slnPath=Get-ChildItem $SolutionFolder\*.sln | Where-Object { $_ } | ForEach-Object { $_.FullName }
 
 if (-not (Get-Module NugetSharedPacker)) {
-	Import-Module "$PSScriptRoot\..\PowerShell\NugetSharedPacker.psd1"
+	Import-Module "$SolutionFolder\PowerShell\NugetSharedPacker.psd1"
 }
+Log "Configuration path: $(Get-NuGetDbToolsConfigPath)"
+try {
+	Log 'Update package tools'
+	Get-PackageTools -SolutionPath $slnPath
 
-Get-SolutionContent -SolutionPath $slnPath
+	Remove-Module Nuget*,*Extension
+	Import-Module "$SolutionFolder\PowerShell\NugetSharedPacker.psd1"
 
-$reference = Get-SolutionDependencies -SolutionPath $slnPath
-$reference.Keys | sort | % {
-	$package = $_
-	$version = $reference[$package]
-	if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {
-		Set-NuGetDependencyVersion -SolutionPath $slnPath -Dependency $package -Version $version
-	}
+	Log 'Get solution content'
+	Get-SolutionContent -SolutionPath $slnPath
+} catch {
+	Log -Error 'Get-PackageContent failed'
+	Log -Error $_
 }

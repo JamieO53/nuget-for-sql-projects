@@ -1,7 +1,7 @@
 ﻿if (Get-Module NugetShared) {
 	Remove-Module NugetShared
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1" -Global -DisableNameChecking
 
 Describe "Get-NuGetCachePaths" {
 	Context "Exists" {
@@ -10,7 +10,7 @@ Describe "Get-NuGetCachePaths" {
 		}
 	}
 	Context "Valid paths" {
-		Get-NuGetCachePaths | % {
+		Get-NuGetCachePaths | ForEach-Object {
 			$source = $_
 			It "$source exists" {
 				nuget list -Source "$source" | should -Not -BeNullOrEmpty
@@ -18,10 +18,10 @@ Describe "Get-NuGetCachePaths" {
 		}
 	}
 	Context "Contains NuGet packages" {
-		Get-NuGetCachePaths | % {
+		Get-NuGetCachePaths | Where-Object { $_ -like "$env:UserProfile\.nuget*" } | ForEach-Object {
 			$source = $_
 			It "$source contains nuget" {
-				nuget list -Source "$source" | ? { $_ -like 'nuget*' } | should -Not -BeNullOrEmpty
+				nuget list -Source "$source" | Where-Object { $_ -like 'nuget*' } | should -Not -BeNullOrEmpty
 			}
 		}
 	}

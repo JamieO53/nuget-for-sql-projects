@@ -1,7 +1,7 @@
 if ( Get-Module NugetShared) {
 	Remove-Module NugetShared
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1" -Global -DisableNameChecking
 
 $solutionText = @"
 Microsoft Visual Studio Solution File, Format Version 12.00
@@ -30,26 +30,26 @@ $slnPath = "$slnFolder\solution.sln"
 Describe "Get-SqlProjects" {
     Context "Get solution SQL projects" {
         mkdir $slnFolder
-        $solutionText | sc $slnPath -Encoding UTF8
+        $solutionText | Set-Content $slnPath -Encoding UTF8
         $actual = Get-SqlProjects -SolutionPath $slnPath
         Context "Actual projects as expected" {
-            $actual | % {
+            $actual | ForEach-Object {
                 $actProj = $_.Project
                 $actPath = $_.ProjectPath
-                $exp = $expected | ? { $_.Project -eq $actProj }
+                $exp = $expected | Where-Object { $_.Project -eq $actProj }
                 It "$actProj was expected" { $exp | should not BeNullOrEmpty }
                 It "$actProj path" { $exp.ProjectPath | should be $actPath }
             }
         }
         Context "Expected projects are actual" {
-            $expected | % {
+            $expected | ForEach-Object {
                 $expProj = $_.Project
                 $expPath = $_.ProjectPath
-                $act = $actual | ? { $_.Project -eq $expProj }
+                $act = $actual | Where-Object { $_.Project -eq $expProj }
                 It "$expProj was expected" { $act | should not BeNullOrEmpty }
                 It "$expProj path" { $act.ProjectPath | should be $expPath }
             }
         }
-        rmdir $slnFolder\* -Recurse -Force
+        Remove-Item $slnFolder\* -Recurse -Force
     }
 }

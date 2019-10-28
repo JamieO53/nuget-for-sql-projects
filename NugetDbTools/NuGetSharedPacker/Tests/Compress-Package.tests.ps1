@@ -1,12 +1,12 @@
 ﻿if (Get-Module NuGetSharedPacker -All) {
 	Remove-Module NuGetSharedPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psm1" -Global -DisableNameChecking
 
 if (Get-Module TestUtils -All) {
 	Remove-Module TestUtils
 }
-Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1"
+Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global -DisableNameChecking
 
 Describe "Compress-Package" {
 	$projFolder = "$testDrive\proj"
@@ -29,7 +29,7 @@ Context "Exists" {
 		mkdir "$nugetFolder\content" | Out-Null
 		mkdir "$nugetFolder\content\Databases" | Out-Null
 		mkdir "$nugetFolder\build" | Out-Null
-		Compress-Package -NugetPath $nugetFolder
+		Compress-Package -NuspecPath $nugetFolder\Package.nuspec -NugetFolder $nugetFolder -PackageFolder $nugetFolder
 
 		$id = $nugetSettings.nugetSettings.id
 		$version = $nugetSettings.nugetSettings.version

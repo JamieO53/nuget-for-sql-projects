@@ -12,14 +12,16 @@ function Set-NuspecDependencyVersion {
         # The path of the .nuspec file
 		[string]$Path,
 		# The dependency name
-		[string]$Dependency
+		[string]$Dependency,
+		# The optional Branch - Prerelease label
+		[string]$Branch = $null
 	)
 
-	[xml]$spec = gc $Path
+	[xml]$spec = Get-Content $Path
 	$dependencies = $spec.package.metadata.dependencies
 	[xml.XmlElement]$dependencies = Get-GroupNode -ParentNode $spec.package.metadata -Id 'dependencies'
-	$newVersion = Get-NuGetPackageVersion $Dependency
-	$dep = $dependencies.dependency | ? { $_.id -eq $Dependency }
+	$newVersion = Get-NuGetPackageVersion -PackageName $Dependency -Branch $Branch
+	$dep = $dependencies.dependency | Where-Object { $_.id -eq $Dependency }
 	if ($dep) {
 		$dep.SetAttribute('version', $newVersion)
 	} else {

@@ -4,7 +4,7 @@ function Get-SolutionContent {
 	.DESCRIPTION
     Gets the content of all the solution's NuGet dependencies and updates the SQL projects' NuGet versions for each dependency
 	.EXAMPLE
-	Get-SolutionPackages -SolutionPath C:\VSTS\Batch\Batch.sln
+	Get-SolutionContent -SolutionPath C:\VSTS\Batch\Batch.sln
 	#>
     [CmdletBinding()]
     param
@@ -14,7 +14,7 @@ function Get-SolutionContent {
 	)
 	$solutionFolder = Split-Path $SolutionPath
 	$packageContentFolder = "$SolutionFolder\PackageContent"
-	$packageFolder = "$SolutionFolder\Packages"
+	$packageFolder = "$SolutionFolder\packages"
 	$contentFolder = Get-NuGetContentFolder
 	$solutionContentFolder = "$SolutionFolder\$contentFolder"
 
@@ -24,38 +24,45 @@ function Get-SolutionContent {
 		exit 1
 	}
 
-	if (Test-Path $packageContentFolder) {
-		if (-not $global:testing)
-		{
-			del $packageContentFolder\* -Recurse -Force
-		}
-	} else {
-		mkdir $packageContentFolder | Out-Null
-	}
-
 	Log "Get solution packages: $SolutionPath"
 	Get-SolutionPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
-	rmdir "$SolutionPath\Databases*" -Recurse -Force
-	ls $packageContentFolder -Directory | % {
-		ls $_.FullName -Directory | ? { (ls $_.FullName -Exclude _._).Count -ne 0 } | % {
+	Remove-Item "$solutionFolder\Databases\*" -Recurse -Force -Exclude NugetDbPackerDb.Root.dacpac,master.dacpac
+	Get-ChildItem $packageContentFolder -Directory | ForEach-Object {
+		Get-ChildItem $_.FullName -Directory | Where-Object { (Get-ChildItem $_.FullName -Exclude _._).Count -ne 0 } | ForEach-Object {
 			if (-not (Test-Path "$SolutionFolder\$($_.Name)")) {
 				mkdir "$SolutionFolder\$($_.Name)" | Out-Null
 			}
-			copy "$($_.FullName)\*" "$SolutionFolder\$($_.Name)" -Recurse -Force
+			Copy-Item "$($_.FullName)\*" "$SolutionFolder\$($_.Name)\" -Recurse -Force
 		}
 	}
 
-	del $packageContentFolder -Include '*' -Recurse -Force
+	Remove-Item $packageContentFolder\* -Recurse -Force
+	Remove-Item $packageContentFolder -Recurse -Force
 
-	if ((Test-Path $packageFolder) -and (ls "$packageFolder\**\$contentFolder" -Recurse)) {
+	$csPackage = @{}
+	Get-ChildItem $solutionFolder\**\packages.config | ForEach-Object {
+		[xml]$pc = Get-Content $_
+		$pc.packages.package | ForEach-Object {
+			New-Object -TypeName PSCustomObject -Property @{ id=$_.id; version=$_.version }
+		}
+	} | Sort-Object -Property id,version -Unique | ForEach-Object {
+		$csPackage[$_.id] = $_.version
+	}
+	
+	if ((Test-Path $packageFolder) -and (Get-ChildItem "$packageFolder\**\$contentFolder" -Recurse)) {
 		if (Test-Path $solutionContentFolder) {
-			rmdir $solutionContentFolder\* -Recurse -Force
+			Remove-Item $solutionContentFolder\* -Recurse -Force
 		} else {
 			mkdir $solutionContentFolder | Out-Null
 		}
-		ls "$packageFolder\**\$contentFolder" -Recurse | % {
-			copy "$($_.FullName)\*" $solutionContentFolder -Recurse -Force
+		$csPackage.Keys | Sort-Object | ForEach-Object {
+			$id = $_
+			$version = $csPackage[$id]
+			$idContentFolder = "$packageFolder\$id.$version\content\$contentFolder"
+			if (Test-Path $idContentFolder) {
+				Copy-Item "$idContentFolder\*" "$solutionContentFolder\" -Recurse -Force
+			}
 		}
 	}
 }

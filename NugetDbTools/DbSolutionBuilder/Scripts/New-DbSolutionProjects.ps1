@@ -6,7 +6,7 @@ function New-DbSolutionProjects {
 
 	The result is the location of the new solution
 	.EXAMPLE
-	[xml]$params = gc .\DbSolution.xml
+	[xml]$params = Get-Content .\DbSolution.xml
 	New-DbSolutionProjects -Parameters $params
 	#>
     [CmdletBinding()]
@@ -23,7 +23,7 @@ function New-DbSolutionProjects {
 		# The location of the solution's Pkg project
 		[string]$PkgProjectPath
 	)
-	$sln = gc $SolutionPath | Out-String
+	$sln = Get-Content $SolutionPath | Out-String
 	$sln = Set-SqlProjectInSolution -Parameters $Parameters -SolutionFolder $SolutionFolder -TemplateFolder $TemplateFolder -SolutionFile $sln -PkgProjectPath $PkgProjectPath
 	$sln | Out-File -FilePath $SolutionPath -Encoding utf8
 }

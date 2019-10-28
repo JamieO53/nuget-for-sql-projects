@@ -1,7 +1,7 @@
 ﻿if ( Get-Module NuGetProjectPacker) {
 	Remove-Module NuGetProjectPacker
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NuGetProjectPacker\NuGetProjectPacker.psm1" -Global -DisableNameChecking
 
 Describe "Import-ArtifactProject" {
 	$projFolder = "TestDrive:\proj"
@@ -87,7 +87,7 @@ Describe "Import-ArtifactProject" {
 		$nugetSettings = Import-NugetSettingsFramework -NuspecPath $pkgNspPath -PackagesConfigPath $pkgCfgPath
 		Initialize-NuGetFolders -Path $nugetFolder
 		Initialize-NuGetSpec -Path $nugetFolder -setting $nugetSettings
-		[xml]$spec = gc "$nugetFolder\Package.nuspec"
+		[xml]$spec = Get-Content "$nugetFolder\Package.nuspec"
 
 		Remove-Item -Path $projFolder -Recurse -Force
 	}

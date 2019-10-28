@@ -15,19 +15,8 @@ function Get-SolutionPackages {
 		# The folder where the package content is to be installed
 		[string]$ContentFolder
 	)
-	$slnFolder = Split-Path $SolutionPath
-	$sln = Split-Path $SolutionPath -Leaf
-	$localSources = [string]::Join("' -Source '",(Get-NuGetCachePaths))
 
 	Log "Get solution dependencies"
 	$reference = Get-SolutionDependencies $SolutionPath
-	$reference.Keys | sort | % {
-		$package = $_
-		$version = $reference[$package]
-		if (-not $global:testing -or (Test-NuGetVersionExists -Id $package -Version $version)) {
-			Log "Getting $package $version"
-			Get-NuGetPackage -Id $package -Version $version -Sources $localSources -OutputDirectory $ContentFolder
-			Set-NuGetDependencyVersion -SolutionPath $SolutionPath -Dependency $package -Version $version
-		}
-	}
+	Get-ReferencedPackages -SolutionPath $SolutionPath -Reference $reference -ContentFolder $ContentFolder
 }

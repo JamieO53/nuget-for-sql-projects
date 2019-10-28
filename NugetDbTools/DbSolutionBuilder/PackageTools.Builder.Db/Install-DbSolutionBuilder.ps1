@@ -1,5 +1,5 @@
-ls * -Directory | % {
-    rmdir "$($_.FullName)*" -Recurse -Force
+Get-ChildItem * -Directory | ForEach-Object {
+    Remove-Item "$($_.FullName)*" -Recurse -Force
 }
 
 if (-not (Test-Path .\NuGet)) {
@@ -8,11 +8,11 @@ if (-not (Test-Path .\NuGet)) {
 nuget install DbSolutionBuilder -Source https://pkgs.dev.azure.com/epsdev/_packaging/EpsNuGet/nuget/v3/index.json -OutputDirectory .\NuGet -ExcludeVersion
 
 
-ls .\NuGet\**\* -Directory | % {
+Get-ChildItem .\NuGet\**\* -Directory | ForEach-Object {
     if (-not (Test-Path ".\$($_.Name)")) {
         mkdir ".\$($_.Name)" | Out-Null
     }
-    copy "$($_.FullName)\*" ".\$($_.Name)"
+    Copy-Item "$($_.FullName)\*" ".\$($_.Name)"
 }
 
-rmdir .\NuGet* -Recurse -Force
+Remove-Item .\NuGet* -Recurse -Force

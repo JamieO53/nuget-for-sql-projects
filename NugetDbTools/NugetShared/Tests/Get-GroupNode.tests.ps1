@@ -1,12 +1,12 @@
 ﻿if (Get-Module NugetShared) {
 	Remove-Module NugetShared
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetShared\NugetShared.psm1" -Global -DisableNameChecking
 
 Describe "Get-GroupNode" {
 	Context "Exists" {
 		It "Is in the module" {
-			Get-Module NuGetShared | % {
+			Get-Module NuGetShared | ForEach-Object {
 				$_.ExportedFunctions['Get-GroupNode'] 
 			} | should be 'Get-GroupNode'
 		}

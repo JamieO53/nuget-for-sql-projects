@@ -1,7 +1,7 @@
 ﻿if ( Get-Module VSTSExtension) {
 	Remove-Module VSTSExtension
 }
-Import-Module "$PSScriptRoot\..\bin\Debug\VSTSExtension\VSTSExtension.psm1"
+Import-Module "$PSScriptRoot\..\bin\Debug\VSTSExtension\VSTSExtension.psm1" -Global -DisableNameChecking
 
 Describe "Test-IsRunningBuildAgent" {
 	Context "Build agent service" {
