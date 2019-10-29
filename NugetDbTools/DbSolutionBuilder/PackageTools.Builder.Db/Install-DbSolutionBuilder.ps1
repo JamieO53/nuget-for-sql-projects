@@ -5,7 +5,7 @@ Get-ChildItem * -Directory | ForEach-Object {
 if (-not (Test-Path .\NuGet)) {
     mkdir .\NuGet | Out-Null
 }
-nuget install DbSolutionBuilder -Source https://pkgs.dev.azure.com/epsdev/_packaging/EpsNuGet/nuget/v3/index.json -OutputDirectory .\NuGet -ExcludeVersion
+nuget install DbSolutionBuilder -Source https://nuget.pkg.github.com/JamieO53/index.json -OutputDirectory .\NuGet -ExcludeVersion
 
 
 Get-ChildItem .\NuGet\**\* -Directory | ForEach-Object {

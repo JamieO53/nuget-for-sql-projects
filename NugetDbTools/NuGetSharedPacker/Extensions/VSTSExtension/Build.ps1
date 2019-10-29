@@ -5,7 +5,7 @@ $Dependencies = @()
 $Dependents = @('NuGetSharedPacker', 'NugetDbPacker', 'DbSolutionBuilder', 'NuGetProjectPacker')
 
 "'$SolutionDir\PowershellBuilder\PSModuleBuilder.ps1' -project $ProjectName -path $SolutionDir\NuGetSharedPacker\Extensions -outputPath $ProjectDir\bin\Debug"
-pushd $SolutionDir
+Push-Location $SolutionDir
 if (-not (Test-Path $ProjectDir\bin\Debug\$ProjectName)) {mkdir $ProjectDir\bin\Debug\$ProjectName | Out-Null}
 iex "$SolutionDir\PowershellBuilder\PSModuleBuilder.ps1 -project $ProjectName -path $SolutionDir\NuGetSharedPacker\Extensions -outputPath $ProjectDir\bin\Debug"
 popd

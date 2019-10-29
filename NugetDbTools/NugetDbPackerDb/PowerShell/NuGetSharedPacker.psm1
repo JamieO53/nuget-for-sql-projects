@@ -186,7 +186,7 @@ function Get-NuGetPackage {
 	.DESCRIPTION
     Gets the content of all the package and its dependencies
 	.EXAMPLE
-	Get-NuGetPackage -Id Batch.Batching -Version 0.2.11 -Source 'https://pkgs.dev.azure.com/epsdev/_packaging/EpsNuGet/nuget/v3/index.json' -OutputDirectory C:\VSTS\Batch\PackageContent
+	Get-NuGetPackage -Id Batch.Batching -Version 0.2.11 -Source 'https://nuget.pkg.github.com/JamieO53/index.json' -OutputDirectory C:\VSTS\Batch\PackageContent
 	#>
     [CmdletBinding()]
     param
