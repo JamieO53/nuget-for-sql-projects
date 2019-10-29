@@ -6,18 +6,24 @@ $nugetApiKey = 'NUG3TK3Y'
 $contentFolder = 'Runtime'
 
 function Set-NuGetConfig {
-    $nugetConfigDir = "$env:APPDATA\JamieO53\NugetDbTools"
-    $nugetConfigPath = "$nugetConfigDir\NugetDbTools.config"
+    $nugetConfigDir = "$PSScriptRoot\PackageTools"
+    $nugetConfigPath = "$nugetConfigDir\PackageTools.root.config"
     $configText = @"
-<?xml version=`"1.0`"?>
-<configuration>
-    <nugetLocalServer>
-        <add key=`"ApiKey`" value=`"$nugetApiKey`"/>
-        <add key=`"ContentFolder`" value=`"$contentFolder`"/>
-        <add key=`"Source`" value=`"$nugetSource`"/>
-        <add key=`"PushTimeout`" value=`"900`"/> <!-- seconds -->
-    </nugetLocalServer>
-</configuration>
+<?xml version="1.0"?>
+<tools>
+    <extensions>
+        <extension name="GitExtension" path="GitExtension.psm1" />
+        <extension name="VSTSExtension" path="VSTSExtension.psm1" />
+    </extensions>
+    <content>
+        <contentFolder>$contentFolder</contentFolder>
+    </content>
+    <nuget>
+		<source>$nugetSource</source>
+		<pushTimeout>900</pushTimeout>
+		<apiKey>$nugetApiKey</apiKey>
+    </nuget>
+</tools>
 "@
 
     if (-not (Test-Path $nugetConfigDir)) {

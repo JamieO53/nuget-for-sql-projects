@@ -186,7 +186,7 @@ function Get-NuGetPackage {
 	.DESCRIPTION
     Gets the content of all the package and its dependencies
 	.EXAMPLE
-	Get-NuGetPackage -Id Batch.Batching -Version 0.2.11 -Source 'https://pkgs.dev.azure.com/epsdev/_packaging/EpsNuGet/nuget/v3/index.json' -OutputDirectory C:\VSTS\Batch\PackageContent
+	Get-NuGetPackage -Id Batch.Batching -Version 0.2.11 -Source 'https://nuget.pkg.github.com/JamieO53/index.json' -OutputDirectory C:\VSTS\Batch\PackageContent
 	#>
     [CmdletBinding()]
     param
@@ -203,12 +203,6 @@ function Get-NuGetPackage {
 		[string]$Framework = ''
 	)
 
-	# if ($Framework) {
-	# 	$frameworkVersion = " -Framework $Framework"
-	# } else {
-	# 	$frameworkVersion = ''
-	# }
-	# Invoke-Trap "nuget install $Id -Version '$Version' -Source '$Sources' -OutputDirectory '$OutputDirectory' -ExcludeVersion$frameworkVersion" -Message "Failed retrieving $Id $Version" -Fatal
 	$cacheFolder = "$env:userprofile\.nuget\packages\$id\$version"
 	mkdir $OutputDirectory\$id | Out-Null
 	Copy-Item $cacheFolder\* $OutputDirectory\$id -Recurse -Force
