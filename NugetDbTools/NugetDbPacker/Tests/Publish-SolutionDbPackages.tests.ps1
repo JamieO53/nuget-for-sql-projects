@@ -11,3 +11,6 @@ Describe "Publish-SolutionDbPackages" {
 		}
 	}
 }
+if (Test-Path "$PSScriptRoot\..\..\..\Template.Db\Template.DBProject\NuGet") {
+	Remove-Item -Path "$PSScriptRoot\..\..\..\Template.Db\Template.DBProject\NuGet*" -Recurse -Force
+}

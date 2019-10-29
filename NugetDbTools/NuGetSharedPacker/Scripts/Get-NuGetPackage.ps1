@@ -21,12 +21,6 @@ function Get-NuGetPackage {
 		[string]$Framework = ''
 	)
 
-	# if ($Framework) {
-	# 	$frameworkVersion = " -Framework $Framework"
-	# } else {
-	# 	$frameworkVersion = ''
-	# }
-	# Invoke-Trap "nuget install $Id -Version '$Version' -Source '$Sources' -OutputDirectory '$OutputDirectory' -ExcludeVersion$frameworkVersion" -Message "Failed retrieving $Id $Version" -Fatal
 	$cacheFolder = "$env:userprofile\.nuget\packages\$id\$version"
 	mkdir $OutputDirectory\$id | Out-Null
 	Copy-Item $cacheFolder\* $OutputDirectory\$id -Recurse -Force

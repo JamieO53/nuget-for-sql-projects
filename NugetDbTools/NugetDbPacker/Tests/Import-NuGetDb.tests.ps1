@@ -1,4 +1,8 @@
-﻿if ( Get-Module NugetDbPacker) {
+﻿if ( Get-Module NugetSharedPacker) {
+	Remove-Module NugetSharedPacker
+}
+Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetSharedPacker.psm1" -Global -DisableNameChecking
+if ( Get-Module NugetDbPacker) {
 	Remove-Module NugetDbPacker
 }
 Import-Module "$PSScriptRoot\..\bin\Debug\NugetDbPacker\NugetDbPacker.psm1" -Global -DisableNameChecking

@@ -60,5 +60,3 @@ try {
 } finally {
 	Pop-Location
 }
-# Remove-Variable * -ErrorAction SilentlyContinue
-# $upVersion
