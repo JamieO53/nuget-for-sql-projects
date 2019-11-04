@@ -1,5 +1,5 @@
 @{
-	PackageOrder = @('NugetShared','NuGetSharedPacker','NugetDbPacker','NuGetProjectPacker','DbSolutionBuilder')
+	PackageOrder = @('NuGetShared','NuGetSharedPacker','NuGetDbPacker','NuGetProjectPacker','DbSolutionBuilder')
 	Version = @{
 		major=0
 		minor=1

@@ -32,6 +32,7 @@
     <Compile Include="Scripts\Get-Branch.ps1" />
     <Compile Include="Scripts\Get-Label.ps1" />
     <Compile Include="Scripts\Get-RevisionCount.ps1" />
+    <Compile Include="Scripts\Get-RevisionCountAfterLabel.ps1" />
     <Compile Include="Scripts\Remove-Repository.ps1" />
     <Compile Include="Scripts\Set-Label.ps1" />
     <Compile Include="Scripts\Test-PathIsCommitted.ps1" />
