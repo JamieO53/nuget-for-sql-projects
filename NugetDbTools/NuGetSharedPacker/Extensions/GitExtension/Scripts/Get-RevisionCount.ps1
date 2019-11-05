@@ -9,7 +9,8 @@ function Get-RevisionCount {
 	try {
 		Push-Location $Path
 		if (Test-PathIsInGitRepo -Path (Get-Location)) {
-			[int]$revisions = (Invoke-Expression "git rev-list HEAD -- `"$Path\*`"").Count
+			$rp = Resolve-GitPath $Path
+			[int]$revisions = (Invoke-Expression "git rev-list HEAD -- `"$rp\*`"").Count
 		}
 		else {
 			[int]$revisions = 0

@@ -8,7 +8,7 @@ if (-not (Get-Module TestUtils)) {
 }
 
 Describe "Import-NuGetSettings" {
-	$slnFolder = "TestDrive:\sln"
+	$slnFolder = "$testDrive\sln"
 	$slnPath = "$snlFolder\sln.sln"
 	$projFolder = "$slnFolder\proj"
 	$configPath = "$projFolder\proj.nuget.config"
@@ -47,7 +47,7 @@ Describe "Import-NuGetSettings" {
 		It "Runs" { Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath | should not BeNullOrEmpty }
 	}
 	Context "Content" {
-		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
+		mock Test-Path { return $true } -ParameterFilter { $Path -eq "$TestDrive\.git" } -ModuleName NuGetShared
 		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- `"$projFolder\*`"" } -ModuleName GitExtension
 		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName GitExtension
 		$content = Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $slnPath
