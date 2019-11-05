@@ -22,9 +22,6 @@ try {
 	}
 
 	$branch = Get-Branch
-	if ($branch -eq 'master') {
-		$branch = ''
-	}
 	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir -UpVersion $upVersion
 	if ($version -like '*.0'){
 		throw "Invalid version $version"

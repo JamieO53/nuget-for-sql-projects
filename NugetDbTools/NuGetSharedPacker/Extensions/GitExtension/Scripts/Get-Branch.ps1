@@ -17,6 +17,9 @@ function Get-Branch {
 					$branch = ''
 				}
 			}
+			if ($branch -eq 'master') {
+				$branch = ''
+			}
 		} else {
 			$branch = ''
 		}
