@@ -1,7 +1,7 @@
-[string]$Global:ConfigPath = "$PSScriptRoot\PackageTools\PackageTools.root.config"
 if (Get-Module NuGetSharedPacker -All) {
 	Remove-Module NuGet*,*Extension
 }
+[string]$Global:ConfigPath = (Get-Item "$PSScriptRoot\PackageTools\PackageTools.root.config").FullName
 Import-Module "$PSScriptRoot\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1" -Global -DisableNameChecking
 
 [string]$solutionFolder = $PSScriptRoot
