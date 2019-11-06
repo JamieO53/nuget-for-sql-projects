@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>NuGetDbPacker</id>
-    <version>0.1.0-TP61721-f-changed-commits</version>
+    <version>0.1.250-TP61721-f-changed-commits</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
