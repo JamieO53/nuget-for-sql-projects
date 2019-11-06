@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DbSolutionBuilder</id>
-    <version>0.1.227-TP61721-f-changed-commits</version>
+    <version>0.1.229-TP61721-f-changed-commits</version>
     <authors>joglethorpe</authors>
     <owners>Jamie Oglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>

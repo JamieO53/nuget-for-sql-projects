@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>NuGetProjectPacker</id>
-    <version>0.1.173-TP61721-f-changed-commits</version>
+    <version>0.1.175-TP61721-f-changed-commits</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -12,7 +12,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>NuGetProjectPacker 'CI tools'</tags>
     <dependencies>
-      <dependency id="NuGetSharedPacker" version="0.1.220-TP61721-f-changed-commits" />
+      <dependency id="NuGetSharedPacker" version="0.1.226-TP61721-f-changed-commits" />
     </dependencies>
   </metadata>
   <files>
