@@ -1,4 +1,6 @@
-sqllocaldb create ecentric
+if (-not (sqllocaldb info | Where-Object { $_ -eq 'ecentric' })) {
+	sqllocaldb create ecentric
+}
 
 if (-not (Get-Module NuGetSharedPacker)) {
 	Import-Module "$PSScriptRoot\..\PowerShell\NugetSharedPacker.psd1" -Global -DisableNameChecking
