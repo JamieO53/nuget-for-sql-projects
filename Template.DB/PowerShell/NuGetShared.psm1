@@ -94,7 +94,7 @@ function Get-LogPath {
 }
 
 function Get-NuGetCachePaths {
-	[string[]]$paths = @("$env:userprofile\.nuget\packages", 'Microsoft Visual Studio Offline Packages')
+	[string[]]$paths = @("$env:userprofile\.nuget\packages", "${env:ProgramFiles(x86)}\Microsoft SDKs\NuGetPackages")
 	$paths
 }
 
@@ -113,7 +113,7 @@ function Get-NuGetDbToolsConfig {
 
 function Get-NuGetDbToolsConfigPath {
 	if ($Global:ConfigPath -and (Test-Path $Global:ConfigPath)) {
-		$configPath = $Global:ConfigPath
+		$Global:ConfigPath
 	} else {
 		$configPath = "$PSScriptRoot\..\PackageTools\PackageTools.root.config"
 		if (-not (Test-Path $configPath)) {
@@ -128,8 +128,8 @@ function Get-NuGetDbToolsConfigPath {
 				}
 			}
 		}
+		$configPath
 	}
-	$configPath
 }
 
 function Get-NuGetLocalApiKey {
@@ -557,11 +557,18 @@ function Test-NuGetVersionExists {
     (
 		# The package being tested
 		[string]$Id,
+		# The version being tested
 		[string]$Version
 	)
 	$exists = $false
-	nuget List $Id -AllVersions -Source "$(Get-NuGetLocalSource)" -PreRelease -NonInteractive | Where-Object {
-		$_.Equals("$Id $Version") 
+	$cmd = "nuget List $Id -AllVersions -Source '$(Get-NuGetLocalSource)'"
+	$filter = "$Id $Version"
+	$branch = $Version.Split('-', 2).Count -eq 2
+	if ($Branch) {
+		$cmd += ' -Prerelease'
+	}
+	Invoke-Expression $cmd | Where-Object {
+		$_.Equals($filter) 
 	} | ForEach-Object {
 		$exists = $true 
 	}
