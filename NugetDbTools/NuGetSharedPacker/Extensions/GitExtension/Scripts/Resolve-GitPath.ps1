@@ -12,5 +12,7 @@ function Resolve-GitPath {
         # The path being resolved
 		[string]$Path
 	)
-	return (Get-Item $Path).FullName
+	$folder = Split-Path $Path
+	$subfolder = Split-Path $Path -Leaf
+	return (Get-ChildItem $folder | Where-Object {$_.Name -eq $subfolder} ).FullName
 }

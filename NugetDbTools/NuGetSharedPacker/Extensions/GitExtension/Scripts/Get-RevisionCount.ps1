@@ -8,7 +8,7 @@ function Get-RevisionCount {
 	# Note: use Invoke-Expression so that git calls can be mocked in tests
 	try {
 		Push-Location $Path
-		if (Test-PathIsInGitRepo -Path (Get-Location)) {
+		if (Test-PathIsInGitRepo -Path (Get-Location).Path) {
 			$rp = Resolve-GitPath $Path
 			[int]$revisions = (Invoke-Expression "git rev-list HEAD -- `"$rp\*`"").Count
 		}

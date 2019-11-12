@@ -62,6 +62,10 @@ try {
 		$lines | Set-Content "NuGet\content\$contentType\$id.psd1"
 	}
 
+	if ($upVersion) {
+		Update-ToRepository -Path $projDir\Package.nuspec -Message 'BATCH update dependency versions'
+	}
+
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){
 		NuGet pack $projDir\Package.nuspec -BasePath "$projDir\NuGet" -OutputDirectory $projDir
 		Publish-NuGetPackage -PackagePath "$projDir\$id.$version.nupkg"

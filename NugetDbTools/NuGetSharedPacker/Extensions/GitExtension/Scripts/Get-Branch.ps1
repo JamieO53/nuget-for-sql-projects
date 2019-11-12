@@ -7,7 +7,7 @@ function Get-Branch {
 	# Note: use Invoke-Expression (Invoke-Expression) so that git calls can be mocked in tests
 	try {
 		Push-Location $Path
-		if (Test-PathIsInGitRepo -Path (Get-Location)) {
+		if (Test-PathIsInGitRepo -Path (Get-Location).Path) {
 			$branch = Invoke-Expression 'git branch' | Where-Object { $_.StartsWith('* ') } | ForEach-Object { $_.Replace('* ', '') }
 			# Check VSTS build agent branch
 			if ($branch -like '(HEAD detached at *)') {

@@ -31,12 +31,12 @@ $sourceCommits = @{}
 $order | ForEach-Object {
 	$projectFolder = "$solutionFolder\$_"
 	$nuspecPath = "$projectFolder\Package.nuspec"
-	$sourceVersion[$_] = (Measure-ProjectVersion -Path $nuspecPath -ProjectFolder $projectFolder)
-	$sourceCommits[$_] = (Get-RevisionCountAfterLabel -Path $projectFolder -Label $oldLabel) -gt 0
+	$sourceVersion[$_] = (Measure-ProjectVersion -Path $nuspecPath -ProjectFolder $projectFolder -OldVersion $nugetVersion[$_])
+	$sourceCommits[$_] = $sourceVersion[$_] -ne $nugetVersion[$_]
 }
 $sourceIsUpdated = @{}
 $order |  Where-Object {
-	$nugetVersion[$_] -ne $sourceVersion[$_] -or $sourceCommits
+	$nugetVersion[$_] -ne $sourceVersion[$_] -or $sourceCommits[$_]
 } | Where-Object {
 	-not $sourceIsUpdated[$_]
 } | ForEach-Object {
@@ -58,6 +58,16 @@ $order | ForEach-Object {
 	}
 }
 
+$order | ForEach-Object { New-Object -TypeName psobject -Property @{
+	Module=$_
+	NugetVersion=$nugetVersion[$_]
+	SourceVersion=$sourceVersion[$_]
+	SourceCommits=$sourceCommits[$_]
+	SourceIsUpdated=$sourceIsUpdated[$_]
+	UpVersion=$upVersion[$_]
+}
+} | Format-Table -Property Module,NugetVersion,SourceVersion,SourceCommits,SourceIsUpdated,UpVersion
+
 try {
 	$order | Where-Object { $sourceIsUpdated[$_] } | ForEach-Object {
 		Push-Location "$solutionFolder\$_"
@@ -67,7 +77,7 @@ try {
 			throw "Package of $_ failed"
 		}
 	}
-	if (-not $branch) {
+	if (-not $branch -and $newLabel -ne $oldLabel) {
 		Set-Label $newLabel
 	}
 } catch {
