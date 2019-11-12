@@ -61,7 +61,6 @@ if (Test-Path $rtFolder\Execute_*_RegressionTests.cmd) {
 		[Environment]::SetEnvironmentVariable($name, $value, "Process")
 	}
 
-	
 	$packageContentFolder = "$SolutionFolder\PackageContent"
 	if (-not (Test-Path $packageContentFolder\tsqlunit)) {
 		mkdir $packageContentFolder | Out-Null

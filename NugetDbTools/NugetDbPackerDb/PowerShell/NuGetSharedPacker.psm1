@@ -502,7 +502,9 @@ function Get-SolutionContent {
 	Log "Get solution packages: $SolutionPath"
 	Get-SolutionPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
-	Remove-Item "$SolutionPath\Databases*" -Recurse -Force
+	if (-not (Test-Path "$solutionFolder\Databases")) {
+		Remove-Item "$solutionFolder\Databases\*" -Recurse -Force -Exclude NugetDbPackerDb.Root.dacpac,master.dacpac
+	}
 	Get-ChildItem $packageContentFolder -Directory | ForEach-Object {
 		Get-ChildItem $_.FullName -Directory | Where-Object { (Get-ChildItem $_.FullName -Exclude _._).Count -ne 0 } | ForEach-Object {
 			if (-not (Test-Path "$SolutionFolder\$($_.Name)")) {
@@ -512,10 +514,11 @@ function Get-SolutionContent {
 		}
 	}
 
-	Remove-Item $packageContentFolder* -Recurse -Force
+	Remove-Item $packageContentFolder\* -Recurse -Force
+	Remove-Item $packageContentFolder -Recurse -Force
 
 	$csPackage = @{}
-	Get-ChildItem .\**\packages.config | ForEach-Object {
+	Get-ChildItem $solutionFolder\**\packages.config | ForEach-Object {
 		[xml]$pc = Get-Content $_
 		$pc.packages.package | ForEach-Object {
 			New-Object -TypeName PSCustomObject -Property @{ id=$_.id; version=$_.version }
@@ -768,7 +771,7 @@ function Initialize-NuGetSpec {
 		$files = $_
 		$attrs = $setting.nugetContents[$files]
 		[xml]$node = "<files include=`"$files`" $attrs/>"
-		$childNode = $contFilesNode.AppendChild($contFilesNode.OwnerDocument.ImportNode($node.FirstChild, $true))
+		$contFilesNode.AppendChild($contFilesNode.OwnerDocument.ImportNode($node.FirstChild, $true)) | Out-Null
 	}
 	Out-FormattedXml -Xml $specDoc -FilePath $nuGetSpecPath
 }
@@ -818,7 +821,7 @@ function Measure-ProjectVersion {
 		# The folder for version calculations
 		[string]$ProjectFolder,
 		# The previous version to be updated with the new revision number
-		[string]$OldVersion,
+		[string]$OldVersion = $null,
 		# Increase the version by 1
 		[bool]$UpVersion = $false
 	)
@@ -894,6 +897,42 @@ function Remove-NugetFolder {
 	if (Test-Path $Path) {
 		Remove-Item -Path "$Path\*" -Recurse -Force
 		Remove-Item -Path $Path -Recurse
+	}
+}
+
+function Set-CSharpProjectVersion {
+	<#.Synopsis
+	Set the assembly versions of all the solution's assemblies
+	.DESCRIPTION
+    Edits all the solution's csproj and sqlproj files 
+	.EXAMPLE
+	Set-CSharpProjectVersion -SolutionPath C:\VSTS\Batch\Batch.sln -Version 1.0.123
+	#>
+    [CmdletBinding()]
+    param
+    (
+        # The location of .sln file of the solution being updated
+        [string]$SolutionPath,
+		# The build package version
+		[string]$Version
+	)
+	$solutionFolder = Split-Path $SolutionPath
+	$regex = '(Assembly.*Version\(\")([\d\.]*)(\"\))'
+	(Get-CSharpProjects $SolutionPath) + (Get-SqlProjects $SolutionPath) | ForEach-Object {
+		$projPath = "$slnFolder\$($_.ProjectPath)"
+		$projFolder = Split-Path $projPath
+		$infoPath = "$projFolder\Properties\AssemblyInfo.cs"
+		if (Test-Path $infoPath) {
+			$info = Get-Content $infoPath
+			$info = $info -replace $regex,"`${1}$Version`${3}"
+			$info | Out-File $infoPath
+		}
+		[xml]$proj = Get-Content -Path $projPath
+		$parentNode = $proj.Project.PropertyGroup | Where-Object { $_.ApplicationVersion }
+		if ($parentNode) {
+			Set-NodeText -parentNode $parentNode -id 'ApplicationVersion' -text $Version
+			Out-FormattedXml -Xml $proj -FilePath $projPath
+		}
 	}
 }
 
@@ -1014,6 +1053,47 @@ function Set-NuspecVersion {
 	Set-NodeText -parentNode $cfg.package.metadata -id version -text $newVersion
 	Out-FormattedXml -Xml $cfg -FilePath $Path
 	$newVersion
+}
+
+function Set-SqlProjectVersion {
+	<#.Synopsis
+	Set the DacVersion of all the solution's SQL projects
+	.DESCRIPTION
+    Edits all the solution's sqlproj files 
+	.EXAMPLE
+	Set-SqlProjectVersion -SolutionPath C:\VSTS\Batch\Batch.sln -Version 1.0.123
+	#>
+    [CmdletBinding()]
+    param
+    (
+        # The location of .sln file of the solution being updated
+        [string]$SolutionPath,
+		# The build package version
+		[string]$Version
+	)
+	$solutionFolder = Split-Path $SolutionPath
+	Get-SqlProjects $SolutionPath | ForEach-Object {
+		$projPath = "$solutionFolder\$($_.ProjectPath)"
+		$configPath = [IO.Path]::ChangeExtension($projPath, '.nuget.config')
+		if (Test-Path $configPath) {
+			$settings = Import-NuGetSettings -NugetConfigPath $configPath -SolutionPath $SolutionPath
+			$versionBranch = $settings.nugetSettings.version.Split('-',2)
+			$version = $versionBranch[0]
+			if ($versionBranch.Count -eq 2) {
+				$version += '.0'
+			}
+
+			[xml]$proj = Get-Content -Path $projPath
+			$parentNode = $proj.Project.PropertyGroup | Where-Object { $_.DacVersion }
+			if (-not $parentNode) {
+				$parentNode = $proj.Project.PropertyGroup | Where-Object { $_.ProjectGuid }
+			}
+			if ($parentNode) {
+				Set-NodeText -parentNode $parentNode -id 'DacVersion' -text $version
+				Out-FormattedXml -Xml $proj -FilePath $projPath
+			}
+		}
+	}
 }
 
 function Step-Version {

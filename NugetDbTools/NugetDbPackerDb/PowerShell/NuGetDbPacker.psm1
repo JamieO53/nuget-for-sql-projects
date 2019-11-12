@@ -88,8 +88,12 @@ function Find-PublishProfilePath {
 	}
 
 	$path = [IO.Path]::ChangeExtension($ProjectPath, '.publish.xml')
+	$branch = Get-Branch
+	if (-not $branch) {
+		$branch = 'master'
+	}
 	
-	$overrides = @($Override, $Host.Name, $hostType, (Get-Branch))
+	$overrides = @($Override, $Host.Name, $hostType, $branch)
 	$overrides | Where-Object {
 		-not [string]::IsNullOrEmpty($_) 
 	} | ForEach-Object {

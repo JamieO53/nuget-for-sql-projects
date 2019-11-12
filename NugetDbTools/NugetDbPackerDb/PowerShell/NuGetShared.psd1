@@ -12,7 +12,7 @@
 RootModule = 'NuGetShared.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.1.184'
+ModuleVersion = '0.1.196'
 
 # ID used to uniquely identify this module
 GUID = '9af4e7bd-a3fd-47a9-bd7c-dd9d232a6254'

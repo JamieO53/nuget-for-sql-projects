@@ -3,6 +3,6 @@
     <TargetFramework>netstandard1.4</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NuGetDbPacker" Version="0.1.237" />
+    <PackageReference Include="NuGetDbPacker" Version="0.1.254" />
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@ Import-Module "$PSScriptRoot\..\PowerShell\NugetDbPacker.psd1" -Global -DisableN
 
 $slnFolder = Get-ParentSubFolder "$PSScriptRoot" '*.sln'
 $slnPath = Get-ChildItem "$slnFolder\*.sln" | Select-Object -First 1 | ForEach-Object { $_.FullName }
+$branch = Get-Branch $slnFolder
 
 Get-SqlProjects -SolutionPath $slnPath | ForEach-Object {
 	$projName = $_.Project
