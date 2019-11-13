@@ -33,6 +33,7 @@ function Set-SqlProjectVersion {
 			}
 			if ($parentNode) {
 				Set-NodeText -parentNode $parentNode -id 'DacVersion' -text $version
+				$proj = $proj.OuterXML.Replace(' xmlns=""','') # I don't know where this comes from
 				Out-FormattedXml -Xml $proj -FilePath $projPath
 			}
 		}

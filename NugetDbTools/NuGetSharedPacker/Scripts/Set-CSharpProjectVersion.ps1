@@ -29,6 +29,7 @@ function Set-CSharpProjectVersion {
 		$parentNode = $proj.Project.PropertyGroup | Where-Object { $_.ApplicationVersion }
 		if ($parentNode) {
 			Set-NodeText -parentNode $parentNode -id 'ApplicationVersion' -text $Version
+			$proj = $proj.OuterXML.Replace(' xmlns=""','') # I don't know where this comes from
 			Out-FormattedXml -Xml $proj -FilePath $projPath
 		}
 	}
