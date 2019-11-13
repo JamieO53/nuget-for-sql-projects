@@ -13,5 +13,5 @@ function Update-ToRepository {
 		# The commit message
 		[string]$Message
 	)
-	Invoke-Expression "git commit -m $Message -- $Path"
+	Invoke-Expression "git commit -m `"$Message`" -- $Path"
 }
