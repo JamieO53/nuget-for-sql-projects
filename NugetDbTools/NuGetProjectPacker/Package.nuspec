@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <package>
   <metadata>
     <id>NuGetProjectPacker</id>
-    <version>0.1.180</version>
+    <version>0.1.181</version>
     <authors>joglethorpe</authors>
     <owners>joglethorpe</owners>
     <projectUrl>https://github.com/JamieO53/nuget-for-sql-projects</projectUrl>
@@ -12,7 +12,7 @@
     <copyright>Copyright 2017</copyright>
     <tags>NuGetProjectPacker 'CI tools'</tags>
     <dependencies>
-      <dependency id="NuGetSharedPacker" version="0.1.231" />
+      <dependency id="NuGetSharedPacker" version="0.1.232" />
     </dependencies>
   </metadata>
   <files>
