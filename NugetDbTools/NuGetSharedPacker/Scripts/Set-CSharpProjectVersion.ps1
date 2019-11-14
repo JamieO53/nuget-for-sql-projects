@@ -14,7 +14,6 @@ function Set-CSharpProjectVersion {
 		# The build package version
 		[string]$Version
 	)
-	$solutionFolder = Split-Path $SolutionPath
 	$regex = '(Assembly.*Version\(\")([\d\.]*)(\"\))'
 	(Get-CSharpProjects $SolutionPath) + (Get-SqlProjects $SolutionPath) | ForEach-Object {
 		$projPath = "$slnFolder\$($_.ProjectPath)"
@@ -29,7 +28,6 @@ function Set-CSharpProjectVersion {
 		$parentNode = $proj.Project.PropertyGroup | Where-Object { $_.ApplicationVersion }
 		if ($parentNode) {
 			Set-NodeText -parentNode $parentNode -id 'ApplicationVersion' -text $Version
-			$proj = $proj.OuterXML.Replace(' xmlns=""','') # I don't know where this comes from
 			Out-FormattedXml -Xml $proj -FilePath $projPath
 		}
 	}

@@ -3,6 +3,6 @@ Function Out-FormattedXml {
 		[xml]$Xml,
 		[string]$FilePath
 	)
-	Format-XMLIndent $Xml -Indent 2 | Out-File $FilePath -Encoding utf8
+	[xml]$outXml = $Xml.OuterXml.Replace(' xmlns=""','') # Introduced when adding a node to a VS project file
+	Format-XMLIndent $outXml -Indent 2 | Out-File $FilePath -Encoding utf8
 }
-
