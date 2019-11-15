@@ -17,6 +17,7 @@ function Get-SolutionContent {
 	$packageFolder = "$SolutionFolder\packages"
 	$contentFolder = Get-NuGetContentFolder
 	$solutionContentFolder = "$SolutionFolder\$contentFolder"
+	$archiveSolutionContentFolder = "$solutionContentFolder.$(Get-Date -Format 'yyyyMMddHHmm')"
 
 	if (-not $contentFolder) {
 		$configFolder = (Get-Item (Get-NuGetDbToolsConfigPath)).FullName
@@ -54,10 +55,9 @@ function Get-SolutionContent {
 	
 	if ((Test-Path $packageFolder) -and (Get-ChildItem "$packageFolder\**\$contentFolder" -Recurse)) {
 		if (Test-Path $solutionContentFolder) {
-			Remove-Item $solutionContentFolder\* -Recurse -Force
-		} else {
-			mkdir $solutionContentFolder | Out-Null
+			Rename-Item -Path $solutionContentFolder -NewName $archiveSolutionContentFolder
 		}
+		mkdir $solutionContentFolder | Out-Null
 		$csPackage.Keys | Sort-Object | ForEach-Object {
 			$id = $_
 			$version = $csPackage[$id]
