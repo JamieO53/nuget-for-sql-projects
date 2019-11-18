@@ -1,5 +1,5 @@
-if (-not (sqllocaldb info | Where-Object { $_ -eq 'ecentric' })) {
-	sqllocaldb create ecentric
+if (-not (sqllocaldb info | Where-Object { $_ -eq 'jamieo53' })) {
+	sqllocaldb create jamieo53
 }
 
 if (-not (Get-Module NuGetSharedPacker)) {

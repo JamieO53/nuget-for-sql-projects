@@ -8,7 +8,7 @@
     <AssemblyName>MyApplication</AssemblyName>
     <Name>PowershellBuilder</Name>
     <Author>Jamie Oglethorpe</Author>
-    <CompanyName>Ecentric Payment Systems</CompanyName>
+    <CompanyName>JamieO53</CompanyName>
     <Copyright>Copyright © 2017 Jamie Oglethorpe</Copyright>
     <Description>Functions needed to build a Powershell project by copying all .ps1 files in the Scripts folder into the project's $(ProjectName).ps1 or $(ProjectName).psm1 file. The ouput is sent the $(OutputPath)$(ProjectName) folder together with dependency modules.</Description>
     <Guid>b93e1bc6-945c-48e6-8027-ea5d1e9ad16a</Guid>
