@@ -81,6 +81,31 @@ function Get-GroupNode ($parentNode, $id) {
 	}
 }
 
+function Get-LockedFiles {
+	<#.Synopsis
+	Identifies locked files in the folder
+	.DESCRIPTION
+    Gets a list of files that can be opened with normal credentials
+	.EXAMPLE
+	[string[]]$locked = Get-LockedFiles -Path C:\VSTS\Batch
+	Get-ChildItem -Path C:\VSTS\Batch -Recurse -Exclude $locked
+	#>
+	[CmdletBinding()]
+	[OutputType([string[]])]
+    param
+    (
+        # The folder being tested
+        [string]$Folder
+	)
+	[string[]]$locked = @()
+	Get-ChildItem $Folder -Recurse -Force | Where-Object { -not (Test-IsDirectory $_) } | ForEach-Object {
+		if ((Test-PathIsLocked $_.FullName) -or (Get-Owner -Path $_.FullName) -eq 'BUILTIN\Administrators') {
+			$locked += $_.Name
+		}
+	}
+	return $locked
+}
+
 function Get-LogPath {
     [CmdletBinding()]
 	param (
@@ -216,6 +241,27 @@ function Get-NuGetPackageVersion {
 	} else {
 		return ''
 	}
+}
+
+function Get-Owner {
+	<#.Synopsis
+	Gets the file's owner
+	.DESCRIPTION
+    Tests if the file can be opened exclusively
+	.EXAMPLE
+	if ((Get-Owner -Path C:\VSTS\Batch\Batch.sln) -eq 'BUILTIN\Administrators') {...}
+	#>
+	[CmdletBinding()]
+	[OutputType([string])]
+    param
+    (
+        # The file being tested
+        [string]$Path
+	)
+	$acl = Get-Acl -Path $Path
+	$sid = $acl.GetOwner([System.Security.Principal.SecurityIdentifier])
+	[string]$owner = $sid.Translate([System.Security.Principal.NTAccount]).Value
+	$owner
 }
 
 function Get-ParentSubfolder
@@ -442,9 +488,9 @@ Function Out-FormattedXml {
 		[xml]$Xml,
 		[string]$FilePath
 	)
-	Format-XMLIndent $Xml -Indent 2 | Out-File $FilePath -Encoding utf8
+	[xml]$outXml = $Xml.OuterXml.Replace(' xmlns=""','') # Introduced when adding a node to a VS project file
+	Format-XMLIndent $outXml -Indent 2 | Out-File $FilePath -Encoding utf8
 }
-
 
 function Publish-NuGetPackage {
 	<#.Synopsis
@@ -543,6 +589,26 @@ function Set-ProjectDependencyVersion {
 	Save-CSharpProject -Project $proj -Path $Path
 }
 
+function Test-IsDirectory {
+	<#.Synopsis
+	Checks if the item is a directory
+	.DESCRIPTION
+    Tests if the file can be opened exclusively
+	.EXAMPLE
+	if (Test-IsDirectory -Info (Get-Item C:\VSTS\Batch)) {
+		Get-ChildItem C:\VSTS\Batch -Recurse
+	}
+	#>
+	[CmdletBinding()]
+	[OutputType([bool])]
+    param
+    (
+        # The folder being tested
+        [System.IO.FileSystemInfo]$Info
+	)
+	return $Info.GetType().Name -eq 'DirectoryInfo'
+}
+
 function Test-NuGetVersionExists {
 	<#.Synopsis
 	Test if the package version is on the server
@@ -573,6 +639,39 @@ function Test-NuGetVersionExists {
 		$exists = $true 
 	}
 	return $exists
+}
+
+function Test-PathIsLocked {
+	<#.Synopsis
+	Is the file locked?
+	.DESCRIPTION
+		Tests if the file can be opened exclusively
+	.EXAMPLE
+	if (Test-PathIsLocked -Path C:\VSTS\Batch\Batch.sln) {...}
+	#>
+	[CmdletBinding()]
+	[OutputType([bool])]
+	param
+	(
+		# The path of the file being tested
+		[string]$Path
+	)
+	
+	$args = @($Path, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Write, [System.IO.FileShare]::None)
+	$isLocked = $false
+	try {
+		$fs = New-Object -TypeName System.IO.FileStream -ArgumentList $args
+	} catch {
+		$isLocked = $true
+	} finally {
+		if ($fs) {
+			if ($fs.CanRead) {
+				$fs.Close()
+			}
+			$fs.Dispose()
+		}
+	}
+	return $isLocked
 }
 
 
