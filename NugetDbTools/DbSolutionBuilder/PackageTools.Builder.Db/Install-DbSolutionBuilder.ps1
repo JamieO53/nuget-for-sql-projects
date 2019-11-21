@@ -5,8 +5,10 @@ Get-ChildItem * -Directory | ForEach-Object {
 if (-not (Test-Path .\NuGet)) {
     mkdir .\NuGet | Out-Null
 }
-nuget install DbSolutionBuilder -Source https://pkgs.dev.azure.com/epsdev/_packaging/EpsNuGet/nuget/v3/index.json -OutputDirectory .\NuGet -ExcludeVersion
-
+$Global:ConfigPath = "$PSScriptRoot\PackageTools.root.config"
+[xml]$config = Get-Content $Global:ConfigPath
+$localSource = $config.tools.nuget.source
+nuget install DbSolutionBuilder -Source $localSource -OutputDirectory .\NuGet -ExcludeVersion
 
 Get-ChildItem .\NuGet\**\* -Directory | ForEach-Object {
     if (-not (Test-Path ".\$($_.Name)")) {
