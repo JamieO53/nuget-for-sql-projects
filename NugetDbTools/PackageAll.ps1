@@ -1,38 +1,52 @@
-[string]$Global:ConfigPath = "$PSScriptRoot\PackageTools\PackageTools.root.config"
-if (-not (Get-Module NuGetSharedPacker)) {
-	Import-Module "$PSScriptRoot\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1" -Global
+if (Get-Module NuGetSharedPacker -All) {
+	Remove-Module NuGet*,*Extension
 }
-# if (-not (Test-IsRunningBuildAgent) -and -not (Test-PathIsCommitted)) {
-# 	Write-Host 'Commit changes before publishing the projects to NuGet' -ForegroundColor Red
-# 	exit 1
-# }
-Remove-Variable * -ErrorAction SilentlyContinue
-[string]$Global:ConfigPath = "$PSScriptRoot\PackageTools\PackageTools.root.config"
-$solutionFolder = $PSScriptRoot
-$order = Import-PowerShellDataFile "$solutionFolder\PackageSequence.psd1"
+[string]$Global:ConfigPath = (Get-Item "$PSScriptRoot\PackageTools\PackageTools.root.config").FullName
+Import-Module "$PSScriptRoot\NuGetSharedPacker\bin\Debug\NuGetSharedPacker\NuGetSharedPacker.psd1" -Global -DisableNameChecking
+
+[string]$solutionFolder = $PSScriptRoot
+$packageOrder = Import-PowerShellDataFile "$solutionFolder\PackageSequence.psd1"
+$order = $packageOrder.PackageOrder
+$versionParts = $packageOrder.Version
+[string]$oldLabel = Get-Label -Prefix $versionParts.Prefix
+[string]$newLabel = "$($versionParts.prefix)$($versionParts.major).$($versionParts.minor).$(Get-RevisionCount -Path $solutionFolder)"
+[string]$branch = Get-Branch $solutionFolder
+
 $nugetVersion = @{}
-$order.PackageOrder | ForEach-Object {
-	$nugetVersion[$_] = (Get-NuGetPackageVersion -PackageName $_)
+$order | ForEach-Object {
+	$version = (Get-NuGetPackageVersion -PackageName $_)
+	if ($branch) {
+		$branchVersion = (Get-NuGetPackageVersion -PackageName $_ -Branch $branch)
+		if ($branchVersion) {
+			$nugetVersion[$_] = $branchVersion
+		} else {
+			$nugetVersion[$_] = $version
+		}
+	} else {
+		$nugetVersion[$_] = $version
+	}
 }
 $sourceVersion = @{}
-$order.PackageOrder | ForEach-Object {
+$sourceCommits = @{}
+$order | ForEach-Object {
 	$projectFolder = "$solutionFolder\$_"
 	$nuspecPath = "$projectFolder\Package.nuspec"
-	$sourceVersion[$_] = (Measure-ProjectVersion -Path $nuspecPath -ProjectFolder $projectFolder)
+	$sourceVersion[$_] = (Measure-ProjectVersion -Path $nuspecPath -ProjectFolder $projectFolder -OldVersion $nugetVersion[$_])
+	$sourceCommits[$_] = $sourceVersion[$_] -ne $nugetVersion[$_]
 }
 $sourceIsUpdated = @{}
-$order.PackageOrder |  Where-Object {
-	$nugetVersion[$_] -ne $sourceVersion[$_]
+$order |  Where-Object {
+	$nugetVersion[$_] -ne $sourceVersion[$_] -or $sourceCommits[$_]
 } | Where-Object {
 	-not $sourceIsUpdated[$_]
 } | ForEach-Object {
 	$sourceIsUpdated[$_] = $true
 }
 $upVersion = @{}
-$order.PackageOrder | ForEach-Object {
+$order | ForEach-Object {
 	$upVersion[$_] = $false
 }
-$order.PackageOrder | ForEach-Object {
+$order | ForEach-Object {
 	if ($sourceIsUpdated[$_]) {
 		$projectFolder = "$solutionFolder\$_"
 		$buildConfigPath = "$projectFolder\BuildConfig.psd1"
@@ -44,15 +58,27 @@ $order.PackageOrder | ForEach-Object {
 	}
 }
 
+$order | ForEach-Object { New-Object -TypeName psobject -Property @{
+	Module=$_
+	NugetVersion=$nugetVersion[$_]
+	SourceVersion=$sourceVersion[$_]
+	SourceCommits=$sourceCommits[$_]
+	SourceIsUpdated=$sourceIsUpdated[$_]
+	UpVersion=$upVersion[$_]
+}
+} | Format-Table -Property Module,NugetVersion,SourceVersion,SourceCommits,SourceIsUpdated,UpVersion
+
 try {
-	$order.PackageOrder | Where-Object { $sourceIsUpdated[$_] } | ForEach-Object {
+	$order | Where-Object { $sourceIsUpdated[$_] } | ForEach-Object {
 		Push-Location "$solutionFolder\$_"
-		#powershell.exe -command '.\Package.ps1; exit $LASTEXITCODE'
 		.\Package.ps1 -UpVersion $upVersion[$_]
 		Pop-Location
 		if ($LASTEXITCODE) {
 			throw "Package of $_ failed"
 		}
+	}
+	if (-not $branch -and $newLabel -ne $oldLabel) {
+		Set-Label $newLabel
 	}
 } catch {
 	Write-Host $_.Exception.Message -ForegroundColor Red

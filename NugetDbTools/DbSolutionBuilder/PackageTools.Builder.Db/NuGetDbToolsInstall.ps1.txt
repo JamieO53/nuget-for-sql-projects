@@ -1,8 +1,8 @@
 param (
     [string]$path='.'
 )
-$nugetSource = https://nuget.pkg.github.com/JamieO53/index.json'
-$nugetApiKey = 'github'
+$nugetSource = 'https://nuget.pkg.github.com/jamieo53/index.json'
+$nugetApiKey = 'NUG3TK3Y'
 $contentFolder = 'Runtime'
 
 function Set-NuGetConfig {

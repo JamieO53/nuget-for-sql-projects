@@ -15,7 +15,8 @@ function Test-PathIsCommitted {
 	)
 	try {
 		Push-Location $Path
-		(Test-PathIsInGitRepo -Path .) -and ([string]::IsNullOrEmpty((Invoke-Expression 'git status --porcelain')))
+		$rp = Resolve-GitPath $Path
+		(Test-PathIsInGitRepo -Path .) -and ([string]::IsNullOrEmpty((Invoke-Expression "git status --porcelain -- $rp")))
 	} finally {
 		Pop-Location
 	}

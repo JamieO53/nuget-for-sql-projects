@@ -30,10 +30,15 @@
     <Compile Include="GitExtension.psd1" />
     <Compile Include="GitExtension.psm1" />
     <Compile Include="Scripts\Get-Branch.ps1" />
+    <Compile Include="Scripts\Get-Label.ps1" />
     <Compile Include="Scripts\Get-RevisionCount.ps1" />
+    <Compile Include="Scripts\Get-RevisionCountAfterLabel.ps1" />
     <Compile Include="Scripts\Remove-Repository.ps1" />
+    <Compile Include="Scripts\Resolve-GitPath.ps1" />
+    <Compile Include="Scripts\Set-Label.ps1" />
     <Compile Include="Scripts\Test-PathIsCommitted.ps1" />
     <Compile Include="Scripts\Test-PathIsInGitRepo.ps1" />
+    <Compile Include="Scripts\Update-ToRepository.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\" />

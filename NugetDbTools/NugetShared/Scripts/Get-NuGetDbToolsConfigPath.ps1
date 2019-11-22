@@ -1,6 +1,6 @@
 function Get-NuGetDbToolsConfigPath {
 	if ($Global:ConfigPath -and (Test-Path $Global:ConfigPath)) {
-		$configPath = $Global:ConfigPath
+		$Global:ConfigPath
 	} else {
 		$configPath = "$PSScriptRoot\..\PackageTools\PackageTools.root.config"
 		if (-not (Test-Path $configPath)) {
@@ -15,6 +15,6 @@ function Get-NuGetDbToolsConfigPath {
 				}
 			}
 		}
+		$configPath
 	}
-	$configPath
 }

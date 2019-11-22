@@ -8,16 +8,15 @@ if (-not (Get-Module TestUtils)) {
 }
 
 Describe "Export-NuGetSettings" {
-	$slnFolder = "TestDrive:\sln"
+	$slnFolder = "$TestDrive\sln"
 	$slnPath = "$snlFolder\sln.sln"
 	$projFolder = "$slnFolder\proj"
-	$projPath = "$projFolder\proj.sqlproj"
 	$configPath = "$projFolder\proj.nuget.config"
 	mkdir $projFolder
 	Context "Content" {
 		$expectedSettings = Initialize-TestNugetConfig -Content 'Database'
 		$expectedOptions = $expectedSettings.nugetOptions | Get-Member | Where-Object { $_.MemberType -eq 'NoteProperty' } | ForEach-Object { $_.Name }
-		mock Test-Path { return $true } -ParameterFilter { $Path -eq 'TestDrive:\.git' } -ModuleName NuGetShared
+		mock Test-Path { return $true } -ParameterFilter { $Path -eq "$TestDrive\.git" } -ModuleName NuGetShared
 		mock Invoke-Expression { return 1..123 } -ParameterFilter { $Command -eq "git rev-list HEAD -- `"$projFolder\*`"" } -ModuleName GitExtension
 		mock Invoke-Expression { return '* master' } -ParameterFilter { $Command -eq 'git branch' } -ModuleName GitExtension
 		Context "Dependencies exist" {

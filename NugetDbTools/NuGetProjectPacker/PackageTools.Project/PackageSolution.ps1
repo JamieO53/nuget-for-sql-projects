@@ -1,6 +1,6 @@
 $projectType = 'Project'
 $projName='Name'
-$id="Ecentric.$projName"
+$id="JamieO53.$projName"
 $contentType='lib'
 $buildConfig='Debug'
 

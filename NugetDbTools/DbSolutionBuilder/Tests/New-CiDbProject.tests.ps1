@@ -128,23 +128,23 @@ $deps = @{dep1='1.0.123'; dep2='1.0.234'}
 #
 	Context "New project validation" {
 		It "$location\$name folder exists" {
-			Test-Path "$location\$name" | should be $true
+			Test-Path "$location\$name" | should -betrue
 		}
 		It "$($name) solution exists" {
-			Test-Path "$location\$name\$($name).sln" | should be $true
+			Test-Path "$location\$name\$($name).sln" | should -betrue
 		}
 		It "$location\$name\$($name)Pkg folder exists" {
-			Test-Path "$location\$name\$($name)Pkg" | should be $true
+			Test-Path "$location\$name\$($name)Pkg" | should -betrue
 		}
 		It "$($name)Pkg project exists" {
-			Test-Path "$location\$name\$($name)Pkg\$($name)Pkg.csproj" | should be $true
+			Test-Path "$location\$name\$($name)Pkg\$($name)Pkg.csproj" | should -betrue
 		}
 		$cs = Get-CSharpProjects -SolutionPath "$location\$name\$name.sln"
 		It "Only one C# project is in the solution" {
-			$cs.Count | should benullorempty
+			$cs | should -not -benullorempty
 		}
 		It "$($name)Pkg project is in the solution" {
-			$cs.Project | should be "$($name)Pkg"
+			$cs.Project | should -be "$($name)Pkg"
 		}
 		It "$($name)Pkg project path is in the solution" {
 			$cs.ProjectPath | should be "$($name)Pkg\$($name)Pkg.csproj"
@@ -168,11 +168,11 @@ $deps = @{dep1='1.0.123'; dep2='1.0.234'}
 			$prj.Project.ItemGroup.PackageReference | ForEach-Object {
 				if ($deps[$_.Include]) {
 					It "$($_.Include) version" {
-						$_.Version | should be $deps[$_.Include]
+						$_.Version | should -be $deps[$_.Include]
 					}
 				} else {
 					It "$($_.Include) version" {
-						$_.Version | should -Not -BeNullOrEmpty
+						$_.Version | should -not -benullorempty
 					}
 				}
 			}

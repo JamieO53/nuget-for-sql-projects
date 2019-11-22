@@ -11,9 +11,9 @@ if (Test-Path $BootstrapFolder) {
     mkdir $BootstrapFolder
 }
 
-$configPath = "$env:APPDATA\JamieO53\NugetDbTools\NugetDbTools.config"
+$Global:ConfigPath = "$PSScriptRoot\PackageTools.root.config"
 [xml]$config = Get-Content $configPath
-$localSource = $config.configuration.nugetLocalServer.add | Where-Object { $_.key -eq 'Source' } | ForEach-Object { $_.value }
+$localSource = $config.tools.nuget\source
 
 nuget install $package -Source $localSource -OutputDirectory $BootstrapFolder -ExcludeVersion
 

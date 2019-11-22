@@ -17,6 +17,7 @@ function Get-SolutionContent {
 	$packageFolder = "$SolutionFolder\packages"
 	$contentFolder = Get-NuGetContentFolder
 	$solutionContentFolder = "$SolutionFolder\$contentFolder"
+	$archiveSolutionContentFolder = "$solutionContentFolder.$(Get-Date -Format 'yyyyMMddHHmm')"
 
 	if (-not $contentFolder) {
 		$configFolder = (Get-Item (Get-NuGetDbToolsConfigPath)).FullName
@@ -27,7 +28,11 @@ function Get-SolutionContent {
 	Log "Get solution packages: $SolutionPath"
 	Get-SolutionPackages -SolutionPath $SolutionPath -ContentFolder $packageContentFolder
 
-	Remove-Item "$solutionFolder\Databases\*" -Recurse -Force -Exclude NugetDbPackerDb.Root.dacpac,master.dacpac
+	if (Test-Path "$solutionFolder\Databases") {
+		Log "Removing old database dacpacs"
+		Remove-Item "$solutionFolder\Databases\*" -Recurse -Force -Exclude NugetDbPackerDb.Root.dacpac,master.dacpac
+	}
+	Log "Getting referenced database dacpacs"
 	Get-ChildItem $packageContentFolder -Directory | ForEach-Object {
 		Get-ChildItem $_.FullName -Directory | Where-Object { (Get-ChildItem $_.FullName -Exclude _._).Count -ne 0 } | ForEach-Object {
 			if (-not (Test-Path "$SolutionFolder\$($_.Name)")) {
@@ -52,10 +57,34 @@ function Get-SolutionContent {
 	
 	if ((Test-Path $packageFolder) -and (Get-ChildItem "$packageFolder\**\$contentFolder" -Recurse)) {
 		if (Test-Path $solutionContentFolder) {
-			Remove-Item $solutionContentFolder\* -Recurse -Force
+			[string[]]$exclude = Get-LockedFiles $solutionContentFolder
+			if ($exclude.Count -gt 0) {
+				Log -Warn "$solutionContentFolder contains locked files"
+				$exclude | ForEach-Object {
+					Log -Warn $_
+				}
+			}
+			Log "Archiving $contentFolder to $archiveSolutionContentFolder"
+			mkdir -Path $archiveSolutionContentFolder | Out-Null
+			Copy-Item -Path $solutionContentFolder\* -Destination $archiveSolutionContentFolder -Recurse -Force -Exclude $exclude
+			if ($exclude.Count -gt 0) {
+				Log "Attempting to archive locked files"
+				Copy-Item -Path $solutionContentFolder\* -Destination $archiveSolutionContentFolder -Recurse -Force -ErrorAction SilentlyContinue
+			}
+			Log "Clearing $contentFolder"
+			Get-ChildItem $solutionContentFolder\* -Directory | ForEach-Object {
+				$d = $_
+				Log "Clearing $($d.Name) files"
+				try {
+					Remove-Item -Path $d -Force -Recurse -Exclude $exclude -ErrorAction Stop
+				} catch {}
+			}
+			Log "Removing empty subfolders"
+			Remove-Item -Path $solutionContentFolder\* -Recurse -Force -Exclude $exclude -ErrorAction SilentlyContinue
 		} else {
 			mkdir $solutionContentFolder | Out-Null
 		}
+		Log "Populating $contentFolder"
 		$csPackage.Keys | Sort-Object | ForEach-Object {
 			$id = $_
 			$version = $csPackage[$id]

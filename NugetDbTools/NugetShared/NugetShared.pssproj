@@ -42,6 +42,7 @@
     <Compile Include="Scripts\Get-CSharpProjects.ps1" />
     <Compile Include="Scripts\Get-ExtensionPaths.ps1" />
     <Compile Include="Scripts\Get-GroupNode.ps1" />
+    <Compile Include="Scripts\Get-LockedFiles.ps1" />
     <Compile Include="Scripts\Get-LogPath.ps1" />
     <Compile Include="Scripts\Get-NuGetCachePaths.ps1" />
     <Compile Include="Scripts\Get-NuGetContentFolder.ps1" />
@@ -52,6 +53,7 @@
     <Compile Include="Scripts\Get-NuGetLocalPushTimeout.ps1" />
     <Compile Include="Scripts\Get-NuGetLocalSource.ps1" />
     <Compile Include="Scripts\Get-NuGetPackageVersion.ps1" />
+    <Compile Include="Scripts\Get-Owner.ps1" />
     <Compile Include="Scripts\Get-ParentSubfolder.ps1" />
     <Compile Include="Scripts\Get-PowerShellProjects.ps1" />
     <Compile Include="Scripts\Get-ProjectsByType.ps1" />
@@ -66,7 +68,9 @@
     <Compile Include="Scripts\Save-CSharpProject.ps1" />
     <Compile Include="Scripts\Set-NodeText.ps1" />
     <Compile Include="Scripts\Set-ProjectDependencyVersion.ps1" />
+    <Compile Include="Scripts\Test-IsDirectory.ps1" />
     <Compile Include="Scripts\Test-NuGetVersionExists.ps1" />
+    <Compile Include="Scripts\Test-PathIsLocked.ps1" />
     <Compile Include="Tests\Get-ExtensionPaths.tests.ps1" />
     <Compile Include="Tests\Get-GroupNode.tests.ps1" />
     <Compile Include="Tests\Get-NuGetCachePaths.tests.ps1" />

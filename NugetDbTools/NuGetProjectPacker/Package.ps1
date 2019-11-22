@@ -22,9 +22,6 @@ try {
 	}
 
 	$branch = Get-Branch
-	if ($branch -eq 'master') {
-		$branch = ''
-	}
 	$version = Set-NuspecVersion -Path $projDir\Package.nuspec -ProjectFolder $projDir -UpVersion $upVersion
 	if ($version -like '*.0'){
 		throw "Invalid version $version"
@@ -63,6 +60,10 @@ try {
 			}
 		}
 		$lines | Set-Content "NuGet\content\$contentType\$id.psd1"
+	}
+
+	if ($upVersion) {
+		Update-ToRepository -Path $projDir\Package.nuspec -Message 'BATCH update dependency versions'
 	}
 
 	if (-not (Test-NuGetVersionExists -Id $id -Version $version)){

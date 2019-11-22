@@ -52,7 +52,7 @@ function Initialize-NuGetSpec {
 		$files = $_
 		$attrs = $setting.nugetContents[$files]
 		[xml]$node = "<files include=`"$files`" $attrs/>"
-		$childNode = $contFilesNode.AppendChild($contFilesNode.OwnerDocument.ImportNode($node.FirstChild, $true))
+		$contFilesNode.AppendChild($contFilesNode.OwnerDocument.ImportNode($node.FirstChild, $true)) | Out-Null
 	}
 	Out-FormattedXml -Xml $specDoc -FilePath $nuGetSpecPath
 }

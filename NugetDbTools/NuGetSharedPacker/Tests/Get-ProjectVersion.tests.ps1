@@ -9,7 +9,7 @@ if (Get-Module TestUtils -All) {
 Import-Module "$PSScriptRoot\..\..\TestUtils\bin\Debug\TestUtils\TestUtils.psd1" -Global -DisableNameChecking
 
 Describe "Get-ProjectVersion" {
-	$projFolder = "TestDrive:\proj"
+	$projFolder = "$TestDrive\proj"
 	$projPath = "$projFolder\proj.sqlproj"
 
 	Context "Not in git" {
